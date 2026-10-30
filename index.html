@@ -47,4 +47,13 @@ document.getElementById("filters").addEventListener("click",e=>{let b=e.target.c
 document.getElementById("sendOrder").onclick=()=>{if(!cart.length){showToast("Сначала добавь товар в корзину");return}let lines=cart.map(x=>{let p=products.find(p=>p.id===x.id);return `• ${p.name} — размер ${x.size} × ${x.qty} = ${money(p.price*x.qty)}`}),total=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0),name=document.getElementById("customerName").value.trim(),contact=document.getElementById("customerContact").value.trim(),comment=document.getElementById("customerComment").value.trim();let msg=`Здравствуйте! Хочу оформить заказ в DOFAMIN:\n\n${lines.join("\n")}\n\nИтого по товарам: ${money(total)}${name?`\nИмя: ${name}`:""}${contact?`\nКонтакт: ${contact}`:""}${comment?`\nКомментарий: ${comment}`:""}\n\nПодтвердите, пожалуйста, наличие и условия доставки.`;if(window.Telegram?.WebApp?.HapticFeedback)Telegram.WebApp.HapticFeedback.impactOccurred("light");window.open(`https://t.me/${MANAGER}?text=${encodeURIComponent(msg)}`,"_blank")};
 if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();try{Telegram.WebApp.setHeaderColor("#101010");Telegram.WebApp.setBackgroundColor("#101010")}catch(e){}}
 renderProducts();renderCart();
+</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://nigcbsunnavrlkwtktua.supabase.co';
+  const SUPABASE_KEY = '0c92e976-9d81-487f-802e-a1baacce805c';
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 </script></body></html>
