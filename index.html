@@ -90,6 +90,7 @@ async function checkAdminAccess() {
     });
 
     const result = await response.json();
+    console.log('Проверка админки:', response.status, result);
     return response.ok && result.ok === true && result.isAdmin === true;
   } catch (error) {
     console.error('Ошибка проверки администратора:', error);
