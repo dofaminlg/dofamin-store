@@ -6,7 +6,21 @@
   <meta name="theme-color" content="#090909">
   <title>DOFAMIN — больше, чем просто одежда</title>
   <style>
-    :root{--bg:#090909;--panel:#141414;--panel2:#1d1d1d;--text:#f6f6f6;--muted:#a4a4a4;--line:#292929;--orange:#ff6a00;--radius:16px}
+    :root:root{--bg:#030303;--panel:#0a0a0a;--panel2:#111111;--text:#ffffff;--muted:#a6a6a6;--line:#202020;--orange:#ffffff;--radius:16px}
+    /* DOFAMIN — white glow */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.brand,
+h1, h2, h3,
+.hero h1,
+.sectionhead h2 {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255,255,255,.22),
+               0 0 20px rgba(255,255,255,.08);
+}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
     button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:0 16px 94px}
     header{position:sticky;top:0;z-index:10;background:rgba(9,9,9,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
