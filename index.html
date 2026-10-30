@@ -330,6 +330,26 @@ h1, h2, h3,
 .bottomnav .navbtn:active b {
   transform: scale(0.92);
 }  
+/* Увеличиваем и приподнимаем нижнюю навигацию */
+.bottomnav {
+  padding-top: 16px !important;
+  padding-bottom: calc(22px + env(safe-area-inset-bottom)) !important;
+  gap: 9px !important;
+}
+
+/* Увеличенные стеклянные квадраты */
+.bottomnav .navbtn b {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 23px !important;
+  font-size: 27px !important;
+}
+
+/* Немного увеличиваем расстояние до названий */
+.bottomnav .navbtn {
+  gap: 7px !important;
+  font-size: 11px !important;
+} 
   </style>
 </head>
 <body>
