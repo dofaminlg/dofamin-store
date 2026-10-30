@@ -169,6 +169,256 @@ async function checkAdminAccess() {
     if(error){console.error(error);$('productsGrid').innerHTML='<div class="empty"><strong>Не удалось загрузить товары</strong>Проверьте таблицу products и публичную RLS-политику SELECT для активных товаров в Supabase.</div>';$('productsGrid2').innerHTML=$('productsGrid').innerHTML;return;}
     products=data||[];renderCategories();renderProducts();renderFavorites();
   }
+ 
+  // ===== DOFAMIN ADMIN PANEL =====
+  async function adminRequest(action, extra = {}) {
+    const response = await fetch(ADMIN_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_PUBLISHABLE_KEY
+      },
+      body: JSON.stringify({
+        initData: window.Telegram?.WebApp?.initData || '',
+        action,
+        ...extra
+      })
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || 'Ошибка сервера');
+    }
+    return result;
+  }
+
+  function createAdminPanel() {
+    const profile = $('profilePage');
+    if (!profile || $('adminPanel')) return;
+
+    const panel = document.createElement('div');
+    panel.id = 'adminPanel';
+    panel.className = 'adminnote';
+    panel.style.marginTop = '14px';
+    panel.innerHTML = `
+      <h3 style="margin-top:0">⚙️ Админ-панель DOFAMIN</h3>
+      <p class="small">Управление товарами магазина</p>
+
+      <form id="adminForm" class="formgrid">
+        <input class="field" name="name" placeholder="Название товара" required maxlength="200">
+        <input class="field" name="price" type="number" min="0" step="0.01" placeholder="Цена в рублях" required>
+        <textarea class="field" name="description" placeholder="Описание товара"></textarea>
+        <input class="field" name="sizes" placeholder="Размеры через запятую: S, M, L, XL">
+        <label class="small">Фотография товара</label>
+        <input class="field" name="image" type="file" accept="image/jpeg,image/png,image/webp">
+        <label style="display:flex;gap:8px;align-items:center">
+          <input name="active" type="checkbox" checked>
+          Показывать товар в магазине
+        </label>
+        <button class="btn primary" type="submit">Добавить товар</button>
+      </form>
+
+      <div class="sectionhead">
+        <h3>Товары магазина</h3>
+        <button class="btn" id="adminRefresh" type="button">Обновить</button>
+      </div>
+      <div id="adminProducts">Загружаем товары...</div>
+      <p class="hint" id="adminMessage"></p>
+    `;
+
+    profile.appendChild(panel);
+
+    const form = $('adminForm');
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+
+      const button = form.querySelector('button[type="submit"]');
+      const message = $('adminMessage');
+      button.disabled = true;
+      message.textContent = 'Сохраняем товар...';
+
+      try {
+        const file = form.image.files[0];
+        let image_url = '';
+
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) {
+            throw new Error('Фотография должна быть не больше 5 МБ');
+          }
+
+          const base64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+
+          const uploaded = await adminRequest('upload', {
+            fileName: file.name,
+            contentType: file.type,
+            base64
+          });
+
+          image_url = uploaded.image_url;
+        }
+
+        const sizes = form.sizes.value
+          .split(',')
+          .map(value => value.trim())
+          .filter(Boolean);
+
+        await adminRequest('add', {
+          name: form.name.value.trim(),
+          price: Number(form.price.value),
+          description: form.description.value.trim(),
+          sizes_text: sizes,
+          image_url,
+          is_active: form.active.checked
+        });
+
+        form.reset();
+        form.active.checked = true;
+        message.textContent = 'Товар успешно добавлен!';
+        await loadAdminProducts();
+        await loadProducts();
+      } catch (error) {
+        message.textContent = 'Ошибка: ' + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    $('adminRefresh').addEventListener('click', loadAdminProducts);
+    loadAdminProducts();
+  }
+
+  async function loadAdminProducts() {
+    const target = $('adminProducts');
+    if (!target) return;
+
+    target.textContent = 'Загружаем товары...';
+
+    try {
+      const result = await adminRequest('list');
+
+      if (!result.products.length) {
+        target.textContent = 'Товаров пока нет.';
+        return;
+      }
+
+      target.innerHTML = result.products.map(product => `
+        <div style="border-top:1px solid var(--line);padding:13px 0">
+          <strong>${safe(product.name)}</strong>
+          <div class="small">${rub(product.price)} · ${
+            product.is_active ? 'Активен' : 'Скрыт'
+          }</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px">
+            <button class="btn" data-edit="${safe(product.id)}">Изменить</button>
+            <button class="btn" data-toggle="${safe(product.id)}" data-active="${product.is_active}">
+              ${product.is_active ? 'Скрыть' : 'Показать'}
+            </button>
+            <button class="btn" data-delete="${safe(product.id)}">Удалить</button>
+          </div>
+        </div>
+      `).join('');
+
+      target.querySelectorAll('[data-toggle]').forEach(button => {
+        button.addEventListener('click', async () => {
+          try {
+            await adminRequest('toggle', {
+              id: button.dataset.toggle,
+              is_active: button.dataset.active !== 'true'
+            });
+            await loadAdminProducts();
+            await loadProducts();
+          } catch (error) {
+            toast(error.message);
+          }
+        });
+      });
+
+      target.querySelectorAll('[data-delete]').forEach(button => {
+        button.addEventListener('click', async () => {
+          if (!confirm('Точно удалить этот товар?')) return;
+          try {
+            await adminRequest('delete', { id: button.dataset.delete });
+            await loadAdminProducts();
+            await loadProducts();
+            toast('Товар удалён');
+          } catch (error) {
+            toast(error.message);
+          }
+        });
+      });
+
+      target.querySelectorAll('[data-edit]').forEach(button => {
+        button.addEventListener('click', async () => {
+          const product = result.products.find(
+            item => String(item.id) === button.dataset.edit
+          );
+          if (!product) return;
+
+          const name = prompt('Название товара:', product.name);
+          if (name === null) return;
+
+          const price = prompt('Цена:', product.price);
+          if (price === null) return;
+
+          const description = prompt('Описание:', product.description || '');
+          if (description === null) return;
+
+          const sizes = prompt(
+            'Размеры через запятую:',
+            Array.isArray(product.sizes_text)
+              ? product.sizes_text.join(', ')
+              : ''
+          );
+          if (sizes === null) return;
+
+          try {
+            await adminRequest('update', {
+              id: product.id,
+              name,
+              price: Number(price),
+              description,
+              sizes_text: sizes.split(',').map(s => s.trim()).filter(Boolean)
+            });
+            await loadAdminProducts();
+            await loadProducts();
+            toast('Товар обновлён');
+          } catch (error) {
+            toast(error.message);
+          }
+        });
+      });
+
+    } catch (error) {
+      target.textContent = 'Ошибка загрузки: ' + error.message;
+    }
+  }
+
+  async function initializeAdmin() {
+    if (!window.Telegram?.WebApp?.initData) return;
+
+    try {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+
+      const allowed = await checkAdminAccess();
+
+      if (allowed) {
+        createAdminPanel();
+        toast('Добро пожаловать в админ-панель!');
+      }
+    } catch (error) {
+      console.error('Ошибка запуска админ-панели:', error);
+    }
+  }
+
+  initializeAdmin();
+  // ===== END DOFAMIN ADMIN PANEL =====
+
   updateCount();renderCart();loadProducts();
 })();
 </script>
