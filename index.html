@@ -62,5 +62,57 @@ renderProducts();renderCart();
     SUPABASE_KEY
   );
 </script>
-</body>
+<div id="admin-login" style="display:none; position:fixed; inset:0; z-index:99999; background:#090909; color:white; padding:30px; font-family:Arial; align-items:center; justify-content:center;">
+  <div style="width:100%; max-width:360px;">
+    <h2>DOFAMIN ADMIN</h2>
+    <p>Вход администратора</p>
+
+    <input id="admin-email" type="email" placeholder="Email"
+      style="width:100%; padding:14px; margin:8px 0; box-sizing:border-box;">
+
+    <input id="admin-password" type="password" placeholder="Пароль"
+      style="width:100%; padding:14px; margin:8px 0; box-sizing:border-box;">
+
+    <button onclick="adminLogin()"
+      style="width:100%; padding:14px; margin-top:12px; background:white; color:black; border:0;">
+      Войти
+    </button>
+
+    <p id="admin-message"></p>
+  </div>
+</div>
+
+<script>
+async function adminLogin() {
+  const email = document.getElementById('admin-email').value;
+  const password = document.getElementById('admin-password').value;
+  const message = document.getElementById('admin-message');
+
+  message.textContent = 'Проверяем вход...';
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  const { data: admin, error: adminError } = await supabaseClient
+    .from('admins')
+    .select('user_id')
+    .eq('user_id', data.user.id)
+    .maybeSingle();
+
+  if (adminError || !admin) {
+    await supabaseClient.auth.signOut();
+    message.textContent = 'У вас нет прав администратора.';
+    return;
+  }
+
+  message.textContent = 'Вход выполнен!';
+}
+</script></body>
 </html>
