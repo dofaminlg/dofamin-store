@@ -59,7 +59,8 @@
   <button class="navbtn" data-page="profile"><b>♙</b>Профиль</button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (() => {
   'use strict';
@@ -68,6 +69,33 @@
   const SUPABASE_URL = 'https://nigcbsunnavrlkwtktua.supabase.co';
   const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a8Bt00Q_6hSGY6UnIz3dzQ__AlgLMF6';
   const MANAGER_TELEGRAM = 'DofaminMg';
+  const ADMIN_FUNCTION_URL =
+  'https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/dofamin-admin';
+
+async function checkAdminAccess() {
+  if (!window.Telegram?.WebApp?.initData) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(ADMIN_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_PUBLISHABLE_KEY
+      },
+      body: JSON.stringify({
+        initData: window.Telegram.WebApp.initData
+      })
+    });
+
+    const result = await response.json();
+    return response.ok && result.ok === true && result.isAdmin === true;
+  } catch (error) {
+    console.error('Ошибка проверки администратора:', error);
+    return false;
+  }
+}
   const hasConfig = SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_') ||
                     SUPABASE_PUBLISHABLE_KEY.startsWith('eyJ');
   const db = (window.supabase && hasConfig)
