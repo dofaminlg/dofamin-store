@@ -1,130 +1,148 @@
 <!doctype html>
-<html lang="ru"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101010"><title>DOFAMIN — магазин</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-:root{--bg:#101010;--panel:#191919;--text:#f5f5f5;--muted:#aaa;--line:#333}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:760px;margin:auto;padding:0 16px 100px}
-header{padding:23px 0 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{font-size:22px;font-weight:900;letter-spacing:3px}.tag{font-size:10px;color:var(--muted);letter-spacing:1.3px;margin-top:5px}
-.carttop{background:#fff;color:#111;border:0;border-radius:99px;padding:10px 14px;font-weight:800}
-.hero{padding:25px 0 18px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--muted)}.hero h1{font-size:clamp(30px,8vw,43px);line-height:1.02;letter-spacing:-1.5px;margin:10px 0}.hero p{font-size:13px;color:var(--muted);line-height:1.55}
-.filters{display:flex;gap:8px;overflow:auto;padding:8px 0 18px}.filter{white-space:nowrap;background:none;border:1px solid var(--line);color:white;border-radius:99px;padding:9px 13px;font-size:12px}.filter.active{background:white;color:#111}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:var(--panel);border:1px solid #292929;border-radius:14px;overflow:hidden}.photo{height:205px;background:linear-gradient(145deg,#292929,#121212);display:flex;align-items:center;justify-content:center;position:relative}.photo img{width:100%;height:100%;object-fit:cover}.placeholder{font-size:46px;filter:grayscale(1)}.badge{position:absolute;top:10px;left:10px;background:#fff;color:#111;font-size:9px;font-weight:800;padding:6px 8px;border-radius:4px}
-.details{padding:12px}.category{font-size:9px;color:var(--muted);letter-spacing:1.3px;text-transform:uppercase}.name{font-size:14px;font-weight:750;margin:6px 0 8px}.price{font-size:15px;font-weight:850}.delivery{font-size:11px;color:var(--muted);margin-top:6px}.selectrow{display:flex;gap:7px;margin-top:12px}.size{flex:1;min-width:0;background:#111;color:white;border:1px solid #444;border-radius:8px;padding:9px 5px;font-size:12px}.add{background:#fff;color:#111;border:0;border-radius:8px;padding:10px 11px;font-weight:800;font-size:12px}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:rgba(16,16,16,.96);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:10}.bottominner{max-width:728px;margin:auto;display:flex;align-items:center;gap:14px}.summary{flex:1}.summary small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}.summary strong{font-size:16px}.checkout,.wide{border:0;background:#fff;color:#111;font-weight:850;border-radius:10px;padding:14px 17px}.checkout:disabled{opacity:.35}
-.overlay{display:none;position:fixed;inset:0;background:#000b;z-index:20;align-items:flex-end;justify-content:center}.overlay.show{display:flex}.sheet{width:100%;max-width:760px;max-height:85vh;overflow:auto;background:#181818;border:1px solid #333;border-radius:18px 18px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom))}.sheethead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.sheet h2{font-size:20px;margin:0}.close{background:#292929;color:#fff;border:0;border-radius:50%;width:34px;height:34px;font-size:20px}.cartline{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:13px}.cartline small{display:block;color:var(--muted);margin-top:4px}.qty{display:flex;align-items:center;gap:9px}.qty button{background:#303030;color:#fff;border:0;border-radius:7px;width:28px;height:28px}.checkoutform{display:grid;gap:10px;margin-top:17px}.checkoutform input,.checkoutform textarea{width:100%;background:#101010;color:#fff;border:1px solid #393939;border-radius:9px;padding:12px}.checkoutform textarea{min-height:70px}.note{font-size:11px;line-height:1.5;color:var(--muted)}.wide{width:100%}.toast{display:none;position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#fff;color:#111;padding:11px 15px;border-radius:10px;font-size:12px;font-weight:700;z-index:40}
-footer{text-align:center;color:#777;font-size:10px;letter-spacing:1.2px;padding:28px 0}
-@media(min-width:600px){.photo{height:270px}.details{padding:15px}.name{font-size:16px}}@media(max-width:360px){.app{padding-left:11px;padding-right:11px}.photo{height:165px}.details{padding:10px}.add{padding:10px 8px}}
-</style></head><body>
-<div class="app">
-<header><div><div class="brand">DOFAMIN®</div><div class="tag">БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА</div></div><button class="carttop" id="openCart">Корзина · <span id="cartCount">0</span></button></header>
-<section class="hero"><div class="eyebrow">SELECTED ITEMS / 001</div><h1>Найди свой<br>стиль.</h1><p>Одежда, обувь и аксессуары.<br>Выбери товар и размер — остальное согласуем с менеджером.</p></section>
-<nav class="filters" id="filters"><button class="filter active" data-cat="Все">Все товары</button><button class="filter" data-cat="Верхняя одежда">Верхняя одежда</button><button class="filter" data-cat="Худи и свитшоты">Худи и свитшоты</button><button class="filter" data-cat="Обувь">Обувь</button><button class="filter" data-cat="Аксессуары">Аксессуары</button></nav>
-<section class="grid" id="products"></section><footer>DOFAMIN® · MORE THAN JUST CLOTHING</footer></div>
-<div class="bottom"><div class="bottominner"><div class="summary"><small>В корзине: <span id="bottomCount">0</span> шт.</small><strong id="total">0 ₽</strong></div><button class="checkout" id="checkout" disabled>Оформить заказ ↗</button></div></div>
-<div class="overlay" id="cartOverlay" role="dialog" aria-modal="true"><div class="sheet"><div class="sheethead"><h2>Твой заказ</h2><button class="close" id="closeCart">×</button></div><div id="cartLines"></div><div class="checkoutform"><input id="customerName" placeholder="Имя (необязательно)" maxlength="80"><input id="customerContact" placeholder="Контакт для связи (необязательно)" maxlength="100"><textarea id="customerComment" placeholder="Город или комментарий"></textarea></div><p class="note">Откроется Telegram с подготовленным сообщением менеджеру. Заказ подтвердится после согласования наличия, размера, доставки и оплаты.</p><button class="wide" id="sendOrder">Продолжить в Telegram</button></div></div><div class="toast" id="toast"></div>
-<script>
-const MANAGER="DodaminMg"; // Username менеджера без символа @. Проверь перед запуском.
-const products=[
-{id:1,name:"Пуховик Essential",category:"Верхняя одежда",price:6490,sizes:["XS","S","M","L","XL"],delivery:"до 7 дней",badge:"POPULAR",emoji:"🧥",image:""},
-{id:2,name:"Худи Oversize",category:"Худи и свитшоты",price:3490,sizes:["S","M","L","XL"],delivery:"до 7 дней",badge:"NEW",emoji:"👕",image:""},
-{id:3,name:"Свитшот Minimal",category:"Худи и свитшоты",price:2990,sizes:["XS","S","M","L","XL"],delivery:"до 14 дней",badge:"",emoji:"🖤",image:""},
-{id:4,name:"Кроссовки Street",category:"Обувь",price:4990,sizes:["39","40","41","42","43","44"],delivery:"до 14 дней",badge:"",emoji:"👟",image:""},
-{id:5,name:"Футболка Basic",category:"Худи и свитшоты",price:1590,sizes:["XS","S","M","L","XL"],delivery:"до 7 дней",badge:"",emoji:"👕",image:""},
-{id:6,name:"Аксессуар Daily",category:"Аксессуары",price:990,sizes:["ONE SIZE"],delivery:"до 7 дней",badge:"",emoji:"🧢",image:""}];
-let cart=[],activeCat="Все";const money=n=>new Intl.NumberFormat("ru-RU").format(n)+" ₽";
-function renderProducts(){let list=products.filter(p=>activeCat==="Все"||p.category===activeCat);document.getElementById("products").innerHTML=list.map(p=>`<article class="card"><div class="photo">${p.image?`<img src="${p.image}" alt="${p.name}">`:`<span class="placeholder">${p.emoji}</span>`}${p.badge?`<span class="badge">${p.badge}</span>`:""}</div><div class="details"><div class="category">${p.category}</div><div class="name">${p.name}</div><div class="price">${money(p.price)}</div><div class="delivery">📦 Доставка: ${p.delivery}</div><div class="selectrow"><select class="size" id="size-${p.id}">${p.sizes.map(s=>`<option value="${s}">${s==="ONE SIZE"?"Единый размер":s}</option>`).join("")}</select><button class="add" onclick="addToCart(${p.id})">＋ Добавить</button></div></div></article>`).join("")||'<div style="color:#aaa;padding:24px">В этой категории пока нет товаров.</div>'}
-function addToCart(id){let p=products.find(x=>x.id===id),size=document.getElementById("size-"+id).value,found=cart.find(x=>x.id===id&&x.size===size);if(found)found.qty++;else cart.push({id,size,qty:1});renderCart();showToast("Добавлено в корзину")}
-function changeQty(id,size,delta){let item=cart.find(x=>x.id===id&&x.size===size);if(!item)return;item.qty+=delta;if(item.qty<=0)cart=cart.filter(x=>x!==item);renderCart()}
-function renderCart(){let count=cart.reduce((s,x)=>s+x.qty,0),total=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0);document.getElementById("cartCount").textContent=count;document.getElementById("bottomCount").textContent=count;document.getElementById("total").textContent=money(total);document.getElementById("checkout").disabled=count===0;document.getElementById("cartLines").innerHTML=cart.length?cart.map(x=>{let p=products.find(p=>p.id===x.id);return `<div class="cartline"><div><strong>${p.name}</strong><small>Размер: ${x.size} · ${money(p.price)} / шт.</small></div><div class="qty"><button onclick="changeQty(${x.id},'${x.size}',-1)">−</button><b>${x.qty}</b><button onclick="changeQty(${x.id},'${x.size}',1)">+</button></div></div>`}).join(""):'<p class="note">Корзина пока пустая. Выбери товар в каталоге.</p>'}
-function showToast(t){let el=document.getElementById("toast");el.textContent=t;el.style.display="block";setTimeout(()=>el.style.display="none",1800)}
-function openCart(){document.getElementById("cartOverlay").classList.add("show")}function closeCart(){document.getElementById("cartOverlay").classList.remove("show")}
-document.getElementById("openCart").onclick=openCart;document.getElementById("checkout").onclick=openCart;document.getElementById("closeCart").onclick=closeCart;document.getElementById("cartOverlay").addEventListener("click",e=>{if(e.target.id==="cartOverlay")closeCart()});
-document.getElementById("filters").addEventListener("click",e=>{let b=e.target.closest("button[data-cat]");if(!b)return;activeCat=b.dataset.cat;document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));renderProducts()});
-document.getElementById("sendOrder").onclick=()=>{if(!cart.length){showToast("Сначала добавь товар в корзину");return}let lines=cart.map(x=>{let p=products.find(p=>p.id===x.id);return `• ${p.name} — размер ${x.size} × ${x.qty} = ${money(p.price*x.qty)}`}),total=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0),name=document.getElementById("customerName").value.trim(),contact=document.getElementById("customerContact").value.trim(),comment=document.getElementById("customerComment").value.trim();let msg=`Здравствуйте! Хочу оформить заказ в DOFAMIN:\n\n${lines.join("\n")}\n\nИтого по товарам: ${money(total)}${name?`\nИмя: ${name}`:""}${contact?`\nКонтакт: ${contact}`:""}${comment?`\nКомментарий: ${comment}`:""}\n\nПодтвердите, пожалуйста, наличие и условия доставки.`;if(window.Telegram?.WebApp?.HapticFeedback)Telegram.WebApp.HapticFeedback.impactOccurred("light");window.open(`https://t.me/${MANAGER}?text=${encodeURIComponent(msg)}`,"_blank")};
-if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();try{Telegram.WebApp.setHeaderColor("#101010");Telegram.WebApp.setBackgroundColor("#101010")}catch(e){}}
-renderProducts();renderCart();
-</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <title>DOFAMIN — больше, чем просто одежда</title>
+  <style>
+    :root{--bg:#090909;--panel:#141414;--panel2:#1d1d1d;--text:#f6f6f6;--muted:#a4a4a4;--line:#292929;--orange:#ff6a00;--radius:16px}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:0 16px 94px}
+    header{position:sticky;top:0;z-index:10;background:rgba(9,9,9,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .head{max-width:1120px;margin:auto;padding:14px 16px;display:flex;align-items:center;gap:14px}.brand{font-weight:1000;letter-spacing:2px;font-size:22px}.brand span{color:var(--orange)}.spacer{flex:1}
+    .iconbtn,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:10px 13px}.btn.primary{background:var(--orange);color:#111;border-color:var(--orange);font-weight:800}.btn:disabled{opacity:.45;cursor:not-allowed}
+    .hero{margin:22px 0;background:linear-gradient(120deg,#242424,#101010 65%);border:1px solid var(--line);border-radius:22px;padding:28px 22px;min-height:185px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;position:relative}
+    .eyebrow{color:var(--orange);font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(26px,6vw,48px);line-height:1.05;margin:10px 0;max-width:650px}.hero p{color:#c6c6c6;margin:0 0 18px;max-width:560px}
+    .sectionhead{display:flex;align-items:center;gap:12px;margin:26px 0 14px}.sectionhead h2{font-size:21px;margin:0}.count{color:var(--muted);font-size:13px}
+    .searchrow{display:flex;gap:8px;margin:18px 0}.field{min-width:0;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px 13px;outline:none}.field:focus{border-color:var(--orange)}
+    .filters{display:flex;gap:8px;overflow:auto;padding:0 0 5px}.chip{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:9px 13px}.chip.active{background:var(--orange);color:#111;border-color:var(--orange);font-weight:800}
+    .sortrow{display:flex;justify-content:flex-end;margin:10px 0}.sortrow select{max-width:210px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.product{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;position:relative}.photo{width:100%;aspect-ratio:4/4.7;object-fit:cover;display:block;background:#242424}.placeholder{aspect-ratio:4/4.7;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#262626,#111);font-size:42px;color:#555}
+    .pbody{padding:11px}.pname{font-weight:750;line-height:1.25;min-height:38px;overflow-wrap:anywhere}.pdesc{font-size:12px;color:var(--muted);margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:34px}.price{font-size:18px;font-weight:900;margin:10px 0}.tag{position:absolute;top:9px;left:9px;background:var(--orange);color:#111;font-size:11px;font-weight:900;padding:5px 7px;border-radius:7px}.heart{position:absolute;right:9px;top:9px;background:#111c;border:1px solid #ffffff22;color:white;border-radius:50%;width:35px;height:35px;font-size:19px}.product .btn{width:100%;padding:10px 6px}
+    .empty{border:1px dashed #3a3a3a;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted);grid-column:1/-1}.empty strong{display:block;color:var(--text);margin-bottom:6px}
+    .page{display:none}.page.active{display:block}.cartitem{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;margin:10px 0}.cartitem img,.cartthumb{width:72px;height:82px;object-fit:cover;border-radius:9px;background:#222}.cartname{font-weight:750}.small{font-size:12px;color:var(--muted)}.qty{display:flex;align-items:center;gap:9px;margin-top:7px}.qty button{background:var(--panel2);color:white;border:0;border-radius:8px;width:28px;height:28px}.totalbox{margin-top:18px;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:16px}.totalrow{display:flex;justify-content:space-between;margin:8px 0}.totalrow.big{font-size:20px;font-weight:900;border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+    .formgrid{display:grid;gap:10px}.hint{font-size:12px;color:var(--muted);margin:10px 0}.notice{padding:12px 14px;border:1px solid #60401d;background:#23170d;border-radius:12px;color:#ffd0a3;margin:12px 0;font-size:13px}
+    .bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:#101010f5;border-top:1px solid var(--line);padding:7px max(8px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}.navbtn{border:0;background:transparent;color:#aaa;padding:7px 2px;font-size:11px}.navbtn b{display:block;font-size:20px;margin-bottom:2px}.navbtn.active{color:var(--orange)}
+    .toast{position:fixed;left:16px;right:16px;bottom:88px;z-index:40;background:#f6f6f6;color:#111;padding:13px 16px;border-radius:12px;display:none;font-weight:650}
+    .footer{color:#777;text-align:center;font-size:12px;margin:28px 0 0}.adminnote{border:1px solid var(--line);padding:16px;border-radius:14px;background:var(--panel)}
+    @media(min-width:620px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.hero{padding:38px}.pbody{padding:14px}}
+    @media(min-width:900px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  </style>
+</head>
+<body>
+<header><div class="head"><div class="brand">DOFA<span>MIN</span></div><div class="spacer"></div><button class="iconbtn" id="headerCart" aria-label="Корзина">🛒 <span id="cartCount">0</span></button></div></header>
+<main class="wrap">
+  <section id="homePage" class="page active">
+    <div class="hero"><div class="eyebrow">DOFAMIN® STORE</div><h1>БОЛЬШЕ, ЧЕМ<br>ПРОСТО ОДЕЖДА.</h1><p>Одежда, обувь и аксессуары. Выбирай свой стиль.</p><button class="btn primary" id="heroCatalog" style="align-self:flex-start">Перейти в каталог →</button></div>
+    <div class="sectionhead"><h2>Каталог</h2><span class="count" id="homeCount"></span></div>
+    <div class="searchrow"><input class="field" id="search" placeholder="🔎 Поиск товаров..." aria-label="Поиск товаров"></div>
+    <div class="filters" id="categories"></div>
+    <div class="sortrow"><select class="field" id="sort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select></div>
+    <div class="grid" id="productsGrid"><div class="empty"><strong>Подключаем каталог</strong>Загружаем товары из магазина…</div></div>
+  </section>
+  <section id="catalogPage" class="page">
+    <div class="sectionhead"><h2>Каталог</h2><span class="count" id="catalogCount"></span></div>
+    <div class="searchrow"><input class="field" id="search2" placeholder="🔎 Поиск товаров..." aria-label="Поиск товаров"></div>
+    <div class="filters" id="categories2"></div><div class="sortrow"><select class="field" id="sort2" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select></div>
+    <div class="grid" id="productsGrid2"></div>
+  </section>
+  <section id="favoritesPage" class="page"><div class="sectionhead"><h2>Избранное ❤️</h2></div><div class="grid" id="favoritesGrid"></div></section>
+  <section id="cartPage" class="page"><div class="sectionhead"><h2>Корзина 🛒</h2></div><div id="cartItems"></div><div id="cartCheckout"></div></section>
+  <section id="profilePage" class="page"><div class="sectionhead"><h2>Профиль</h2></div><div class="adminnote"><strong>DOFAMIN</strong><p class="small">Заказы и вопросы по товарам — менеджеру.</p><a href="https://t.me/DofaminMg" target="_blank" rel="noopener" class="btn primary" style="display:inline-block;text-decoration:none">Написать менеджеру ↗</a><p class="hint">История заказов появится после настройки авторизации и серверной части магазина.</p></div></section>
+  <div class="footer">DOFAMIN® — БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА.</div>
+</main>
+<nav class="bottomnav" aria-label="Основная навигация">
+  <button class="navbtn active" data-page="home"><b>⌂</b>Главная</button>
+  <button class="navbtn" data-page="catalog"><b>▦</b>Каталог</button>
+  <button class="navbtn" data-page="favorites"><b>♡</b>Избранное</button>
+  <button class="navbtn" data-page="profile"><b>♙</b>Профиль</button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
+(() => {
+  'use strict';
+  // Публичные настройки проекта. Publishable key предназначен для браузера;
+  // безопасность данных обеспечивается RLS-политиками Supabase.
   const SUPABASE_URL = 'https://nigcbsunnavrlkwtktua.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_a8Bt00Q_6hSGY6UnIz3dzQ__AlgLMF6';
-
-  const supabaseClient = window.supabase.createClient(
-   renderProducts();
-renderCart();
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = 'https://nigcbsunnavrlkwtktua.supabase.co';
-const SUPABASE_KEY = '0c92e976-9d81-487f-802e-a1baacce805c';
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-</script>
-
-<div id="admin-login" style="display:none; position:fixed; inset:0; z-index:99999; background:#090909; color:white; padding:30px; font-family:Arial; align-items:center; justify-content:center;">
-  <div style="width:100%; max-width:360px; margin:auto;">
-    <h2>DOFAMIN ADMIN</h2>
-    <p>Вход администратора</p>
-
-    <input id="admin-email" type="email" placeholder="Email" style="width:100%;padding:14px;margin:8px 0;box-sizing:border-box;">
-    <input id="admin-password" type="password" placeholder="Пароль" style="width:100%;padding:14px;margin:8px 0;box-sizing:border-box;">
-
-    <button onclick="adminLogin()" style="width:100%;padding:14px;margin-top:12px;background:white;color:black;border:0;">
-      ВОЙТИ
-    </button>
-
-    <button onclick="document.getElementById('admin-login').style.display='none'" style="width:100%;padding:12px;margin-top:8px;background:transparent;color:white;border:1px solid #555;">
-      ЗАКРЫТЬ
-    </button>
-
-    <p id="admin-message"></p>
-  </div>
-</div>
-
-<script>
-async function adminLogin() {
-  const email = document.getElementById('admin-email').value.trim();
-  const password = document.getElementById('admin-password').value;
-  const message = document.getElementById('admin-message');
-
-  message.textContent = 'Проверяем вход...';
-
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    message.textContent = 'Ошибка входа: ' + error.message;
-    return;
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a8Bt00Q_6hSGY6UnIz3dzQ__AlgLMF6';
+  const MANAGER_TELEGRAM = 'DofaminMg';
+  const hasConfig = SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_') ||
+                    SUPABASE_PUBLISHABLE_KEY.startsWith('eyJ');
+  const db = (window.supabase && hasConfig)
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+    : null;
+  let products = [], categories = [], activeCategory = 'Все', searchText = '';
+  let cart = JSON.parse(localStorage.getItem('dofamin_cart') || '[]');
+  let favorites = JSON.parse(localStorage.getItem('dofamin_favorites') || '[]');
+  const $ = id => document.getElementById(id);
+  const rub = n => new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:0}).format(Number(n)||0);
+  const safe = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function toast(message){const el=$('toast');el.textContent=message;el.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.style.display='none',3000);}
+  function persist(){localStorage.setItem('dofamin_cart',JSON.stringify(cart));localStorage.setItem('dofamin_favorites',JSON.stringify(favorites));updateCount();renderCart();}
+  function updateCount(){$('cartCount').textContent=cart.reduce((sum,i)=>sum+i.qty,0);}
+  function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=$(name+'Page');if(page)page.classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='cart')renderCart();if(name==='favorites')renderFavorites();window.scrollTo({top:0,behavior:'smooth'});}
+  document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+  $('headerCart').addEventListener('click',()=>showPage('cart'));$('heroCatalog').addEventListener('click',()=>showPage('catalog'));
+  function filtered(){
+    let list=products.filter(p=>(p.is_active===undefined||p.is_active===true));
+    if(activeCategory!=='Все')list=list.filter(p=>(p.category||'Без категории')===activeCategory);
+    if(searchText)list=list.filter(p=>(`${p.name||''} ${p.description||''} ${p.category||''}`).toLowerCase().includes(searchText.toLowerCase()));
+    const mode=$('sort').value;
+    if(mode==='low')list.sort((a,b)=>Number(a.price)-Number(b.price));
+    else if(mode==='high')list.sort((a,b)=>Number(b.price)-Number(a.price));
+    else if(mode==='name')list.sort((a,b)=>String(a.name).localeCompare(String(b.name),'ru'));
+    else list.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+    return list;
   }
-
-  const { data: admin, error: adminError } = await supabaseClient
-    .from('admins')
-    .select('user_id')
-    .eq('user_id', data.user.id)
-    .maybeSingle();
-
-  if (adminError || !admin) {
-    await supabaseClient.auth.signOut();
-    message.textContent = 'Нет прав администратора.';
-    return;
+  function productCard(p){
+    const id=String(p.id), fav=favorites.includes(id), image=p.image_url;
+    const photo=image?`<img class="photo" src="${safe(image)}" alt="${safe(p.name)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'">`:`<div class="placeholder">◇</div>`;
+    const tags=[p.is_hit?'ХИТ':'',p.is_new?'НОВИНКА':''].filter(Boolean).join(' · ');
+    return `<article class="product">${tags?`<div class="tag">${safe(tags)}</div>`:''}<button class="heart" data-fav="${safe(id)}" aria-label="Добавить в избранное">${fav?'♥':'♡'}</button>${photo}<div class="pbody"><div class="pname">${safe(p.name||'Товар DOFAMIN')}</div><div class="pdesc">${safe(p.description||p.category||'')}</div><div class="price">${rub(p.price)}</div><button class="btn primary" data-add="${safe(id)}">В корзину</button></div></article>`;
   }
-
-  message.textContent = 'Вход выполнен!';
-}
-</script></body>
+  function bindCards(root){
+    root.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{const p=products.find(x=>String(x.id)===b.dataset.add);if(!p)return;const found=cart.find(i=>String(i.id)===String(p.id));if(found)found.qty++;else cart.push({id:p.id,name:p.name,price:Number(p.price)||0,image_url:p.image_url||'',qty:1});persist();toast('Добавлено в корзину');}));
+    root.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.fav;favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];persist();renderProducts();renderFavorites();}));
+  }
+  function renderProducts(){
+    const list=filtered(), markup=list.length?list.map(productCard).join(''):'<div class="empty"><strong>Товары пока не найдены</strong>Попробуйте изменить поиск или категорию. Если каталог пустой, сначала добавьте товары в таблицу products в Supabase.</div>';
+    $('productsGrid').innerHTML=markup;$('productsGrid2').innerHTML=markup;
+    bindCards($('productsGrid'));bindCards($('productsGrid2'));
+    $('homeCount').textContent=`${list.length} шт.`;$('catalogCount').textContent=`${list.length} шт.`;
+  }
+  function renderCategories(){
+    const cats=['Все',...new Set(products.map(p=>p.category).filter(Boolean))];
+    categories=cats;
+    ['categories','categories2'].forEach(id=>{$(id).innerHTML=cats.map(c=>`<button class="chip ${activeCategory===c?'active':''}" data-category="${safe(c)}">${safe(c)}</button>`).join('');$(id).querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{activeCategory=b.dataset.category;renderCategories();renderProducts();}));});
+  }
+  function renderFavorites(){
+    const list=products.filter(p=>favorites.includes(String(p.id)));
+    $('favoritesGrid').innerHTML=list.length?list.map(productCard).join(''):'<div class="empty"><strong>Здесь пока пусто</strong>Нажимайте ♡ на карточках, чтобы сохранять понравившиеся товары.</div>';
+    bindCards($('favoritesGrid'));
+  }
+  function renderCart(){
+    $('cartItems').innerHTML=cart.length?cart.map(i=>`<div class="cartitem"><div>${i.image_url?`<img src="${safe(i.image_url)}" alt="">`:'<div class="cartthumb"></div>'}</div><div><div class="cartname">${safe(i.name)}</div><div class="small">${rub(i.price)} за шт.</div><div class="qty"><button data-minus="${safe(i.id)}" aria-label="Уменьшить">−</button><span>${i.qty}</span><button data-plus="${safe(i.id)}" aria-label="Увеличить">+</button><button data-remove="${safe(i.id)}" aria-label="Удалить" style="margin-left:4px">×</button></div></div><strong>${rub(i.price*i.qty)}</strong></div>`).join(''):'<div class="empty"><strong>Корзина пуста</strong>Добавьте товары из каталога.</div>';
+    $('cartItems').querySelectorAll('[data-minus]').forEach(b=>b.onclick=()=>changeQty(b.dataset.minus,-1));
+    $('cartItems').querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>changeQty(b.dataset.plus,1));
+    $('cartItems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{cart=cart.filter(i=>String(i.id)!==b.dataset.remove);persist();});
+    const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+    $('cartCheckout').innerHTML=cart.length?`<div class="totalbox"><div class="totalrow"><span>Товары</span><strong>${rub(total)}</strong></div><div class="totalrow big"><span>Итого</span><span>${rub(total)}</span></div><div class="notice">После отправки заявки менеджер свяжется с вами в Telegram для подтверждения наличия, доставки и оплаты. Оплата на сайте пока не подключена.</div><form id="checkoutForm" class="formgrid"><input class="field" name="name" placeholder="Ваше имя" required maxlength="80"><input class="field" name="telegram" placeholder="Ваш Telegram, например @username" required maxlength="80"><input class="field" name="city" placeholder="Город" required maxlength="100"><select class="field" name="payment" required><option value="card">Оплата переводом на карту (после связи с менеджером)</option><option value="cash">Наличными при личной встрече в Луганске</option></select><button class="btn primary" type="submit">Отправить заявку менеджеру</button></form><p class="hint">Заявка откроется в Telegram. До настройки серверной части она не сохраняется в личном кабинете.</p></div>`:'';
+    const form=$('checkoutForm');if(form){form.querySelector('[name="city"]').addEventListener('input',e=>{const cash=form.querySelector('[name="payment"] option[value="cash"]');cash.disabled=!/луганск|lugansk|luhansk/i.test(e.target.value);if(cash.disabled&&form.payment.value==='cash')form.payment.value='card';});form.addEventListener('submit',e=>{e.preventDefault();if(!cart.length)return;const f=new FormData(form);const order={name:f.get('name'),telegram:f.get('telegram'),city:f.get('city'),payment:f.get('payment'),items:cart.map(i=>`${i.name} × ${i.qty} — ${rub(i.price*i.qty)}`).join('\n'),total:rub(total)};const message=`Здравствуйте! Хочу оформить заказ в DOFAMIN.\nИмя: ${order.name}\nTelegram: ${order.telegram}\nГород: ${order.city}\nОплата: ${order.payment==='cash'?'наличные при встрече в Луганске':'перевод на карту после связи'}\n\nТовары:\n${order.items}\n\nИтого: ${order.total}`;window.open(`https://t.me/${MANAGER_TELEGRAM}?text=${encodeURIComponent(message)}`,'_blank','noopener');toast('Откройте Telegram и отправьте подготовленное сообщение менеджеру.');});}
+  }
+  function changeQty(id,delta){const item=cart.find(i=>String(i.id)===String(id));if(!item)return;item.qty+=delta;if(item.qty<1)cart=cart.filter(i=>String(i.id)!==String(id));persist();}
+  function syncSearch(source){searchText=$(source).value;['search','search2'].forEach(id=>{if($(id)!==$(source))$(id).value=searchText;});renderProducts();}
+  $('search').addEventListener('input',()=>syncSearch('search'));$('search2').addEventListener('input',()=>syncSearch('search2'));
+  $('sort').addEventListener('change',()=>{$('sort2').value=$('sort').value;renderProducts();});$('sort2').addEventListener('change',()=>{$('sort').value=$('sort2').value;renderProducts();});
+  async function loadProducts(){
+    if(!db){$('productsGrid').innerHTML='<div class="empty"><strong>Остался один шаг подключения</strong>В коде найдите SUPABASE_PUBLISHABLE_KEY и замените текст ВСТАВЬТЕ_СЮДА_ВАШ_sb_publishable_КЛЮЧ на свой Publishable key. Сохраните файл и обновите страницу.</div>';$('productsGrid2').innerHTML=$('productsGrid').innerHTML;return;}
+    const {data,error}=await db.from('products').select('*').eq('is_active',true).order('created_at',{ascending:false});
+    if(error){console.error(error);$('productsGrid').innerHTML='<div class="empty"><strong>Не удалось загрузить товары</strong>Проверьте таблицу products и публичную RLS-политику SELECT для активных товаров в Supabase.</div>';$('productsGrid2').innerHTML=$('productsGrid').innerHTML;return;}
+    products=data||[];renderCategories();renderProducts();renderFavorites();
+  }
+  updateCount();renderCart();loadProducts();
+})();
+</script>
+</body>
 </html>
