@@ -74,10 +74,38 @@ h1, h2, h3,
   height: 100%;
   object-fit: contain;
 }
+.bottomnav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  width: 100%;
+}
+
+.bottomnav .navbtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 2px;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.bottomnav .navbtn b {
+  font-size: 20px;
+  line-height: 1;
+}  
   </style>
 </head>
 <body>
-<header><div class="head"><div class="brand">DOFA<span>MIN</span></div><div class="spacer"></div><button class="iconbtn" id="headerCart" aria-label="Корзина">🛒 <span id="cartCount">0</span></button></div></header>
+<header>
+  <div class="head">
+    <div class="brand">DOFA<span>MIN</span></div>
+    <div class="spacer"></div>
+  </div>
+</header>
 <main class="wrap">
   <section id="homePage" class="page active">
    <div class="hero hero-banner">
