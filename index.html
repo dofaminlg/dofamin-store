@@ -21,6 +21,17 @@ h1, h2, h3,
   text-shadow: 0 0 8px rgba(255,255,255,.22),
                0 0 20px rgba(255,255,255,.08);
 }
+    button {
+  transition: box-shadow .25s ease, border-color .25s ease;
+}
+
+.btn.primary {
+  box-shadow: 0 0 12px rgba(255,255,255,.08);
+}
+
+.btn.primary:active {
+  box-shadow: 0 0 18px rgba(255,255,255,.22);
+}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
     button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:0 16px 94px}
     header{position:sticky;top:0;z-index:10;background:rgba(9,9,9,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
