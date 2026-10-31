@@ -1483,7 +1483,8 @@ if (heroCatalog) {
     else list.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
     return list;
   }
- function openProduct(id) {
+
+function openProduct(id) {
   const p = products.find(x => String(x.id) === String(id));
   if (!p) return;
 
@@ -1491,103 +1492,363 @@ if (heroCatalog) {
     ? p.images
     : (p.image_url ? [p.image_url] : []);
 
-  const gallery = photos.length
-    ? photos.map((url, index) => `
-        <img
-          src="${safe(url)}"
-          alt="${safe(p.name)}"
-          style="width:100%;max-height:420px;object-fit:contain;${index === 0 ? '' : 'display:none'}"
-          data-product-photo="${index}"
-        >
-      `).join('')
-    : '<div class="placeholder">◇</div>';
+  const hasSizes = Array.isArray(p.sizes) && p.sizes.length > 0;
+  let currentPhoto = 0;
+  let selectedSize = '';
+  let isFavorite = favorites.includes(String(p.id));
 
   $('productDetails').innerHTML = `
-    <div class="product-detail">
-      <div id="productGallery">${gallery}</div>
-      <div style="display:flex;gap:10px;margin:12px 0">
-        <button class="btn" id="photoPrev" type="button">←</button>
-        <span id="photoCounter">1 / ${Math.max(photos.length, 1)}</span>
-        <button class="btn" id="photoNext" type="button">→</button>
+    <style>
+      .premium-product {
+        color: #fff;
+        padding: 4px 0 30px;
+      }
+      .premium-top {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+        gap: 30px;
+        align-items: start;
+      }
+      .premium-gallery {
+        min-width: 0;
+      }
+      .premium-main-photo {
+        position: relative;
+        background: #191919;
+        border: 1px solid #303030;
+        border-radius: 22px;
+        overflow: hidden;
+        height: 480px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .premium-main-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 12px;
+        box-sizing: border-box;
+      }
+      .premium-photo-count {
+        position: absolute;
+        bottom: 14px;
+        right: 14px;
+        background: #080808;
+        padding: 7px 13px;
+        border-radius: 20px;
+        font-size: 12px;
+      }
+      .premium-thumbs {
+        display: flex;
+        gap: 9px;
+        overflow-x: auto;
+        padding: 12px 0;
+      }
+      .premium-thumb {
+        width: 72px;
+        height: 78px;
+        flex-shrink: 0;
+        background: #191919;
+        border: 1px solid #444;
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 3px;
+        cursor: pointer;
+      }
+      .premium-thumb.active {
+        border: 2px solid #fff;
+      }
+      .premium-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .premium-info {
+        padding: 8px 0;
+      }
+      .premium-label {
+        color: #aaa;
+        font-size: 11px;
+        letter-spacing: 3px;
+        margin-bottom: 15px;
+      }
+      .premium-name {
+        font-size: clamp(25px, 4vw, 38px);
+        line-height: 1.15;
+        font-weight: 750;
+        margin: 0 0 14px;
+      }
+      .premium-desc {
+        color: #aaa;
+        line-height: 1.6;
+        margin-bottom: 25px;
+      }
+      .premium-price {
+        font-size: 34px;
+        font-weight: 800;
+        margin: 22px 0;
+      }
+      .premium-divider {
+        height: 1px;
+        background: #333;
+        margin: 24px 0;
+      }
+      .premium-heading {
+        font-size: 16px;
+        font-weight: 650;
+        margin-bottom: 14px;
+      }
+      .premium-sizes {
+        display: flex;
+        gap: 9px;
+        flex-wrap: wrap;
+      }
+      .premium-size {
+        min-width: 52px;
+        height: 48px;
+        padding: 0 15px;
+        border: 1px solid #444;
+        border-radius: 12px;
+        background: #171717;
+        color: white;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      .premium-size.active {
+        background: white;
+        color: #111;
+        border-color: white;
+      }
+      .premium-actions {
+        display: grid;
+        gap: 11px;
+        margin-top: 28px;
+      }
+      .premium-buy {
+        min-height: 58px;
+        border: 0;
+        border-radius: 15px;
+        background: white;
+        color: #111;
+        font-size: 16px;
+        font-weight: 750;
+        cursor: pointer;
+      }
+      .premium-fav {
+        min-height: 52px;
+        border: 1px solid #383838;
+        border-radius: 15px;
+        background: #191919;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+      }
+      .premium-benefits {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 28px;
+        color: #aaa;
+        font-size: 12px;
+      }
+      .premium-benefits span {
+        text-align: center;
+      }
+      .premium-description {
+        background: #191919;
+        border: 1px solid #303030;
+        border-radius: 20px;
+        padding: 22px;
+        margin-top: 25px;
+      }
+      .premium-description h3 {
+        margin: 0 0 12px;
+        font-size: 19px;
+      }
+      .premium-description p {
+        color: #aaa;
+        line-height: 1.7;
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
+      @media(max-width:650px) {
+        .premium-top {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .premium-main-photo {
+          height: min(105vw, 430px);
+        }
+        .premium-info {
+          padding: 8px 2px;
+        }
+        .premium-name {
+          font-size: 27px;
+        }
+        .premium-price {
+          font-size: 30px;
+        }
+      }
+    </style>
+
+    <div class="premium-product">
+      <div class="premium-top">
+        <div class="premium-gallery">
+          <div class="premium-main-photo" id="premiumMainPhoto">
+            ${
+              photos.length
+                ? `<img src="${safe(photos[0])}" alt="${safe(p.name)}">`
+                : '<div class="placeholder">◇</div>'
+            }
+            <span class="premium-photo-count" id="premiumPhotoCount">
+              1 / ${Math.max(photos.length, 1)}
+            </span>
+          </div>
+          ${
+            photos.length > 1
+              ? `<div class="premium-thumbs" id="premiumThumbs">
+                  ${photos.map((url, index) => `
+                    <button type="button"
+                      class="premium-thumb ${index === 0 ? 'active' : ''}"
+                      data-premium-photo="${index}">
+                      <img src="${safe(url)}" alt="Фото ${index + 1}">
+                    </button>
+                  `).join('')}
+                </div>`
+              : ''
+          }
+        </div>
+
+        <div class="premium-info">
+          <div class="premium-label">DOFAMIN® COLLECTION</div>
+          <h1 class="premium-name">${safe(p.name || 'Товар DOFAMIN')}</h1>
+          <div class="premium-desc">
+            ${safe(p.description || 'Стиль. Комфорт. DOFAMIN.')}
+          </div>
+
+          <div class="premium-price">${rub(p.price)}</div>
+
+          <div class="premium-divider"></div>
+
+          <div class="premium-heading">Выберите размер</div>
+          <div class="premium-sizes">
+            ${
+              hasSizes
+                ? p.sizes.map(size => `
+                    <button type="button"
+                      class="premium-size"
+                      data-premium-size="${safe(size)}">
+                      ${safe(size)}
+                    </button>
+                  `).join('')
+                : '<span style="color:#aaa;font-size:13px">Размер уточняйте у менеджера</span>'
+            }
+          </div>
+
+          <div class="premium-actions">
+            <button class="premium-buy" id="premiumAdd">
+              ДОБАВИТЬ В КОРЗИНУ
+            </button>
+            <button class="premium-fav" id="premiumFavorite">
+              ${isFavorite ? '♥ В избранном' : '♡ В избранное'}
+            </button>
+          </div>
+
+          <div class="premium-benefits">
+            <span>◇<br>Доставка</span>
+            <span>✧<br>Качество</span>
+            <span>↻<br>Поддержка</span>
+          </div>
+        </div>
       </div>
-      <h2>${safe(p.name || 'Товар DOFAMIN')}</h2>
-      <p>${safe(p.description || '')}</p>
-      <div class="price">${rub(p.price)}</div>
-      <div style="margin:18px 0">
-  <h3>Выберите размер:</h3>
-  <div id="productSizes" style="display:flex;gap:10px;flex-wrap:wrap">
-    ${(Array.isArray(p.sizes) ? p.sizes : []).map(size => `
-      <button
-        type="button"
-        class="btn size-option"
-        data-size="${safe(size)}"
-      >${safe(size)}</button>
-    `).join('')}
-  </div>
-  ${Array.isArray(p.sizes) && p.sizes.length ? '' : '<p>Размер уточняйте у менеджера.</p>'}
-</div>
-      <button class="btn primary" id="detailAdd" type="button">В корзину</button>
+
+      <div class="premium-description">
+        <h3>Описание товара</h3>
+        <p>${safe(p.description || 'Подробности о товаре уточняйте у менеджера DOFAMIN.')}</p>
+      </div>
     </div>
   `;
 
-  let currentPhoto = 0;
-let selectedSize = '';
-
-document.querySelectorAll('.size-option').forEach(btn => {
-  btn.addEventListener('click', () => {
-    selectedSize = btn.dataset.size;
-
-    document.querySelectorAll('.size-option').forEach(b => {
-      b.style.background = '';
-      b.style.color = '';
-    });
-
-    btn.style.background = '#111';
-    btn.style.color = '#fff';
-  });
-});
   function showPhoto(index) {
     if (!photos.length) return;
+
     currentPhoto = (index + photos.length) % photos.length;
-    document.querySelectorAll('[data-product-photo]').forEach((img, i) => {
-      img.style.display = i === currentPhoto ? 'block' : 'none';
-    });
-    $('photoCounter').textContent = `${currentPhoto + 1} / ${photos.length}`;
-  }
 
-  $('photoPrev').addEventListener('click', () => showPhoto(currentPhoto - 1));
-  $('photoNext').addEventListener('click', () => showPhoto(currentPhoto + 1));
+    const main = $('premiumMainPhoto');
+    main.querySelector('img').src = photos[currentPhoto];
 
-  $('detailAdd').addEventListener('click', () => {
-  if (!selectedSize && Array.isArray(p.sizes) && p.sizes.length) {
-    toast('Сначала выберите размер');
-    return;
-  }
+    $('premiumPhotoCount').textContent =
+      `${currentPhoto + 1} / ${photos.length}`;
 
-  const found = cart.find(i =>
-    String(i.id) === String(p.id) &&
-    String(i.size || '') === String(selectedSize)
-  );
-
-  if (found) {
-    found.qty++;
-  } else {
-    cart.push({
-      id: p.id,
-      name: p.name,
-      price: Number(p.price) || 0,
-      image_url: p.image_url || '',
-      size: selectedSize,
-      qty: 1
+    document.querySelectorAll('[data-premium-photo]').forEach((btn, i) => {
+      btn.classList.toggle('active', i === currentPhoto);
     });
   }
 
-  persist();
-  toast('Добавлено в корзину');
-});
+  document.querySelectorAll('[data-premium-photo]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      showPhoto(Number(btn.dataset.premiumPhoto));
+    });
+  });
+
+  document.querySelectorAll('[data-premium-size]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedSize = btn.dataset.premiumSize;
+
+      document.querySelectorAll('[data-premium-size]').forEach(b => {
+        b.classList.toggle('active', b === btn);
+      });
+    });
+  });
+
+  $('premiumFavorite').addEventListener('click', () => {
+    const productId = String(p.id);
+
+    favorites = favorites.includes(productId)
+      ? favorites.filter(x => x !== productId)
+      : [...favorites, productId];
+
+    isFavorite = favorites.includes(productId);
+    persist();
+    $('premiumFavorite').textContent =
+      isFavorite ? '♥ В избранном' : '♡ В избранное';
+
+    renderFavorites();
+    renderProducts();
+  });
+
+  $('premiumAdd').addEventListener('click', () => {
+    if (!selectedSize && hasSizes) {
+      toast('Сначала выберите размер');
+      return;
+    }
+
+    const found = cart.find(i =>
+      String(i.id) === String(p.id) &&
+      String(i.size || '') === String(selectedSize)
+    );
+
+    if (found) {
+      found.qty++;
+    } else {
+      cart.push({
+        id: p.id,
+        name: p.name,
+        price: Number(p.price) || 0,
+        image_url: p.image_url || '',
+        size: selectedSize,
+        qty: 1
+      });
+    }
+
+    persist();
+    toast('Добавлено в корзину');
+  });
 
   showPage('product');
-} 
+}
+ 
   function productCard(p){
     const id=String(p.id), fav=favorites.includes(id), image=p.image_url;
    const photo=image?`<img class="photo" src="${safe(image)}" alt="${safe(p.name)}" loading="lazy" style="width:100%;height:260px;object-fit:contain;background:#fff;padding:10px;box-sizing:border-box" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'">`:`<div class="placeholder">◇</div>`;
