@@ -1133,6 +1133,18 @@ select {
     </div>
   </div>
 </section>
+  <section class="dof-orders-history" style="margin-top:28px">
+  <div class="sectionhead dof-orders-heading">
+    <h2>История покупок</h2>
+    <span class="count" id="purchaseHistoryCount">0</span>
+  </div>
+
+  <div id="purchaseHistoryList" class="dof-orders-list">
+    <div class="dof-orders-empty">
+      Здесь пока нет завершённых покупок.
+    </div>
+  </div>
+</section>
 
   <div class="footer">DOFAMIN® — БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА.</div>
 </main>
@@ -1253,22 +1265,33 @@ async function loadMyOrders() {
 
   try {
     const result = await ordersRequest('list');
-    const orders = result.orders || [];
+    const allOrders = result.orders || [];
+
+const isDelivered = order =>
+  String(order.status || '').toLowerCase().includes('доставлен');
+
+const orders = allOrders.filter(order => !isDelivered(order));
+const historyOrders = allOrders.filter(isDelivered);
 
     if (counter) counter.textContent = orders.length;
 
+const historyContainer = $('purchaseHistoryList');
+const historyCounter = $('purchaseHistoryCount');
+
+if (historyCounter) {
+  historyCounter.textContent = historyOrders.length;
+}
+
     if (!orders.length) {
-      container.innerHTML = `
-        <div class="dof-orders-empty">
-          <h3>Здесь будут твои заказы</h3>
-          <p>После оформления заказа здесь появятся товары и информация о доставке.</p>
-        </div>`;
-      return;
-    }
+  container.innerHTML = `
+    <div class="dof-orders-empty">
+      <h3>Новых заказов пока нет</h3>
+    </div>`;
+}
 
     const escapeHtml = value => safe(String(value ?? ''));
 
-    container.innerHTML = orders.map(order => {
+    const renderOrderCards = list => list.map(order => {
       const items = Array.isArray(order.items) ? order.items : [];
       const date = order.created_at
         ? new Date(order.created_at).toLocaleDateString('ru-RU')
@@ -1344,6 +1367,8 @@ async function loadMyOrders() {
           </div>`;
       }).join('');
 
+
+
       return `
         <article class="dof-order-card" style="padding:18px;border:1px solid #303030;border-radius:20px;margin-bottom:16px;background:#151515;color:#fff;box-sizing:border-box">
           <div style="color:#aaa;font-size:11px;letter-spacing:1.5px;margin-bottom:8px">
@@ -1375,7 +1400,15 @@ async function loadMyOrders() {
           </div>
         </article>`;
     }).join('');
+container.innerHTML = orders.length
+  ? renderOrderCards(orders)
+  : '<div class="dof-orders-empty"><h3>Новых заказов пока нет</h3></div>';
 
+if (historyContainer) {
+  historyContainer.innerHTML = historyOrders.length
+    ? renderOrderCards(historyOrders)
+    : '<div class="dof-orders-empty">Здесь пока нет завершённых покупок.</div>';
+}
   
 } catch (error) {
   console.error('Ошибка загрузки заказов:', error);
