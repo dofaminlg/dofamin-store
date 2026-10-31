@@ -1644,7 +1644,7 @@ document.querySelectorAll('.size-option').forEach(btn => {
   function renderCart(){
     $('cartItems').innerHTML=cart.length?cart.map(i=>`<div class="cartitem"><div>${i.image_url?`<img src="${safe(i.image_url)}" alt="">`:'<div class="cartthumb"></div>'}</div><div><div class="cartname">${safe(i.name)}</div>
 ${i.size ? `<div class="small">Размер: ${safe(i.size)}</div>` : ''}
-<div class="small">${rub(i.price)} за шт.</div><div class="small">${rub(i.price)} за шт.</div><div class="qty">
+<div class="small">${rub(i.price)} за шт.</div><div class="qty">
   <button data-minus="${safe(i.id)}" data-size="${safe(i.size || '')}" aria-label="Уменьшить">−</button>
   <span>${i.qty}</span>
   <button data-plus="${safe(i.id)}" data-size="${safe(i.size || '')}" aria-label="Увеличить">+</button>
