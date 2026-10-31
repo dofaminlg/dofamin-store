@@ -667,6 +667,49 @@ h1, h2, h3,
     0 0 18px rgba(255, 255, 255, 0.08) !important;
 }
 ```
+```css
+/* Заметная стеклянная подложка */
+.bottomnav {
+  background: rgba(30, 30, 35, 0.48) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 28px !important;
+
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Светлая стеклянная окантовка */
+.bottomnav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+/* Стеклянные квадраты */
+.bottomnav .navbtn b {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.18),
+    0 4px 14px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Активный квадрат */
+.bottomnav .navbtn.active b {
+  background: rgba(255, 255, 255, 0.23) !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+}
+``` 
   </style>
 </head>
 <body>
