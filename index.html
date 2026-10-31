@@ -350,6 +350,126 @@ h1, h2, h3,
   gap: 7px !important;
   font-size: 11px !important;
 } 
+/* DOFAMIN — прозрачная нижняя навигация */
+.bottomnav {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 10px calc(14px + env(safe-area-inset-bottom));
+}
+
+/* Разделы без общей подложки */
+.bottomnav .navbtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* Отдельный стеклянный квадратик */
+.bottomnav .navbtn b {
+  width: 58px;
+  height: 58px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 21px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.19),
+    rgba(255, 255, 255, 0.07) 55%,
+    rgba(255, 255, 255, 0.035)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.24),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.05),
+    0 5px 18px rgba(0, 0, 0, 0.2),
+    0 0 14px rgba(255, 255, 255, 0.045);
+
+  font-size: 27px;
+  line-height: 1;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Белое свечение активного раздела */
+.bottomnav .navbtn.active {
+  color: #fff !important;
+}
+
+.bottomnav .navbtn.active b {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.30),
+    rgba(255, 255, 255, 0.12) 60%,
+    rgba(255, 255, 255, 0.06)
+  );
+
+  border-color: rgba(255, 255, 255, 0.55);
+
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.30),
+    0 0 12px rgba(255, 255, 255, 0.12),
+    0 0 25px rgba(255, 255, 255, 0.09);
+}
+
+/* Эффект нажатия */
+.bottomnav .navbtn:active b {
+  transform: scale(0.93);
+}
+
+/* SVG-иконки, если они уже установлены */
+.bottomnav .navbtn b svg {
+  width: 27px;
+  height: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.25));
+}
+
+.bottomnav .navbtn.active b svg {
+  filter:
+    drop-shadow(0 0 5px rgba(255, 255, 255, 0.8))
+    drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
+} 
   </style>
 </head>
 <body>
