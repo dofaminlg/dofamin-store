@@ -1056,7 +1056,45 @@ select {
 .dof-orders-empty .btn {
   cursor: pointer;
 }
+/* Исправление размеров карусели DOFAMIN */
+.dof-carousel {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 220px !important;
+  overflow: hidden !important;
+  margin: 0 0 18px !important;
+  border-radius: 16px !important;
+}
 
+.dof-carousel-track {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  height: 100% !important;
+  transition: transform .35s ease;
+  touch-action: pan-y;
+}
+
+.dof-carousel .dof-slide {
+  display: block !important;
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.dof-carousel .dof-slide img {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: 220px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
   </style>
 </head>
 <body>
