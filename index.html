@@ -1846,7 +1846,13 @@ function openProduct(id) {
     toast('Добавлено в корзину');
   });
 
-  showPage('product');
+  const backButton = $('productBack');
+
+if (backButton) {
+  backButton.onclick = () => showPage('catalog');
+}
+
+showPage('product');
 }
  
   function productCard(p){
