@@ -1483,16 +1483,148 @@ if (heroCatalog) {
     else list.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
     return list;
   }
+ function openProduct(id) {
+  const p = products.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  const photos = Array.isArray(p.images) && p.images.length
+    ? p.images
+    : (p.image_url ? [p.image_url] : []);
+
+  const gallery = photos.length
+    ? photos.map((url, index) => `
+        <img
+          src="${safe(url)}"
+          alt="${safe(p.name)}"
+          style="width:100%;max-height:420px;object-fit:contain;${index === 0 ? '' : 'display:none'}"
+          data-product-photo="${index}"
+        >
+      `).join('')
+    : '<div class="placeholder">◇</div>';
+
+  $('productDetails').innerHTML = `
+    <div class="product-detail">
+      <div id="productGallery">${gallery}</div>
+      <div style="display:flex;gap:10px;margin:12px 0">
+        <button class="btn" id="photoPrev" type="button">←</button>
+        <span id="photoCounter">1 / ${Math.max(photos.length, 1)}</span>
+        <button class="btn" id="photoNext" type="button">→</button>
+      </div>
+      <h2>${safe(p.name || 'Товар DOFAMIN')}</h2>
+      <p>${safe(p.description || '')}</p>
+      <div class="price">${rub(p.price)}</div>
+      <div style="margin:18px 0">
+  <h3>Выберите размер:</h3>
+  <div id="productSizes" style="display:flex;gap:10px;flex-wrap:wrap">
+    ${(Array.isArray(p.sizes) ? p.sizes : []).map(size => `
+      <button
+        type="button"
+        class="btn size-option"
+        data-size="${safe(size)}"
+      >${safe(size)}</button>
+    `).join('')}
+  </div>
+  ${Array.isArray(p.sizes) && p.sizes.length ? '' : '<p>Размер уточняйте у менеджера.</p>'}
+</div>
+      <button class="btn primary" id="detailAdd" type="button">В корзину</button>
+    </div>
+  `;
+
+  let currentPhoto = 0;
+let selectedSize = '';
+
+document.querySelectorAll('.size-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedSize = btn.dataset.size;
+
+    document.querySelectorAll('.size-option').forEach(b => {
+      b.style.background = '';
+      b.style.color = '';
+    });
+
+    btn.style.background = '#111';
+    btn.style.color = '#fff';
+  });
+});
+  function showPhoto(index) {
+    if (!photos.length) return;
+    currentPhoto = (index + photos.length) % photos.length;
+    document.querySelectorAll('[data-product-photo]').forEach((img, i) => {
+      img.style.display = i === currentPhoto ? 'block' : 'none';
+    });
+    $('photoCounter').textContent = `${currentPhoto + 1} / ${photos.length}`;
+  }
+
+  $('photoPrev').addEventListener('click', () => showPhoto(currentPhoto - 1));
+  $('photoNext').addEventListener('click', () => showPhoto(currentPhoto + 1));
+
+  $('detailAdd').addEventListener('click', () => {
+  if (!selectedSize && Array.isArray(p.sizes) && p.sizes.length) {
+    toast('Сначала выберите размер');
+    return;
+  }
+
+  const found = cart.find(i =>
+    String(i.id) === String(p.id) &&
+    String(i.size || '') === String(selectedSize)
+  );
+
+  if (found) {
+    found.qty++;
+  } else {
+    cart.push({
+      id: p.id,
+      name: p.name,
+      price: Number(p.price) || 0,
+      image_url: p.image_url || '',
+      size: selectedSize,
+      qty: 1
+    });
+  }
+
+  persist();
+  toast('Добавлено в корзину');
+});
+
+  showPage('product');
+} 
   function productCard(p){
     const id=String(p.id), fav=favorites.includes(id), image=p.image_url;
     const photo=image?`<img class="photo" src="${safe(image)}" alt="${safe(p.name)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'">`:`<div class="placeholder">◇</div>`;
     const tags=[p.is_hit?'ХИТ':'',p.is_new?'НОВИНКА':''].filter(Boolean).join(' · ');
-    return `<article class="product">${tags?`<div class="tag">${safe(tags)}</div>`:''}<button class="heart" data-fav="${safe(id)}" aria-label="Добавить в избранное">${fav?'♥':'♡'}</button>${photo}<div class="pbody"><div class="pname">${safe(p.name||'Товар DOFAMIN')}</div><div class="pdesc">${safe(p.description||p.category||'')}</div><div class="price">${rub(p.price)}</div><button class="btn primary" data-add="${safe(id)}">В корзину</button></div></article>`;
+    return `<article class="product" data-open-product="${safe(id)}">${tags?`<div class="tag">${safe(tags)}</div>`:''}<button class="heart" data-fav="${safe(id)}" aria-label="Добавить в избранное">${fav?'♥':'♡'}</button>${photo}<div class="pbody"><div class="pname">${safe(p.name||'Товар DOFAMIN')}</div><div class="pdesc">${safe(p.description||p.category||'')}</div><div class="price">${rub(p.price)}</div><button class="btn primary" data-add="${safe(id)}">В корзину</button></div></article>`;
   }
   function bindCards(root){
-    root.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{const p=products.find(x=>String(x.id)===b.dataset.add);if(!p)return;const found=cart.find(i=>String(i.id)===String(p.id));if(found)found.qty++;else cart.push({id:p.id,name:p.name,price:Number(p.price)||0,image_url:p.image_url||'',qty:1});persist();toast('Добавлено в корзину');}));
-    root.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.fav;favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];persist();renderProducts();renderFavorites();}));
-  }
+  root.querySelectorAll('[data-open-product]').forEach(el => {
+    el.addEventListener('click', e => {
+      if (e.target.closest('button')) return;
+
+      const id = el.dataset.openProduct;
+      const p = products.find(x => String(x.id) === String(id));
+      if (!p) return;
+
+      openProduct(p.id);
+    });
+  });
+
+  root.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{
+    const p=products.find(x=>String(x.id)===b.dataset.add);
+    if(!p)return;
+    const found=cart.find(i=>String(i.id)===String(p.id));
+    if(found)found.qty++;
+    else cart.push({id:p.id,name:p.name,price:Number(p.price)||0,image_url:p.image_url||'',qty:1});
+    persist();
+    toast('Добавлено в корзину');
+  }));
+
+  root.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.fav;
+    favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
+    persist();
+    renderProducts();
+    renderFavorites();
+  }));
+}
   function renderProducts(){
     const list=filtered(), markup=list.length?list.map(productCard).join(''):'<div class="empty"><strong>Товары пока не найдены</strong>Попробуйте изменить поиск или категорию. Если каталог пустой, сначала добавьте товары в таблицу products в Supabase.</div>';
     $('productsGrid').innerHTML=markup;$('productsGrid2').innerHTML=markup;
@@ -1571,8 +1703,8 @@ if (form) {
         `Город: ${city}\n\n` +
         `Товары:\n` +
         cart.map(i =>
-          `${i.name} × ${i.qty} — ${rub(i.price * i.qty)}`
-        ).join('\n') +
+  `${i.name} ${i.size ? '— Размер: ' + i.size : ''} × ${i.qty} — ${rub(i.price * i.qty)}`
+).join('\n') +
         `\n\nИтого: ${rub(order.total)}`;
 
       cart = [];
