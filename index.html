@@ -1057,15 +1057,75 @@ select {
   cursor: pointer;
 }
 /* Исправление размеров карусели DOFAMIN */
+/* Карусель DOFAMIN */
 .dof-carousel {
   position: relative !important;
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: 220px !important;
+  height: auto !important;
   overflow: hidden !important;
   margin: 0 0 18px !important;
   border-radius: 16px !important;
+}
+
+.dof-carousel-track {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  height: 220px !important;
+  transition: transform .35s ease;
+  touch-action: pan-y;
+}
+
+.dof-carousel .dof-slide {
+  box-sizing: border-box !important;
+  display: block !important;
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  height: 220px !important;
+  padding: 6px !important;
+}
+
+.dof-carousel .dof-slide img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border: 2px solid #fff !important;
+  border-radius: 18px !important;
+  box-shadow: 0 0 6px rgba(255,255,255,.9),
+              0 0 14px rgba(255,255,255,.65),
+              0 0 28px rgba(255,255,255,.35) !important;
+}
+
+.dof-carousel-dots {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 12px 0 !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.dof-carousel-dots span {
+  display: block !important;
+  width: 11px !important;
+  height: 11px !important;
+  border-radius: 50% !important;
+  background: #777 !important;
+  border: 1px solid #fff !important;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(255,255,255,.5);
+}
+
+.dof-carousel-dots span.active {
+  background: #a020f0 !important;
+  border-color: #d9a3ff !important;
+  box-shadow: 0 0 8px #a020f0, 0 0 16px #a020f0 !important;
 }
 
 .dof-carousel-track {
@@ -1169,12 +1229,7 @@ select {
   </div>
   
 
-  <div class="dof-carousel-dots" id="dofCarouselDots">
-    <span class="active"></span>
-    <span></span>
-  </div>
-</div>
-
+  
 <button class="btn primary" id="heroCatalog">
   Перейти в каталог →
 </button>
