@@ -868,6 +868,42 @@ select {
   text-shadow: none !important;
 }
 ```    
+```css
+/* Увеличиваем нижнюю панель на iPhone */
+@supports (-webkit-touch-callout: none) {
+  .bottomnav {
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+
+    padding: 12px 6px !important;
+    gap: 5px !important;
+
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    border-radius: 28px !important;
+  }
+
+  /* Увеличиваем стеклянные квадраты */
+  .bottomnav .navbtn b {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 19px !important;
+  }
+
+  /* Увеличиваем SVG-иконки */
+  .bottomnav .navbtn b svg {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+  }
+
+  /* Подписи */
+  .bottomnav .navbtn {
+    font-size: 11px !important;
+  }
+}
+```
   </style>
 </head>
 <body>
