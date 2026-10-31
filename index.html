@@ -1722,14 +1722,15 @@ const image_url = images[0] || '';}
           .map(value => value.trim())
           .filter(Boolean);
 
-        await adminRequest('add', {
-          name: form.name.value.trim(),
-          price: Number(form.price.value),
-          description: form.description.value.trim(),
-          sizes_text: sizes,
-          image_url,
-          is_active: form.active.checked
-        });
+       await adminRequest('add', {
+  name: form.name.value.trim(),
+  price: Number(form.price.value),
+  description: form.description.value.trim(),
+  sizes_text: sizes,
+  image_url,
+  images,
+  is_active: form.active.checked
+});
 
         form.reset();
         form.active.checked = true;
