@@ -904,6 +904,48 @@ select {
   }
 }
 ```
+```css
+/* Увеличенная нижняя панель на iPhone */
+@supports (-webkit-touch-callout: none) {
+  nav.bottomnav {
+    position: fixed !important;
+    left: 5px !important;
+    right: 5px !important;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+
+    padding: 14px 4px !important;
+    min-height: 100px !important;
+    box-sizing: border-box !important;
+  }
+
+  nav.bottomnav .navbtn {
+    min-width: 0 !important;
+    padding: 0 !important;
+    gap: 5px !important;
+    font-size: 11px !important;
+  }
+
+  nav.bottomnav .navbtn b {
+    width: 64px !important;
+    height: 64px !important;
+    max-width: 100% !important;
+    flex-shrink: 0 !important;
+    border-radius: 20px !important;
+  }
+
+  nav.bottomnav .navbtn b svg {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+  }
+}
+```
   </style>
 </head>
 <body>
