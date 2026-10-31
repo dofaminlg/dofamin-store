@@ -556,6 +556,33 @@ h1, h2, h3,
   height: 70px !important;
   border-radius: 24px !important;
 }
+```css
+/* Размер иконок */
+.bottomnav .navbtn b {
+  font-size: 28px !important;
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 20px !important;
+}
+
+/* Размер SVG-иконок */
+.bottomnav .navbtn b svg {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+}
+
+/* Мягкое белое свечение */
+.bottomnav .navbtn b svg {
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
+
+/* Свечение активной иконки */
+.bottomnav .navbtn.active b svg {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+}
+``` 
   </style>
 </head>
 <body>
