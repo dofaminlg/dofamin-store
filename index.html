@@ -1325,7 +1325,86 @@ if (headerCart) headerCart.addEventListener('click',()=>showPage('cart'));$('her
     $('cartItems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{cart=cart.filter(i=>String(i.id)!==b.dataset.remove);persist();});
     const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
     $('cartCheckout').innerHTML=cart.length?`<div class="totalbox"><div class="totalrow"><span>Товары</span><strong>${rub(total)}</strong></div><div class="totalrow big"><span>Итого</span><span>${rub(total)}</span></div><div class="notice">После отправки заявки менеджер свяжется с вами в Telegram для подтверждения наличия, доставки и оплаты. Оплата на сайте пока не подключена.</div><form id="checkoutForm" class="formgrid"><input class="field" name="name" placeholder="Ваше имя" required maxlength="80"><input class="field" name="telegram" placeholder="Ваш Telegram, например @username" required maxlength="80"><input class="field" name="city" placeholder="Город" required maxlength="100"><select class="field" name="payment" required><option value="card">Оплата переводом на карту (после связи с менеджером)</option><option value="cash">Наличными при личной встрече в Луганске</option></select><button class="btn primary" type="submit">Отправить заявку менеджеру</button></form><p class="hint">Заявка откроется в Telegram. До настройки серверной части она не сохраняется в личном кабинете.</p></div>`:'';
-    const form=$('checkoutForm');if(form){form.querySelector('[name="city"]').addEventListener('input',e=>{const cash=form.querySelector('[name="payment"] option[value="cash"]');cash.disabled=!/луганск|lugansk|luhansk/i.test(e.target.value);if(cash.disabled&&form.payment.value==='cash')form.payment.value='card';});form.addEventListener('submit',e=>{e.preventDefault();if(!cart.length)return;const f=new FormData(form);const order={name:f.get('name'),telegram:f.get('telegram'),city:f.get('city'),payment:f.get('payment'),items:cart.map(i=>`${i.name} × ${i.qty} — ${rub(i.price*i.qty)}`).join('\n'),total:rub(total)};const message=`Здравствуйте! Хочу оформить заказ в DOFAMIN.\nИмя: ${order.name}\nTelegram: ${order.telegram}\nГород: ${order.city}\nОплата: ${order.payment==='cash'?'наличные при встрече в Луганске':'перевод на карту после связи'}\n\nТовары:\n${order.items}\n\nИтого: ${order.total}`;window.open(`https://t.me/${MANAGER_TELEGRAM}?text=${encodeURIComponent(message)}`,'_blank','noopener');toast('Откройте Telegram и отправьте подготовленное сообщение менеджеру.');});}
+const form = $('checkoutForm');
+
+if (form) {
+  form.querySelector('[name="city"]').addEventListener('input', e => {
+    const cash = form.querySelector('[name="payment"] option[value="cash"]');
+    cash.disabled = !/луганск|lugansk|luhansk/i.test(e.target.value);
+
+    if (cash.disabled && form.payment.value === 'cash') {
+      form.payment.value = 'card';
+    }
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    if (!cart.length) return;
+
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = 'Сохраняем заказ...';
+
+    try {
+      const f = new FormData(form);
+      const name = String(f.get('name') || '').trim();
+      const telegram = String(f.get('telegram') || '').trim();
+      const city = String(f.get('city') || '').trim();
+      const payment = f.get('payment');
+
+      const items = cart.map(i => ({
+        id: String(i.id),
+        qty: Number(i.qty),
+        size: i.size || ''
+      }));
+
+      const result = await ordersRequest('create', {
+        name,
+        telegram,
+        city,
+        comment: 'Оплата: ' + (
+          payment === 'cash'
+            ? 'наличные при встрече в Луганске'
+            : 'перевод на карту после связи с менеджером'
+        ),
+        items
+      });
+
+      const order = result.order;
+
+      const message =
+        `Здравствуйте! Новый заказ DOFAMIN №${order.id}\n` +
+        `Имя: ${name}\n` +
+        `Telegram: ${telegram}\n` +
+        `Город: ${city}\n\n` +
+        `Товары:\n` +
+        cart.map(i =>
+          `${i.name} × ${i.qty} — ${rub(i.price * i.qty)}`
+        ).join('\n') +
+        `\n\nИтого: ${rub(order.total)}`;
+
+      cart = [];
+      persist();
+
+      window.open(
+        `https://t.me/${MANAGER_TELEGRAM}?text=${encodeURIComponent(message)}`,
+        '_blank',
+        'noopener'
+      );
+
+      toast('Заказ сохранён! Отправьте сообщение менеджеру в Telegram.');
+      renderCart();
+
+    } catch (error) {
+      console.error(error);
+      toast(error.message || 'Не удалось оформить заказ');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Отправить заявку менеджеру';
+    }
+  });
+}
   }
   function changeQty(id,delta){const item=cart.find(i=>String(i.id)===String(id));if(!item)return;item.qty+=delta;if(item.qty<1)cart=cart.filter(i=>String(i.id)!==String(id));persist();}
   function syncSearch(source){searchText=$(source).value;['search','search2'].forEach(id=>{if($(id)!==$(source))$(id).value=searchText;});renderProducts();}
