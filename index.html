@@ -1365,19 +1365,23 @@ async function loadMyOrders() {
         </article>`;
     }).join('');
 
-  } catch (error) {
-    console.error('Ошибка загрузки заказов:', error);
-    container.innerHTML = `
-      <div class="dof-orders-empty">
-        Не удалось загрузить заказы. Откройте магазин через Telegram и попробуйте снова.
-      </div>`;
+  
+```js
+} catch (error) {
+  console.error('Ошибка загрузки заказов:', error);
+  container.innerHTML = `
+    <div class="dof-orders-empty">
+      Не удалось загрузить заказы. Откройте магазин через Telegram и попробуйте снова.
+    </div>`;
   }
 }
-```
-  async function checkAdminAccess() {
+
+async function checkAdminAccess() {
   if (!window.Telegram?.WebApp?.initData) {
     return false;
   }
+```
+
 
   try {
     const response = await fetch(ADMIN_FUNCTION_URL, {
@@ -1572,6 +1576,7 @@ if (form) {
       button.textContent = 'Отправить заявку менеджеру';
     }
   });
+}
 }
 
 function changeQty(id,delta){const item=cart.find(i=>String(i.id)===String(id));if(!item)return;item.qty+=delta;if(item.qty<1)cart=cart.filter(i=>String(i.id)!==String(id));persist();}
