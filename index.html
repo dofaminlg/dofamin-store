@@ -1327,11 +1327,15 @@ async function checkAdminAccess() {
     count.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
   }
 }
- function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
 
   const page = $(name + 'Page');
-  if (page) page.classList.add('active');
+  if (page) {
+    page.classList.add('active');
+  }
 
   document.querySelectorAll('.navbtn').forEach(b => {
     b.classList.toggle('active', b.dataset.page === name);
@@ -1340,6 +1344,9 @@ async function checkAdminAccess() {
   if (name === 'cart') renderCart();
   if (name === 'favorites') renderFavorites();
   if (name === 'profile') loadMyOrders();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }.forEach(p=>p.classList.remove('active'));const page=$(name+'Page');if(page)page.classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='cart')renderCart();if(name==='favorites')renderFavorites();window.scrollTo({top:0,behavior:'smooth'});}
