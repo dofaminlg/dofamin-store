@@ -819,6 +819,55 @@ h1, h2, h3,
   }
 }
 ```
+.bottomnav {
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+}
+```css
+/* Мягкое сияние всего текста */
+body,
+body * {
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.16);
+}
+
+/* Заголовки и названия товаров */
+h1,
+h2,
+h3,
+.product-title,
+.product-name,
+.section-title {
+  text-shadow:
+    0 0 7px rgba(255, 255, 255, 0.25),
+    0 0 14px rgba(255, 255, 255, 0.08);
+}
+
+/* Цены */
+.price,
+.product-price {
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.28);
+}
+
+/* Текст кнопок и нижней навигации */
+button,
+.bottomnav .navbtn {
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+}
+
+/* Более заметное сияние выбранной вкладки */
+.bottomnav .navbtn.active {
+  text-shadow:
+    0 0 7px rgba(255, 255, 255, 0.4),
+    0 0 14px rgba(255, 255, 255, 0.15);
+}
+
+/* Не подсвечиваем вводимый пользователем текст */
+input,
+textarea,
+select {
+  text-shadow: none !important;
+}
+```    
   </style>
 </head>
 <body>
