@@ -710,6 +710,43 @@ h1, h2, h3,
   border-color: rgba(255, 255, 255, 0.42) !important;
 }
 ``` 
+```css
+/* Общая стеклянная подложка за иконками */
+.bottomnav {
+  position: fixed !important;
+  isolation: isolate !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Отдельный слой размытия позади иконок */
+.bottomnav::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -8px -6px;
+  border-radius: 30px;
+
+  background: rgba(25, 25, 30, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+  backdrop-filter: blur(30px) saturate(160%);
+
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  pointer-events: none;
+}
+
+/* Сами квадраты остаются немного прозрачными */
+.bottomnav .navbtn b {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+}
+```
   </style>
 </head>
 <body>
