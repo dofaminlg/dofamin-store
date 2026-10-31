@@ -980,6 +980,82 @@ select {
 .bottomnav .navbtn:active b svg {
   transform: scale(0.94);
 }
+```css
+/* Профиль DOFAMIN */
+.dof-profile {
+  padding: 22px !important;
+  border-radius: 24px !important;
+  background: rgba(255,255,255,.045) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.dof-profile-brand {
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-shadow: 0 0 12px rgba(255,255,255,.2);
+}
+
+.dof-manager-btn {
+  display: inline-block;
+  margin-top: 8px;
+  text-decoration: none;
+}
+
+.dof-orders-heading {
+  margin-top: 26px;
+}
+
+.dof-orders-list {
+  display: grid;
+  gap: 14px;
+}
+
+.dof-orders-empty {
+  padding: 30px 20px;
+  text-align: center;
+  border-radius: 24px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.10);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.dof-empty-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.dof-empty-icon svg {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.22));
+}
+
+.dof-orders-empty h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.dof-orders-empty p {
+  margin: 0 0 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: .68;
+}
+
+.dof-orders-empty .btn {
+  cursor: pointer;
+}
 ``` 
   </style>
 </head>
@@ -1010,7 +1086,48 @@ select {
   </section>
   <section id="favoritesPage" class="page"><div class="sectionhead"><h2>Избранное ❤️</h2></div><div class="grid" id="favoritesGrid"></div></section>
   <section id="cartPage" class="page"><div class="sectionhead"><h2>Корзина 🛒</h2></div><div id="cartItems"></div><div id="cartCheckout"></div></section>
-  <section id="profilePage" class="page"><div class="sectionhead"><h2>Профиль</h2></div><div class="adminnote"><strong>DOFAMIN</strong><p class="small">Заказы и вопросы по товарам — менеджеру.</p><a href="https://t.me/DofaminMg" target="_blank" rel="noopener" class="btn primary" style="display:inline-block;text-decoration:none">Написать менеджеру ↗</a><p class="hint">История заказов появится после настройки авторизации и серверной части магазина.</p></div></section>
+```html
+<section id="profilePage" class="page">
+  <div class="sectionhead">
+    <h2>Профиль</h2>
+  </div>
+
+  <div class="adminnote dof-profile">
+    <div class="dof-profile-brand">DOFAMIN®</div>
+    <p class="small">Твой стиль. Твои покупки. Твои заказы.</p>
+
+    <a href="https://t.me/DodaminMg"
+       target="_blank"
+       rel="noopener"
+       class="btn primary dof-manager-btn">
+      Написать менеджеру ↗
+    </a>
+  </div>
+
+  <div class="sectionhead dof-orders-heading">
+    <h2>Мои заказы</h2>
+    <span class="count" id="myOrdersCount">0</span>
+  </div>
+
+  <div id="myOrdersList" class="dof-orders-list">
+    <div class="dof-orders-empty">
+      <div class="dof-empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 7.5h16l-1 13H5l-1-13Z"/>
+          <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+        </svg>
+      </div>
+      <h3>Здесь будут твои заказы</h3>
+      <p>После оформления заказа здесь появятся товары, размеры, цены и информация о доставке.</p>
+      <button type="button" class="btn primary" data-page="catalog">
+        Перейти в каталог
+      </button>
+    </div>
+  </div>
+</section>
+
   <div class="footer">DOFAMIN® — БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА.</div>
 </main>
 
@@ -1085,7 +1202,37 @@ select {
   const MANAGER_TELEGRAM = 'DofaminMg';
   const ADMIN_FUNCTION_URL =
   'https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/dofamin-admin';
+const ORDERS_FUNCTION_URL =
+  'https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/dynamic-endpoint';
 
+async function ordersRequest(action, extra = {}) {
+  const initData = window.Telegram?.WebApp?.initData;
+
+  if (!initData) {
+    throw new Error('Открой магазин через Telegram');
+  }
+
+  const response = await fetch(ORDERS_FUNCTION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_PUBLISHABLE_KEY
+    },
+    body: JSON.stringify({
+      initData,
+      action,
+      ...extra
+    })
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.ok) {
+    throw new Error(result.error || 'Не удалось выполнить запрос');
+  }
+
+  return result;
+}
 async function checkAdminAccess() {
   if (!window.Telegram?.WebApp?.initData) {
     return false;
