@@ -2478,7 +2478,55 @@ function changeQty(id, delta, size = '') {
     }
     return result;
   }
+async function loadAdminCategories() {
+  const result = await adminRequest("categories_list");
+  const categories = result.categories || [];
 
+  const list = $("adminCategories");
+  const select = $("productCategory");
+
+  if (!list || !select) return;
+
+  list.innerHTML = "";
+  select.innerHTML = '<option value="">Без категории</option>';
+
+  categories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    select.appendChild(option);
+
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0";
+
+    const name = document.createElement("span");
+    name.textContent = category.name;
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "btn";
+    remove.textContent = "Удалить";
+
+    remove.addEventListener("click", async () => {
+      if (!confirm(`Удалить категорию «${category.name}»?`)) return;
+
+      try {
+        await adminRequest("category_delete", { id: category.id });
+        await loadAdminCategories();
+        $("adminMessage").textContent = "Категория удалена";
+      } catch (error) {
+        $("adminMessage").textContent = "Ошибка: " + error.message;
+      }
+    });
+
+    row.append(name, remove);
+    list.appendChild(row);
+  });
+
+  if (categories.length === 0) {
+    list.textContent = "Категорий пока нет";
+  }
+}
   function createAdminPanel() {
     const profile = $('profilePage');
     if (!profile || $('adminPanel')) return;
@@ -2492,6 +2540,18 @@ function changeQty(id, delta, size = '') {
       <p class="small">Управление товарами магазина</p>
 
       <form id="adminForm" class="formgrid">
+       <div class="adminnote" style="margin-bottom:14px">
+  <h3>📂 Категории</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <input class="field" id="newCategoryName" placeholder="Название новой категории">
+    <button class="btn" id="addCategoryBtn" type="button">Добавить категорию</button>
+  </div>
+  <div id="adminCategories" class="small">Загружаем категории...</div>
+</div>
+
+<select class="field" name="category_id" id="productCategory">
+  <option value="">Без категории</option>
+</select> 
         <input class="field" name="name" placeholder="Название товара" required maxlength="200">
         <input class="field" name="price" type="number" min="0" step="0.01" placeholder="Цена в рублях" required>
         <textarea class="field" name="description" placeholder="Описание товара"></textarea>
@@ -2531,7 +2591,28 @@ function changeQty(id, delta, size = '') {
     `;
 
     profile.appendChild(panel);
+$("addCategoryBtn").addEventListener("click", async () => {
+  const input = $("newCategoryName");
+  const name = input.value.trim();
 
+  if (!name) {
+    $("adminMessage").textContent = "Введите название категории";
+    return;
+  }
+
+  try {
+    await adminRequest("category_add", { name });
+    input.value = "";
+    await loadAdminCategories();
+    $("adminMessage").textContent = "Категория добавлена!";
+  } catch (error) {
+    $("adminMessage").textContent = "Ошибка: " + error.message;
+  }
+});
+
+loadAdminCategories().catch(error => {
+  $("adminCategories").textContent = "Ошибка загрузки категорий: " + error.message;
+});
     const form = $('adminForm');
 
     form.addEventListener('submit', async event => {
@@ -2590,6 +2671,7 @@ const image_url = images[0] || '';
   sizes_text: sizes,
   image_url,
   images,
+  category_id: form.category_id.value || null,
   is_active: form.active.checked
 });
 
