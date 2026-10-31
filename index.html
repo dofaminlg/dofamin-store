@@ -1451,6 +1451,13 @@ function showPage(name) {
   if (name === 'cart') renderCart();
   if (name === 'favorites') renderFavorites();
   if (name === 'profile') loadMyOrders();
+  if (name === 'product') {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  $('productPage').classList.add('active');
+}
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
