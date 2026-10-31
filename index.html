@@ -806,6 +806,19 @@ h1, h2, h3,
   border-color: rgba(255, 255, 255, 0.3) !important;
 }
 ```
+```css
+/* Учитываем безопасную область экрана */
+.bottomnav {
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Дополнительная страховка для iPhone и iPad */
+@supports (-webkit-touch-callout: none) {
+  .bottomnav {
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+```
   </style>
 </head>
 <body>
