@@ -1376,12 +1376,12 @@ async function loadMyOrders() {
   }
 }
 
+
+```js
 async function checkAdminAccess() {
   if (!window.Telegram?.WebApp?.initData) {
     return false;
   }
-```
-
 
   try {
     const response = await fetch(ADMIN_FUNCTION_URL, {
@@ -1403,12 +1403,15 @@ async function checkAdminAccess() {
     return false;
   }
 }
-  const hasConfig = SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_') ||
-                    SUPABASE_PUBLISHABLE_KEY.startsWith('eyJ');
-  const db = (window.supabase && hasConfig)
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
-    : null;
-  let products = [], categories = [], activeCategory = 'Все', searchText = '';
+
+const hasConfig = SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_') ||
+                  SUPABASE_PUBLISHABLE_KEY.startsWith('eyJ');
+
+const db = (window.supabase && hasConfig)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+  : null;
+
+let products = [], categories = [], activeCategory = 'Все', searchText = '';
   let cart = JSON.parse(localStorage.getItem('dofamin_cart') || '[]');
   let favorites = JSON.parse(localStorage.getItem('dofamin_favorites') || '[]');
   const $ = id => document.getElementById(id);
