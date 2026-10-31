@@ -2008,21 +2008,38 @@ function openProduct(id) {
 .dof-carousel-arrow.prev { left: 8px; }
 .dof-carousel-arrow.next { right: 8px; }
 
+.dof-carousel {
+  position: relative !important;
+}
+
 .dof-carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-  margin-top: 10px;
+  position: absolute !important;
+  bottom: 12px !important;
+  left: 0 !important;
+  right: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  z-index: 10 !important;
 }
 
 .dof-carousel-dots span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #666;
+  display: block !important;
+  width: 11px !important;
+  height: 11px !important;
+  border-radius: 50% !important;
+  background: #777 !important;
+  border: 1px solid #fff !important;
+  cursor: pointer;
 }
 
 .dof-carousel-dots span.active {
+  background: #a020f0 !important;
+  border-color: #d9a3ff !important;
+  box-shadow: 0 0 8px #a020f0, 0 0 16px #a020f0 !important;
+}
   background: #b65cff;
 } 
     </style>
