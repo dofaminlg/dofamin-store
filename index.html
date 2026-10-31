@@ -1541,6 +1541,16 @@ if (form) {
       </div>
       <div id="adminProducts">Загружаем товары...</div>
       <p class="hint" id="adminMessage"></p>
+      <div class="sectionhead" style="margin-top:24px">
+  <h3>📦 Заказы покупателей</h3>
+  <button class="btn" id="adminOrdersRefresh" type="button">
+    Обновить
+  </button>
+</div>
+
+<div id="adminOrders">
+  Загружаем заказы...
+</div>
     `;
 
     profile.appendChild(panel);
@@ -1606,8 +1616,11 @@ if (form) {
       }
     });
 
-    $('adminRefresh').addEventListener('click', loadAdminProducts);
-    loadAdminProducts();
+   $('adminRefresh').addEventListener('click', loadAdminProducts);
+$('adminOrdersRefresh').addEventListener('click', loadAdminOrders);
+
+loadAdminProducts();
+loadAdminOrders();
   }
 
   async function loadAdminProducts() {
@@ -1714,7 +1727,114 @@ if (form) {
       target.textContent = 'Ошибка загрузки: ' + error.message;
     }
   }
+async function loadAdminOrders() {
+  const target = $('adminOrders');
+  if (!target) return;
 
+  target.textContent = 'Загружаем заказы...';
+
+  try {
+    const result = await adminRequest('orders_list');
+    const orders = result.orders || [];
+
+    if (!orders.length) {
+      target.textContent = 'Заказов пока нет.';
+      return;
+    }
+
+    const statuses = [
+      'Новый',
+      'Оплачен',
+      'В пути',
+      'Доставлен',
+      'Доставка задерживается'
+    ];
+
+    target.innerHTML = orders.map(order => `
+      <article style="border-top:1px solid var(--line);padding:15px 0">
+        <strong>Заказ №${safe(order.id)}</strong>
+        <div class="small" style="margin:5px 0">
+          ${safe(order.customer_name || 'Покупатель')}
+          · ${new Date(order.created_at).toLocaleDateString('ru-RU')}
+        </div>
+
+        <div style="margin:8px 0">
+          Статус: <strong>${safe(order.status || 'Новый')}</strong>
+        </div>
+
+        ${(order.items || []).map(item => `
+          <div style="display:flex;gap:10px;align-items:center;margin:10px 0">
+            ${item.image_url
+              ? `<img src="${safe(item.image_url)}" alt=""
+                   style="width:64px;height:64px;object-fit:cover;border-radius:8px">`
+              : `<div style="width:64px;height:64px;background:var(--line);
+                   border-radius:8px;display:grid;place-items:center">◇</div>`
+            }
+            <div>
+              <strong>${safe(item.product_name || 'Товар')}</strong>
+              <div class="small">Размер: ${safe(item.size || 'Не указан')}</div>
+              <div class="small">Количество: ${Number(item.quantity) || 0}</div>
+              <div class="small">
+                ${rub(Number(item.price) * Number(item.quantity))}
+              </div>
+            </div>
+          </div>
+        `).join('')}
+
+        <div style="margin:10px 0">
+          <strong>Итого: ${rub(order.total)}</strong>
+        </div>
+
+        <label class="small" for="status-${safe(order.id)}">
+          Изменить статус заказа
+        </label>
+
+        <select class="field" id="status-${safe(order.id)}">
+          ${statuses.map(status => `
+            <option value="${safe(status)}"
+              ${status === (order.status || 'Новый') ? 'selected' : ''}>
+              ${safe(status)}
+            </option>
+          `).join('')}
+        </select>
+
+        <button class="btn primary"
+          type="button"
+          data-save-status="${safe(order.id)}"
+          style="margin-top:8px">
+          Сохранить статус
+        </button>
+      </article>
+    `).join('');
+
+    target.querySelectorAll('[data-save-status]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const id = button.dataset.saveStatus;
+        const select = $('status-' + id);
+
+        button.disabled = true;
+        button.textContent = 'Сохраняем...';
+
+        try {
+          await adminRequest('set_status', {
+            id,
+            status: select.value
+          });
+
+          toast('Статус заказа обновлён');
+          await loadAdminOrders();
+        } catch (error) {
+          toast('Ошибка: ' + error.message);
+          button.disabled = false;
+          button.textContent = 'Сохранить статус';
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Ошибка загрузки заказов:', error);
+    target.textContent = 'Не удалось загрузить заказы: ' + error.message;
+  }
+}
   async function initializeAdmin() {
     if (!window.Telegram?.WebApp?.initData) return;
 
