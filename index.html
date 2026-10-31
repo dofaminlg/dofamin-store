@@ -522,6 +522,40 @@ h1, h2, h3,
   gap: 7px !important;
   font-size: 11px !important;
 } 
+/* Увеличиваем сами иконки */
+.bottomnav .navbtn b {
+  font-size: 36px !important;
+}
+
+/* Крупные SVG-иконки */
+.bottomnav .navbtn b svg {
+  width: 39px !important;
+  height: 39px !important;
+  min-width: 39px;
+  min-height: 39px;
+  stroke-width: 1.9 !important;
+}
+
+/* Дополнительное белое сияние */
+.bottomnav .navbtn b svg {
+  filter:
+    drop-shadow(0 0 4px rgba(255, 255, 255, 0.45))
+    drop-shadow(0 0 9px rgba(255, 255, 255, 0.18));
+}
+
+/* Сияние выбранной иконки */
+.bottomnav .navbtn.active b svg {
+  filter:
+    drop-shadow(0 0 6px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+}
+
+/* Немного увеличиваем сами стеклянные квадраты */
+.bottomnav .navbtn b {
+  width: 70px !important;
+  height: 70px !important;
+  border-radius: 24px !important;
+}
   </style>
 </head>
 <body>
