@@ -1348,8 +1348,6 @@ function showPage(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}.forEach(p=>p.classList.remove('active'));const page=$(name+'Page');if(page)page.classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='cart')renderCart();if(name==='favorites')renderFavorites();window.scrollTo({top:0,behavior:'smooth'});}
   document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
   const headerCart = $('headerCart');
 if (headerCart) headerCart.addEventListener('click',()=>showPage('cart'));$('heroCatalog').addEventListener('click',()=>showPage('catalog'));
