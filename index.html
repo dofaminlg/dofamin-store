@@ -1590,7 +1590,7 @@ document.querySelectorAll('.size-option').forEach(btn => {
 } 
   function productCard(p){
     const id=String(p.id), fav=favorites.includes(id), image=p.image_url;
-    const photo=image?`<img class="photo" src="${safe(image)}" alt="${safe(p.name)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'">`:`<div class="placeholder">◇</div>`;
+   const photo=image?`<img class="photo" src="${safe(image)}" alt="${safe(p.name)}" loading="lazy" style="width:100%;height:260px;object-fit:contain;background:#fff;padding:10px;box-sizing:border-box" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'">`:`<div class="placeholder">◇</div>`;
     const tags=[p.is_hit?'ХИТ':'',p.is_new?'НОВИНКА':''].filter(Boolean).join(' · ');
     return `<article class="product" data-open-product="${safe(id)}">${tags?`<div class="tag">${safe(tags)}</div>`:''}<button class="heart" data-fav="${safe(id)}" aria-label="Добавить в избранное">${fav?'♥':'♡'}</button>${photo}<div class="pbody"><div class="pname">${safe(p.name||'Товар DOFAMIN')}</div><div class="pdesc">${safe(p.description||p.category||'')}</div><div class="price">${rub(p.price)}</div><button class="btn primary" data-add="${safe(id)}">В корзину</button></div></article>`;
   }
