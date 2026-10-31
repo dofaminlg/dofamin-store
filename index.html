@@ -1732,7 +1732,25 @@ if (form) {
 }
 }
 
-function changeQty(id,delta){const item=cart.find(i=>String(i.id)===String(id));if(!item)return;item.qty+=delta;if(item.qty<1)cart=cart.filter(i=>String(i.id)!==String(id));persist();}
+function changeQty(id, delta, size = '') {
+  const item = cart.find(i =>
+    String(i.id) === String(id) &&
+    String(i.size || '') === String(size || '')
+  );
+
+  if (!item) return;
+
+  item.qty += delta;
+
+  if (item.qty < 1) {
+    cart = cart.filter(i =>
+      !(String(i.id) === String(id) &&
+        String(i.size || '') === String(size || ''))
+    );
+  }
+
+  persist();
+}
   function syncSearch(source){searchText=$(source).value;['search','search2'].forEach(id=>{if($(id)!==$(source))$(id).value=searchText;});renderProducts();}
   $('search').addEventListener('input',()=>syncSearch('search'));$('search2').addEventListener('input',()=>syncSearch('search2'));
   $('sort').addEventListener('change',()=>{$('sort2').value=$('sort').value;renderProducts();});$('sort2').addEventListener('change',()=>{$('sort').value=$('sort2').value;renderProducts();});
