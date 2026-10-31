@@ -1134,6 +1134,13 @@ select {
   </div>
 </section>
   <section class="dof-orders-history" style="margin-top:28px">
+  <button type="button" id="historyToggle"
+    style="width:100%;display:flex;justify-content:space-between;align-items:center;background:#151515;color:#fff;border:1px solid #303030;border-radius:14px;padding:16px;font-size:17px;font-weight:600;cursor:pointer">
+    <span>История покупок</span>
+    <span id="historyArrow">＋</span>
+  </button>
+
+  <div id="historyContent" style="display:none;margin-top:14px">
   <div class="sectionhead dof-orders-heading">
     <h2>История покупок</h2>
     <span class="count" id="purchaseHistoryCount">0</span>
@@ -1142,6 +1149,7 @@ select {
   <div id="purchaseHistoryList" class="dof-orders-list">
     <div class="dof-orders-empty">
       Здесь пока нет завершённых покупок.
+    </div>
     </div>
   </div>
 </section>
@@ -1253,7 +1261,21 @@ async function ordersRequest(action, extra = {}) {
 }
 
 
+const historyToggle = document.getElementById('historyToggle');
+const historyContent = document.getElementById('historyContent');
+const historyArrow = document.getElementById('historyArrow');
 
+if (historyToggle && historyContent) {
+  historyToggle.addEventListener('click', () => {
+    const isOpen = historyContent.style.display !== 'none';
+
+    historyContent.style.display = isOpen ? 'none' : 'block';
+
+    if (historyArrow) {
+      historyArrow.textContent = isOpen ? '＋' : '−';
+    }
+  });
+}
 async function loadMyOrders() {
   const container = $('myOrdersList');
   const counter = $('myOrdersCount');
