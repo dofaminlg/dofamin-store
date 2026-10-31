@@ -1474,8 +1474,15 @@ function showPage(name) {
 }
 
   document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
-  const headerCart = $('headerCart');
-if (headerCart) headerCart.addEventListener('click',()=>showPage('cart'));$('heroCatalog').addEventListener('click',()=>showPage('catalog'));
+ const headerCart = $('headerCart');
+if (headerCart) {
+  headerCart.addEventListener('click', () => showPage('cart'));
+}
+
+const heroCatalog = $('heroCatalog');
+if (heroCatalog) {
+  heroCatalog.addEventListener('click', () => showPage('catalog'));
+}
   function filtered(){
     let list=products.filter(p=>(p.is_active===undefined||p.is_active===true));
     if(activeCategory!=='Все')list=list.filter(p=>(p.category||'Без категории')===activeCategory);
