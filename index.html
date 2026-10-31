@@ -1682,29 +1682,40 @@ function changeQty(id,delta){const item=cart.find(i=>String(i.id)===String(id));
       message.textContent = 'Сохраняем товар...';
 
       try {
-        const file = form.image.files[0];
-        let image_url = '';
+const files = Array.from(form.images.files);
 
-        if (file) {
-          if (file.size > 5 * 1024 * 1024) {
-            throw new Error('Фотография должна быть не больше 5 МБ');
-          }
+if (files.length > 15) {
+  throw new Error('Можно загрузить не больше 15 фотографий');
+}
 
-          const base64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-          });
+const images = [];
 
-          const uploaded = await adminRequest('upload', {
-            fileName: file.name,
-            contentType: file.type,
-            base64
-          });
+for (const file of files) {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    throw new Error('Используйте JPG, PNG или WebP');
+  }
 
-          image_url = uploaded.image_url;
-        }
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error('Каждая фотография должна быть не больше 5 МБ');
+  }
+
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  const uploaded = await adminRequest('upload', {
+    fileName: file.name,
+    contentType: file.type,
+    base64
+  });
+
+  images.push(uploaded.image_url);
+}
+
+const image_url = images[0] || '';}
 
         const sizes = form.sizes.value
           .split(',')
