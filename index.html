@@ -1234,56 +1234,8 @@ async function ordersRequest(action, extra = {}) {
   return result;
 }
 
+
 async function loadMyOrders() {
- async function loadMyOrders() {
-  const container = $('myOrdersList');
-  const counter = $('myOrdersCount');
-
-  if (!container) return;
-
-  container.innerHTML = '<div class="dof-orders-empty">Загружаем заказы...</div>';
-
-  try {
-    const result = await ordersRequest('list');
-    const orders = result.orders || [];
-
-    if (counter) counter.textContent = orders.length;
-
-    if (!orders.length) {
-      container.innerHTML = '<div class="dof-orders-empty">У вас пока нет заказов</div>';
-      return;
-    }
-
-    container.innerHTML = orders.map(order => `
-      <article class="dof-order-card">
-        <div class="dof-order-head">
-          <strong>Заказ №${safe(order.id)}</strong>
-          <span>${safe(order.status || 'Новый')}</span>
-        </div>
-        <div class="dof-order-date">${new Date(order.created_at).toLocaleDateString('ru-RU')}</div>
-        <div class="dof-order-items">
-          ${(order.items || []).map(item => `
-            <div class="dof-order-item">
-              <div>
-                <strong>${safe(item.product_name)}</strong>
-                <div>Размер: ${safe(item.size || 'Не указан')}</div>
-                <div>Количество: ${Number(item.quantity) || 0}</div>
-              </div>
-              <strong>${rub(Number(item.price) * Number(item.quantity))}</strong>
-            </div>
-          `).join('')}
-        </div>
-        <div class="dof-order-total">
-          <span>Итого</span>
-          <strong>${rub(order.total)}</strong>
-        </div>
-      </article>
-    `).join('');
-  } catch (error) {
-    console.error('Ошибка загрузки заказов:', error);
-    container.innerHTML = '<div class="dof-orders-empty">Не удалось загрузить заказы. Откройте магазин через Telegram и попробуйте снова.</div>';
-  }
-} 
   const container = $('myOrdersList');
   const counter = $('myOrdersCount');
 
@@ -1301,124 +1253,74 @@ async function loadMyOrders() {
     if (!orders.length) {
       container.innerHTML = `
         <div class="dof-orders-empty">
-          <div style="font-size:32px;margin-bottom:10px">◇</div>
           <strong>Пока нет заказов</strong>
-          <div style="margin-top:6px">Самое время выбрать что-нибудь особенное.</div>
+          <div style="margin-top:6px">
+            Самое время выбрать что-нибудь особенное.
+          </div>
         </div>`;
       return;
     }
 
     const escapeHtml = value => safe(String(value ?? ''));
 
-    const statusStyle = status => {
-      const styles = {
-        'Новый': 'background:#e8efff;color:#3156a5',
-        'Оплачен': 'background:#e4f7e9;color:#24723c',
-        'В пути': 'background:#e5f3ff;color:#17659a',
-        'Доставлен': 'background:#e4f7e9;color:#24723c',
-        'Доставка задерживается': 'background:#fff0dc;color:#92521b'
-      };
-
-      return styles[status] || 'background:var(--line);color:var(--text)';
-    };
-
     container.innerHTML = orders.map(order => {
       const status = order.status || 'Новый';
       const items = order.items || [];
       const date = order.created_at
-        ? new Date(order.created_at).toLocaleDateString('ru-RU', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric'
-          })
+        ? new Date(order.created_at).toLocaleDateString('ru-RU')
         : '';
 
       return `
         <article class="dof-order-card"
-          style="overflow:hidden;border:1px solid var(--line);
-          border-radius:18px;margin-bottom:18px;
+          style="padding:17px;border:1px solid var(--line);
+          border-radius:18px;margin-bottom:16px;
           background:var(--card, #fff)">
 
-          <div style="padding:17px;border-bottom:1px solid var(--line)">
-            <div style="font-size:11px;letter-spacing:2px;opacity:.6">
-              DOFAMIN® / ЗАКАЗ
-            </div>
-
-            <div style="display:flex;justify-content:space-between;
-              align-items:flex-start;gap:12px;flex-wrap:wrap;margin-top:9px">
-
-              <div style="flex:1;min-width:0">
-                <strong style="display:block;overflow-wrap:anywhere;
-                  font-size:15px">
-                  №${escapeHtml(order.id)}
-                </strong>
-                <div class="dof-order-date"
-                  style="margin-top:8px;opacity:.65;font-size:13px">
-                  ${escapeHtml(date)}
-                </div>
-              </div>
-
-              <span style="display:inline-block;padding:7px 10px;
-                border-radius:999px;font-size:12px;font-weight:600;
-                ${statusStyle(status)}">
-                ${escapeHtml(status)}
-              </span>
-            </div>
+          <div style="display:flex;justify-content:space-between;
+            align-items:center;gap:10px;flex-wrap:wrap">
+            <strong>Заказ №${escapeHtml(order.id)}</strong>
+            <span>${escapeHtml(status)}</span>
           </div>
 
-          <div style="padding:17px">
+          <div style="margin-top:8px;font-size:13px;opacity:.65">
+            ${escapeHtml(date)}
+          </div>
+
+          <div style="margin-top:16px">
             ${items.map(item => {
               const quantity = Number(item.quantity) || 0;
               const price = Number(item.price) || 0;
 
               return `
-                <div class="dof-order-item"
-                  style="display:flex;justify-content:space-between;
-                  align-items:center;gap:14px;padding:5px 0 16px">
-
-                  <div style="min-width:0;flex:1">
-                    <strong style="display:block;font-size:16px;
-                      overflow-wrap:anywhere">
-                      ${escapeHtml(item.product_name || 'Товар')}
-                    </strong>
-
-                    <div style="font-size:13px;opacity:.65;margin-top:7px">
+                <div style="display:flex;justify-content:space-between;
+                  gap:12px;padding:8px 0">
+                  <div style="min-width:0">
+                    <strong>${escapeHtml(item.product_name || 'Товар')}</strong>
+                    <div style="font-size:13px;margin-top:5px">
                       Размер: ${escapeHtml(item.size || 'Не указан')}
                     </div>
-
-                    <div style="font-size:13px;opacity:.65;margin-top:4px">
-                      Количество: ${quantity} шт.
+                    <div style="font-size:13px">
+                      Количество: ${quantity}
                     </div>
                   </div>
-
-                  <strong style="white-space:nowrap;font-size:15px">
+                  <strong style="white-space:nowrap">
                     ${rub(price * quantity)}
                   </strong>
                 </div>`;
             }).join('')}
-
-            <div style="border-top:1px solid var(--line);padding-top:16px;
-              display:flex;justify-content:space-between;align-items:center;
-              gap:12px">
-              <span style="font-size:13px;opacity:.65">Сумма заказа</span>
-              <strong style="font-size:21px">
-                ${rub(order.total)}
-              </strong>
-            </div>
           </div>
 
-          <div style="padding:13px 17px;background:var(--line);
-            display:flex;justify-content:space-between;align-items:center;
-            gap:12px">
-            <span style="font-size:13px">Итого</span>
-            <strong style="font-size:17px">${rub(order.total)}</strong>
+          <div style="display:flex;justify-content:space-between;
+            border-top:1px solid var(--line);
+            padding-top:14px;margin-top:10px">
+            <span>Итого</span>
+            <strong>${rub(order.total)}</strong>
           </div>
         </article>`;
     }).join('');
 
   } catch (error) {
     console.error('Ошибка загрузки заказов:', error);
-
     container.innerHTML = `
       <div class="dof-orders-empty">
         Не удалось загрузить заказы. Откройте магазин через Telegram
@@ -1426,38 +1328,7 @@ async function loadMyOrders() {
       </div>`;
   }
 }
-
-    container.innerHTML = orders.map(order => `
-      <article class="dof-order-card">
-        <div class="dof-order-head">
-          <strong>Заказ №${safe(order.id)}</strong>
-          <span>${safe(order.status || 'Новый')}</span>
-        </div>
-        <div class="dof-order-date">${new Date(order.created_at).toLocaleDateString('ru-RU')}</div>
-        <div class="dof-order-items">
-          ${(order.items || []).map(item => `
-            <div class="dof-order-item">
-              <div>
-                <strong>${safe(item.product_name)}</strong>
-                <div>Размер: ${safe(item.size || 'Не указан')}</div>
-                <div>Количество: ${Number(item.quantity) || 0}</div>
-              </div>
-              <strong>${rub(Number(item.price) * Number(item.quantity))}</strong>
-            </div>
-          `).join('')}
-        </div>
-        <div class="dof-order-total">
-          <span>Итого</span>
-          <strong>${rub(order.total)}</strong>
-        </div>
-      </article>
-    `).join('');
-  } catch (error) {
-    console.error('Ошибка загрузки заказов:', error);
-    container.innerHTML = '<div class="dof-orders-empty">Не удалось загрузить заказы. Откройте магазин через Telegram и попробуйте снова.</div>';
-  }
-} 
-async function checkAdminAccess() {
+  async function checkAdminAccess() {
   if (!window.Telegram?.WebApp?.initData) {
     return false;
   }
@@ -1656,7 +1527,7 @@ if (form) {
     }
   });
 }
-  }
+    
   function changeQty(id,delta){const item=cart.find(i=>String(i.id)===String(id));if(!item)return;item.qty+=delta;if(item.qty<1)cart=cart.filter(i=>String(i.id)!==String(id));persist();}
   function syncSearch(source){searchText=$(source).value;['search','search2'].forEach(id=>{if($(id)!==$(source))$(id).value=searchText;});renderProducts();}
   $('search').addEventListener('input',()=>syncSearch('search'));$('search2').addEventListener('input',()=>syncSearch('search2'));
