@@ -1068,21 +1068,35 @@ select {
 </header>
 <main class="wrap">
   <section id="homePage" class="page active">
-   <div class="hero hero-banner">
-  <img src="./dofamin-banner.png" alt="DOFAMIN" class="hero-logo">
+   <div class="dof-carousel">
+  <div class="dof-carousel-track" id="dofCarouselTrack">
+
+    <a class="dof-slide"
+       href="https://t.me/+47v_EHUngYI3YzJi"
+       target="_blank" rel="noopener noreferrer">
+      <img src="./dofamin-banner.png" alt="DOFAMIN">
+    </a>
+
+    <a class="dof-slide"
+       href="https://t.me/+47v_EHUngYI3YzJi"
+       target="_blank" rel="noopener noreferrer">
+      <img src="./reviews-banner.png" alt="Отзывы DOFAMIN">
+    </a>
+
+  </div>
+
+  
+
+  <div class="dof-carousel-dots" id="dofCarouselDots">
+    <span class="active"></span>
+    <span></span>
+  </div>
 </div>
-<button class="btn primary" id="heroCatalog">Перейти в каталог →</button>
 
-<a href="https://t.me/+47v_EHUngYI3YzJi"
-   target="_blank"
-   rel="noopener noreferrer"
-   style="display:block;width:100%;margin:18px 0;">
-
-  <img src="reviews-banner.png"
-       alt="Отзывы DOFAMIN"
-       style="display:block;width:100%;height:auto;border-radius:14px;">
-
-</a>
+<button class="btn primary" id="heroCatalog">
+  Перейти в каталог →
+</button>
+    
     <div class="sectionhead"><h2>Каталог</h2><span class="count" id="homeCount"></span></div>
     <div class="searchrow"><input class="field" id="search" placeholder="🔎 Поиск товаров..." aria-label="Поиск товаров"></div>
     <div class="filters" id="categories"></div>
@@ -1272,7 +1286,53 @@ async function ordersRequest(action, extra = {}) {
   return result;
 }
 
+// Карусель DOFAMIN
+const carouselTrack = document.getElementById('dofCarouselTrack');
+const carouselSlides = document.querySelectorAll('.dof-slide');
+const carouselDots = document.querySelectorAll('#dofCarouselDots span');
 
+let carouselIndex = 0;
+let carouselStartX = 0;
+
+function showCarouselSlide(index) {
+  if (!carouselTrack || !carouselSlides.length) return;
+
+  carouselIndex = (index + carouselSlides.length) % carouselSlides.length;
+
+  carouselTrack.style.transform =
+    `translateX(-${carouselIndex * 100}%)`;
+
+  carouselDots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === carouselIndex);
+  });
+}
+
+// Переключение нажатием на кружочки
+carouselDots.forEach((dot, index) => {
+  dot.style.cursor = 'pointer';
+
+  dot.addEventListener('click', () => {
+    showCarouselSlide(index);
+  });
+});
+
+// Перелистывание пальцем
+if (carouselTrack) {
+  carouselTrack.addEventListener('touchstart', event => {
+    carouselStartX = event.touches[0].clientX;
+  }, { passive: true });
+
+  carouselTrack.addEventListener('touchend', event => {
+    const difference =
+      event.changedTouches[0].clientX - carouselStartX;
+
+    if (Math.abs(difference) > 45) {
+      showCarouselSlide(
+        carouselIndex + (difference < 0 ? 1 : -1)
+      );
+    }
+  }, { passive: true });
+}
 const historyToggle = document.getElementById('historyToggle');
 const historyContent = document.getElementById('historyContent');
 const historyArrow = document.getElementById('historyArrow');
@@ -1757,6 +1817,67 @@ function openProduct(id) {
           font-size: 30px;
         }
       }
+   .dof-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  margin-bottom: 18px;
+}
+
+.dof-carousel-track {
+  display: flex;
+  transition: transform .35s ease;
+  touch-action: pan-y;
+}
+
+.dof-slide {
+  flex: 0 0 100%;
+  display: block;
+  min-width: 100%;
+}
+
+.dof-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.dof-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  background: rgba(0,0,0,.65);
+  color: white;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+.dof-carousel-arrow.prev { left: 8px; }
+.dof-carousel-arrow.next { right: 8px; }
+
+.dof-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.dof-carousel-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #666;
+}
+
+.dof-carousel-dots span.active {
+  background: #b65cff;
+} 
     </style>
 
     <div class="premium-product">
