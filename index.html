@@ -583,6 +583,40 @@ h1, h2, h3,
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
 }
 ``` 
+```css
+/* Адаптация нижней навигации для Android и узких экранов */
+.bottomnav {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: clamp(4px, 2vw, 12px) !important;
+  padding-left: clamp(8px, 3vw, 16px) !important;
+  padding-right: clamp(8px, 3vw, 16px) !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+/* Кнопки не должны слипаться */
+.bottomnav .navbtn {
+  min-width: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Чуть компактнее стеклянные квадраты на узких экранах */
+.bottomnav .navbtn b {
+  width: clamp(46px, 14vw, 58px) !important;
+  height: clamp(46px, 14vw, 58px) !important;
+  border-radius: 18px !important;
+}
+
+/* Иконки подстраиваются под размер квадрата */
+.bottomnav .navbtn b svg {
+  width: clamp(25px, 7vw, 30px) !important;
+  height: clamp(25px, 7vw, 30px) !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+``` 
   </style>
 </head>
 <body>
