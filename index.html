@@ -1330,7 +1330,7 @@ const form = $('checkoutForm');
 if (form) {
   form.querySelector('[name="city"]').addEventListener('input', e => {
     const cash = form.querySelector('[name="payment"] option[value="cash"]');
-    cash.disabled = !/луганск|lugansk|luhansk/i.test(e.target.value);
+    cash.disabled = false;
 
     if (cash.disabled && form.payment.value === 'cash') {
       form.payment.value = 'card';
