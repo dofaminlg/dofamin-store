@@ -2383,6 +2383,14 @@ async function loadAdminOrders() {
           style="margin-top:8px">
           Сохранить статус
         </button>
+                ${order.status === 'Доставлен' ? `
+          <button class="btn"
+            type="button"
+            data-archive-order="${safe(order.id)}"
+            style="margin-top:8px">
+            Убрать в архив
+          </button>
+        ` : ''}
       </article>
     `).join('');
 
@@ -2406,6 +2414,24 @@ async function loadAdminOrders() {
           toast('Ошибка: ' + error.message);
           button.disabled = false;
           button.textContent = 'Сохранить статус';
+        }
+      });
+    });
+    target.querySelectorAll('[data-archive-order]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const id = button.dataset.archiveOrder;
+
+        button.disabled = true;
+        button.textContent = 'Переносим...';
+
+        try {
+          await adminRequest('archive_order', { id });
+          toast('Заказ перенесён в архив');
+          await loadAdminOrders();
+        } catch (error) {
+          toast('Ошибка: ' + error.message);
+          button.disabled = false;
+          button.textContent = 'Убрать в архив';
         }
       });
     });
