@@ -1235,6 +1235,55 @@ async function ordersRequest(action, extra = {}) {
 }
 
 async function loadMyOrders() {
+ async function loadMyOrders() {
+  const container = $('myOrdersList');
+  const counter = $('myOrdersCount');
+
+  if (!container) return;
+
+  container.innerHTML = '<div class="dof-orders-empty">Загружаем заказы...</div>';
+
+  try {
+    const result = await ordersRequest('list');
+    const orders = result.orders || [];
+
+    if (counter) counter.textContent = orders.length;
+
+    if (!orders.length) {
+      container.innerHTML = '<div class="dof-orders-empty">У вас пока нет заказов</div>';
+      return;
+    }
+
+    container.innerHTML = orders.map(order => `
+      <article class="dof-order-card">
+        <div class="dof-order-head">
+          <strong>Заказ №${safe(order.id)}</strong>
+          <span>${safe(order.status || 'Новый')}</span>
+        </div>
+        <div class="dof-order-date">${new Date(order.created_at).toLocaleDateString('ru-RU')}</div>
+        <div class="dof-order-items">
+          ${(order.items || []).map(item => `
+            <div class="dof-order-item">
+              <div>
+                <strong>${safe(item.product_name)}</strong>
+                <div>Размер: ${safe(item.size || 'Не указан')}</div>
+                <div>Количество: ${Number(item.quantity) || 0}</div>
+              </div>
+              <strong>${rub(Number(item.price) * Number(item.quantity))}</strong>
+            </div>
+          `).join('')}
+        </div>
+        <div class="dof-order-total">
+          <span>Итого</span>
+          <strong>${rub(order.total)}</strong>
+        </div>
+      </article>
+    `).join('');
+  } catch (error) {
+    console.error('Ошибка загрузки заказов:', error);
+    container.innerHTML = '<div class="dof-orders-empty">Не удалось загрузить заказы. Откройте магазин через Telegram и попробуйте снова.</div>';
+  }
+} 
   const container = $('myOrdersList');
   const counter = $('myOrdersCount');
 
