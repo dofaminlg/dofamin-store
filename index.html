@@ -1644,10 +1644,29 @@ document.querySelectorAll('.size-option').forEach(btn => {
   function renderCart(){
     $('cartItems').innerHTML=cart.length?cart.map(i=>`<div class="cartitem"><div>${i.image_url?`<img src="${safe(i.image_url)}" alt="">`:'<div class="cartthumb"></div>'}</div><div><div class="cartname">${safe(i.name)}</div>
 ${i.size ? `<div class="small">Размер: ${safe(i.size)}</div>` : ''}
-<div class="small">${rub(i.price)} за шт.</div><div class="small">${rub(i.price)} за шт.</div><div class="qty"><button data-minus="${safe(i.id)}" aria-label="Уменьшить">−</button><span>${i.qty}</span><button data-plus="${safe(i.id)}" aria-label="Увеличить">+</button><button data-remove="${safe(i.id)}" aria-label="Удалить" style="margin-left:4px">×</button></div></div><strong>${rub(i.price*i.qty)}</strong></div>`).join(''):'<div class="empty"><strong>Корзина пуста</strong>Добавьте товары из каталога.</div>';
-    $('cartItems').querySelectorAll('[data-minus]').forEach(b=>b.onclick=()=>changeQty(b.dataset.minus,-1));
-    $('cartItems').querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>changeQty(b.dataset.plus,1));
-    $('cartItems').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{cart=cart.filter(i=>String(i.id)!==b.dataset.remove);persist();});
+<div class="small">${rub(i.price)} за шт.</div><div class="small">${rub(i.price)} за шт.</div><div class="qty">
+  <button data-minus="${safe(i.id)}" data-size="${safe(i.size || '')}" aria-label="Уменьшить">−</button>
+  <span>${i.qty}</span>
+  <button data-plus="${safe(i.id)}" data-size="${safe(i.size || '')}" aria-label="Увеличить">+</button>
+  <button data-remove="${safe(i.id)}" data-size="${safe(i.size || '')}" aria-label="Удалить" style="margin-left:4px">×</button>
+</div></div><strong>${rub(i.price*i.qty)}</strong></div>`).join(''):'<div class="empty"><strong>Корзина пуста</strong>Добавьте товары из каталога.</div>';
+   $('cartItems').querySelectorAll('[data-minus]').forEach(b =>
+  b.onclick = () => changeQty(b.dataset.minus, -1, b.dataset.size)
+);
+
+$('cartItems').querySelectorAll('[data-plus]').forEach(b =>
+  b.onclick = () => changeQty(b.dataset.plus, 1, b.dataset.size)
+);
+
+$('cartItems').querySelectorAll('[data-remove]').forEach(b =>
+  b.onclick = () => {
+    cart = cart.filter(i =>
+      !(String(i.id) === String(b.dataset.remove) &&
+        String(i.size || '') === String(b.dataset.size || ''))
+    );
+    persist();
+  }
+);
     const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
     $('cartCheckout').innerHTML=cart.length?`<div class="totalbox"><div class="totalrow"><span>Товары</span><strong>${rub(total)}</strong></div><div class="totalrow big"><span>Итого</span><span>${rub(total)}</span></div><div class="notice">После отправки заявки менеджер свяжется с вами в Telegram для подтверждения наличия, доставки и оплаты. Оплата на сайте пока не подключена.</div><form id="checkoutForm" class="formgrid"><input class="field" name="name" placeholder="Ваше имя" required maxlength="80"><input class="field" name="telegram" placeholder="Ваш Telegram, например @username" required maxlength="80"><input class="field" name="city" placeholder="Город" required maxlength="100"><select class="field" name="payment" required><option value="card">Оплата переводом на карту (после связи с менеджером)</option><option value="cash">Наличными при личной встрече в Луганске</option></select><button class="btn primary" type="submit">Отправить заявку менеджеру</button></form><p class="hint">Заявка откроется в Telegram. До настройки серверной части она не сохраняется в личном кабинете.</p></div>`:'';
 const form = $('checkoutForm');
