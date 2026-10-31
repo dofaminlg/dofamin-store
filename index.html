@@ -1826,9 +1826,17 @@ function openProduct(id) {
 }
 
 .dof-carousel-track {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100%;
   transition: transform .35s ease;
   touch-action: pan-y;
+}
+
+.dof-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 100%;
 }
 
 .dof-slide {
