@@ -2001,6 +2001,7 @@ function openProduct(id) {
   border-radius: 19px;
   background: linear-gradient(145deg, #202027, #0b0b0e);
   color: #fff;
+  filter: drop-shadow(0 0 5px #ffffffaa);
   font-size: 32px;
   text-shadow: 0 0 8px #fff, 0 0 16px #ffffff55;
   box-shadow: 0 0 12px #ffffff12, inset 0 0 12px #ffffff08;
@@ -2008,7 +2009,7 @@ function openProduct(id) {
 }
 
 .premium-benefits > a:hover .benefit-icon {
-  border-color: #aaa;
+  border-color: #fff;
   box-shadow: 0 0 18px #ffffff30;
   transform: translateY(-3px);
 }
@@ -2211,7 +2212,19 @@ function openProduct(id) {
 
           <div class="premium-benefits">
   <span>
-    <span class="benefit-icon">🚚</span><br>
+    <span class="benefit-icon">
+  <svg viewBox="0 0 64 64" width="38" height="38"
+       fill="none" stroke="currentColor" stroke-width="2.5"
+       stroke-linecap="round" stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M5 18h30v27H5z"/>
+    <path d="M35 28h12l11 12v5H35z"/>
+    <path d="M39 29v11h17"/>
+    <circle cx="17" cy="47" r="6"/>
+    <circle cx="46" cy="47" r="6"/>
+    <path d="M9 10h18M5 14h14"/>
+  </svg>
+</span><br>
     ${p.delivery_value
       ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
         (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
@@ -2221,7 +2234,16 @@ function openProduct(id) {
   <a href="https://t.me/DofaminMg"
      target="_blank"
      rel="noopener noreferrer">
-    <span class="benefit-icon">➤</span><br>
+    <span class="benefit-icon">
+  <svg viewBox="0 0 64 64" width="38" height="38"
+       fill="none" stroke="currentColor" stroke-width="2.5"
+       stroke-linecap="round" stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M8 29 55 9 42 55 30 38 8 29Z"/>
+    <path d="M30 38 55 9"/>
+    <path d="m30 38 1 12 8-7"/>
+  </svg>
+</span><br>
     Поддержка
   </a>
 </div>
