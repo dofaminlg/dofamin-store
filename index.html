@@ -2348,7 +2348,30 @@ showPage('product');
     const id=String(p.id), fav=favorites.includes(id), image=p.image_url;
    const photo=image?`<img class="photo" src="${safe(image)}" alt="${safe(p.name)}" loading="lazy" style="width:100%;aspect-ratio:1/1;height:auto;object-fit:contain;background:#171717;padding:10px;border-radius:18px;box-sizing:border-box"" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'">`:`<div class="placeholder">◇</div>`;
     const tags=[p.is_hit?'ХИТ':'',p.is_new?'НОВИНКА':''].filter(Boolean).join(' · ');
-    return `<article class="product" data-open-product="${safe(id)}">${tags?`<div class="tag">${safe(tags)}</div>`:''}<button class="heart" data-fav="${safe(id)}" aria-label="Добавить в избранное">${fav?'♥':'♡'}</button>${photo}<div class="pbody"><div class="pname">${safe(p.name||'Товар DOFAMIN')}</div><div class="pdesc">${safe(p.description||p.category||'')}</div><div class="price">${rub(p.price)}</div><button class="btn primary" data-add="${safe(id)}">В корзину</button></div></article>`;
+    return `
+  <article class="product" data-open-product="${safe(id)}">
+    ${tags ? `<div class="tag">${safe(tags)}</div>` : ''}
+    <button class="heart" data-fav="${safe(id)}" aria-label="Добавить в избранное">
+      ${fav ? '♥' : '♡'}
+    </button>
+    ${photo}
+    <div class="pbody">
+      <div class="pname">${safe(p.name || 'Товар DOFAMIN')}</div>
+      <div class="pdesc">${safe(p.description || p.category || '')}</div>
+      <div class="price">${rub(p.price)}</div>
+
+      <div style="color:#aaa;font-size:12px;margin:9px 0 12px">
+        🚚 ${p.delivery_value
+          ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
+            (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
+          : 'Срок доставки уточняйте'}
+      </div>
+
+      <button class="btn primary" data-add="${safe(id)}">
+        В корзину
+      </button>
+    </div>
+  </article>`;
   }
   function bindCards(root){
   root.querySelectorAll('[data-open-product]').forEach(el => {
