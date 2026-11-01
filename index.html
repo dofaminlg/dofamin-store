@@ -2166,10 +2166,21 @@ function openProduct(id) {
           </div>
 
           <div class="premium-benefits">
-            <span>◇<br>Доставка</span>
-            <span>✧<br>Качество</span>
-            <span>↻<br>Поддержка</span>
-          </div>
+  <span>
+    ◇<br>
+    ${p.delivery_value
+      ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
+        (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
+      : 'Срок доставки уточняйте у менеджера'}
+  </span>
+
+  <a href="https://t.me/DofaminMg"
+     target="_blank"
+     rel="noopener noreferrer"
+     style="color:inherit;text-decoration:none;text-align:center">
+    ↻<br>Поддержка
+  </a>
+</div>
         </div>
       </div>
 
