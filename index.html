@@ -2360,12 +2360,38 @@ showPage('product');
       <div class="pdesc">${safe(p.description || p.category || '')}</div>
       <div class="price">${rub(p.price)}</div>
 
-      <div style="color:#aaa;font-size:12px;margin:9px 0 12px">
-        🚚 ${p.delivery_value
-          ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
-            (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
-          : 'Срок доставки уточняйте'}
-      </div>
+      <div style="display:flex;align-items:center;gap:9px;color:#aaa;font-size:12px;margin:9px 0 12px">
+  <span style="
+    width:30px;
+    height:30px;
+    flex-shrink:0;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid #fff;
+    border-radius:9px;
+    background:#080808;
+    color:#fff;
+    box-shadow:0 0 9px #ffffff35;
+  ">
+    <svg viewBox="0 0 64 64" width="21" height="21"
+         fill="none" stroke="currentColor" stroke-width="2.8"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 17h34v28H5z"/>
+      <path d="M39 27h10l10 11v7H39z"/>
+      <path d="M43 28v11h15"/>
+      <circle cx="17" cy="47" r="5"/>
+      <circle cx="48" cy="47" r="5"/>
+      <path d="M12 25h16M12 32h11"/>
+    </svg>
+  </span>
+  <span>
+    ${p.delivery_value
+      ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
+        (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
+      : 'Срок доставки уточняйте'}
+  </span>
+</div>
 
       <button class="btn primary" data-add="${safe(id)}">
         В корзину
