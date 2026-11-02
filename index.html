@@ -2453,9 +2453,25 @@ showPage('product');
   </span>
 </div>
 
-      <button class="btn primary" data-add="${safe(id)}">
-        В корзину
-      </button>
+      ${(() => {
+  const item = cart.find(i =>
+    String(i.id) === id && !i.size
+  );
+
+  return item ? `
+    <div class="card-cart-controls" onclick="event.stopPropagation()">
+      <button type="button" data-card-minus="${safe(id)}">−</button>
+      <strong>${item.qty}</strong>
+      <button type="button" data-card-plus="${safe(id)}">+</button>
+      <button type="button" data-card-remove="${safe(id)}" aria-label="Удалить">🗑</button>
+      <button type="button" class="btn primary" data-card-buy="${safe(id)}">Купить</button>
+    </div>
+  ` : `
+    <button class="btn primary" data-add="${safe(id)}">
+      В корзину
+    </button>
+  `;
+})()}
     </div>
   </article>`;
   }
@@ -2472,16 +2488,51 @@ showPage('product');
     });
   });
 
-  root.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{
-    const p=products.find(x=>String(x.id)===b.dataset.add);
-    if(!p)return;
-    const found=cart.find(i=>String(i.id)===String(p.id));
-    if(found)found.qty++;
-    else cart.push({id:p.id,name:p.name,price:Number(p.price)||0,image_url:p.image_url||'',qty:1});
-    persist();
-    toast('Добавлено в корзину');
-  }));
+  root.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
+  const p = products.find(x => String(x.id) === b.dataset.add);
+  if (!p) return;
 
+  const found = cart.find(i => String(i.id) === String(p.id) && !i.size);
+
+  if (found) found.qty++;
+  else cart.push({
+    id: p.id,
+    name: p.name,
+    price: Number(p.price) || 0,
+    image_url: p.image_url || '',
+    qty: 1
+  });
+
+  persist();
+  renderProducts();
+  renderFavorites();
+  toast('Добавлено в корзину');
+}));
+
+root.querySelectorAll('[data-card-plus]').forEach(b => {
+  b.addEventListener('click', () => {
+    changeQty(b.dataset.cardPlus, 1);
+    renderProducts();
+    renderFavorites();
+  });
+});
+
+root.querySelectorAll('[data-card-minus]').forEach(b => {
+  b.addEventListener('click', () => {
+    changeQty(b.dataset.cardMinus, -1);
+    renderProducts();
+    renderFavorites();
+  });
+});
+
+root.querySelectorAll('[data-card-remove]').forEach(b => {
+  b.addEventListener('click', () => {
+    cart = cart.filter(i => String(i.id) !== String(b.dataset.cardRemove));
+    persist();
+    renderProducts();
+    renderFavorites();
+  });
+});
   root.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{
     const id=b.dataset.fav;
     favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
