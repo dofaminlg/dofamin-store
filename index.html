@@ -1297,6 +1297,12 @@ select {
   max-height: none !important;
   object-fit: cover !important;
 }  
+/* Отображение баннеров на компьютере */
+@media (min-width: 768px) {
+  #dofCarouselTrack .dof-slide img {
+    object-fit: contain !important;
+  }
+}  
   </style>
 </head>
 <body>
