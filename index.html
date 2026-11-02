@@ -1300,9 +1300,18 @@ select {
 /* Отображение баннеров на компьютере */
 @media (min-width: 768px) {
   #dofCarouselTrack .dof-slide img {
-    object-fit: contain !important;
+    object-fit: cover !important;
+    object-position: center !important;
   }
-}  
+
+  #dofCarouselTrack .dof-slide {
+    height: auto !important;
+  }
+
+  #dofCarouselTrack {
+    height: auto !important;
+  }
+}
   </style>
 </head>
 <body>
