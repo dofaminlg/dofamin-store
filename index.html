@@ -1273,6 +1273,30 @@ select {
   font-weight: 900 !important;
 }
 
+/* Исправление отображения слайдов DOFAMIN */
+#dofCarouselTrack {
+  display: flex !important;
+  width: 100% !important;
+  height: 220px !important;
+  overflow: visible !important;
+}
+
+#dofCarouselTrack .dof-slide {
+  display: block !important;
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  height: 220px !important;
+  box-sizing: border-box !important;
+}
+
+#dofCarouselTrack .dof-slide img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: contain !important;
+}  
   </style>
 </head>
 <body>
