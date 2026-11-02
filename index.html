@@ -2502,8 +2502,15 @@ showPage('product');
       <button type="button" data-card-minus="${safe(id)}">−</button>
       <strong>${item.qty}</strong>
       <button type="button" data-card-plus="${safe(id)}">+</button>
-      <button type="button" data-card-remove="${safe(id)}" aria-label="Удалить">🗑</button>
-      <button type="button" class="btn primary" data-card-buy="${safe(id)}">Купить</button>
+<button type="button" data-card-remove="${safe(id)}" aria-label="Удалить" title="Удалить из корзины">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 7h16"/>
+    <path d="M9 7V4h6v3"/>
+    <path d="M6.5 7l1 13h9l1-13"/>
+    <path d="M10 10v7M14 10v7"/>
+  </svg>
+</button>
+<button type="button" class="btn primary" data-card-buy="${safe(id)}">Купить</button>
     </div>
   ` : `
     <button class="btn primary" data-add="${safe(id)}">
