@@ -2583,14 +2583,10 @@ root.querySelectorAll('[data-card-buy]').forEach(b => {
   b.addEventListener('click', e => {
     e.stopPropagation();
 
-    const cartButton = document.querySelector('[data-page="cart"]');
-    if (cartButton) {
-      cartButton.click();
-    } else {
-      document.querySelector('[data-page="cartPage"]')?.click();
-    }
+    const id = b.dataset.cardBuy;
+    openProduct(id);
   });
-});  
+});
     root.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{
     const id=b.dataset.fav;
     favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
