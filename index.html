@@ -2492,35 +2492,79 @@ showPage('product');
   </span>
 </div>
 
-      ${(() => {
-  const item = cart.find(i =>
-    String(i.id) === id && !i.size
-  );
+     ${(() => {
+  const sizes = Array.isArray(p.sizes) ? p.sizes : [];
 
-  return item ? `
-    <div class="card-cart-controls" onclick="event.stopPropagation()">
-      <button type="button" data-card-minus="${safe(id)}">−</button>
-      <strong>${item.qty}</strong>
-      <button type="button" data-card-plus="${safe(id)}">+</button>
-<button type="button" data-card-remove="${safe(id)}" aria-label="Удалить" title="Удалить из корзины">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 7h16"/>
-    <path d="M9 7V4h6v3"/>
-    <path d="M6.5 7l1 13h9l1-13"/>
-    <path d="M10 10v7M14 10v7"/>
-  </svg>
-</button>
-<button type="button" class="btn primary" data-card-buy="${safe(id)}">Купить</button>
+  return `
+    <div class="card-buy-area" onclick="event.stopPropagation()">
+
+      <button type="button"
+        class="btn primary"
+        data-add="${safe(id)}">
+        В корзину
+      </button>
+
+      <button type="button"
+        class="btn primary"
+        data-card-buy="${safe(id)}">
+        Купить
+      </button>
+
+      ${
+        sizes.length
+          ? `
+            <div class="card-size-picker" data-size-picker="${safe(id)}" hidden>
+              <div class="premium-heading">Выберите размер</div>
+
+              <div class="premium-sizes">
+                ${sizes.map(size => `
+                  <button type="button"
+                    class="premium-size"
+                    data-card-size="${safe(id)}"
+                    data-size-value="${safe(size)}">
+                    ${safe(size)}
+                  </button>
+                `).join('')}
+              </div>
+
+              <button type="button"
+                class="btn primary"
+                data-size-confirm="${safe(id)}"
+                data-size-action="">
+                Подтвердить
+              </button>
+            </div>
+          `
+          : ''
+      }
+
     </div>
-  ` : `
-    <button class="btn primary" data-add="${safe(id)}">
-      В корзину
-    </button>
   `;
 })()}
     </div>
   </article>`;
   }
+function addProductToCart(p, size = '') {
+  const found = cart.find(i =>
+    String(i.id) === String(p.id) &&
+    String(i.size || '') === String(size || '')
+  );
+
+  if (found) {
+    found.qty++;
+  } else {
+    cart.push({
+      id: p.id,
+      name: p.name,
+      price: Number(p.price) || 0,
+      image_url: p.image_url || '',
+      size: size || '',
+      qty: 1
+    });
+  }
+
+  persist();
+}  
   function bindCards(root){
   root.querySelectorAll('[data-open-product]').forEach(el => {
     el.addEventListener('click', e => {
@@ -2534,28 +2578,101 @@ showPage('product');
     });
   });
 
-  root.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
-  const p = products.find(x => String(x.id) === b.dataset.add);
-  if (!p) return;
+  root.querySelectorAll('[data-add]').forEach(b => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
 
-  const found = cart.find(i => String(i.id) === String(p.id) && !i.size);
+    const id = String(b.dataset.add);
+    const p = products.find(x => String(x.id) === id);
+    if (!p) return;
 
-  if (found) found.qty++;
-  else cart.push({
-    id: p.id,
-    name: p.name,
-    price: Number(p.price) || 0,
-    image_url: p.image_url || '',
-    qty: 1
+    const sizes = Array.isArray(p.sizes) ? p.sizes : [];
+    const picker = root.querySelector(`[data-size-picker="${id}"]`);
+
+    if (sizes.length && picker) {
+      picker.hidden = false;
+      picker.dataset.sizeAction = 'cart';
+      return;
+    }
+
+    addProductToCart(p, '');
+    renderProducts();
+    renderFavorites();
+    toast('Добавлено в корзину');
   });
+});
+// Выбор размера в карточке товара
+root.querySelectorAll('[data-card-size]').forEach(b => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
 
-  persist();
-  renderProducts();
-  renderFavorites();
-  toast('Добавлено в корзину');
-}));
+    const id = b.dataset.cardSize;
+    const picker = root.querySelector(`[data-size-picker="${id}"]`);
 
-root.querySelectorAll('[data-card-plus]').forEach(b => {
+    picker.querySelectorAll('[data-card-size]').forEach(btn => {
+      btn.classList.toggle('active', btn === b);
+    });
+
+    picker.dataset.selectedSize = b.dataset.sizeValue;
+  });
+});
+
+// Подтверждение выбора размера
+root.querySelectorAll('[data-size-confirm]').forEach(b => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
+
+    const id = b.dataset.sizeConfirm;
+    const picker = root.querySelector(`[data-size-picker="${id}"]`);
+    const size = picker.dataset.selectedSize;
+
+    if (!size) {
+      toast('Сначала выберите размер');
+      return;
+    }
+
+    const p = products.find(x => String(x.id) === id);
+    if (!p) return;
+
+    addProductToCart(p, size);
+
+    const action = picker.dataset.sizeAction;
+
+    if (action === 'buy') {
+      renderCart();
+      showPage('cart');
+      return;
+    }
+
+    renderProducts();
+    renderFavorites();
+    toast('Добавлено в корзину');
+  });
+});
+// Кнопка «Купить» в карточке товара
+root.querySelectorAll('[data-card-buy]').forEach(b => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
+
+    const id = String(b.dataset.cardBuy);
+    const p = products.find(x => String(x.id) === id);
+    if (!p) return;
+
+    const sizes = Array.isArray(p.sizes) ? p.sizes : [];
+    const picker = root.querySelector(`[data-size-picker="${id}"]`);
+
+    if (sizes.length && picker) {
+      picker.hidden = false;
+      picker.dataset.sizeAction = 'buy';
+      return;
+    }
+
+    addProductToCart(p, '');
+    renderCart();
+    showPage('cart');
+  });
+});
+    root.querySelectorAll('[data-card-plus]').forEach(b => {
   b.addEventListener('click', () => {
     changeQty(b.dataset.cardPlus, 1);
     renderProducts();
