@@ -2648,8 +2648,24 @@ root.querySelectorAll('[data-card-size]').forEach(b => {
     const id = b.dataset.cardSize;
     const picker = root.querySelector(`[data-size-picker="${id}"]`);
 
+    if (!picker) return;
+
     picker.querySelectorAll('[data-card-size]').forEach(btn => {
-      btn.classList.toggle('active', btn === b);
+      const selected = btn === b;
+
+      btn.classList.toggle('active', selected);
+
+      if (selected) {
+        btn.style.setProperty('background', '#d7ff3f', 'important');
+        btn.style.setProperty('color', '#111', 'important');
+        btn.style.setProperty('border', '2px solid #d7ff3f', 'important');
+        btn.style.setProperty('box-shadow', '0 0 14px rgba(215,255,63,.7)', 'important');
+      } else {
+        btn.style.removeProperty('background');
+        btn.style.removeProperty('color');
+        btn.style.removeProperty('border');
+        btn.style.removeProperty('box-shadow');
+      }
     });
 
     picker.dataset.selectedSize = b.dataset.sizeValue;
