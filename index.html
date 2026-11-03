@@ -2895,13 +2895,31 @@ function openProduct(id) {
 }    
 /* Исправление кнопки Купить на ПК */
 @media (min-width: 401px) {
+  .cart-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .cart-actions {
-    flex-wrap: wrap;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    gap: 8px;
+  }
+
+  .cart-tools,
+  .cart-qty {
+    min-width: 0;
   }
 
   .cart-buy {
-    flex: 1 1 100%;
-    width: 100%;
+    grid-column: 1 / -1;
+    display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100%;
     box-sizing: border-box;
   }
 }
