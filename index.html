@@ -2635,6 +2635,203 @@ function openProduct(id) {
     font-size: 12px;
   }
 }    
+/* DOFAMIN — обновлённый дизайн корзины */
+
+/* Галочка на фотографии — справа сверху */
+.cart-select {
+  left: auto !important;
+  right: 9px;
+  top: 9px;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #168be8;
+  border-radius: 50%;
+  background: rgba(35, 35, 38, 0.85);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.cart-select.active {
+  background: #168be8;
+  border-color: #168be8;
+}
+
+.cart-select:not(.active) {
+  background: rgba(35, 35, 38, 0.85);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Выбрать все */
+.cart-select-all-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 2px 14px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.cart-select-all {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #8b8b91;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cart-select-all.active {
+  background: #168be8;
+  border-color: #168be8;
+}
+
+/* Кнопки сердца и удаления */
+.cart-tools {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cart-tool {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 11px;
+  background: #2C2C2E;
+  color: #e8e8eb;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cart-tool svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cart-fav.active {
+  color: #ff5b78;
+}
+
+.cart-fav.active svg {
+  fill: #ff5b78;
+  stroke: #ff5b78;
+}
+
+.cart-delete {
+  color: #d2d2d6;
+}
+
+/* Счётчик количества */
+.cart-qty {
+  height: 36px;
+  padding: 4px;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 11px;
+  background: #2C2C2E;
+}
+
+.cart-qty button {
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
+  background: #48484A;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cart-qty span {
+  min-width: 19px;
+  font-size: 14px;
+}
+
+/* Кнопка Купить */
+.cart-buy {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 11px;
+  background: #55565a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cart-buy:active {
+  background: #3f4044;
+  transform: scale(0.97);
+}
+
+/* Расположение элементов */
+.cart-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 7px;
+}
+
+@media (max-width: 400px) {
+  .cart-actions {
+    gap: 5px;
+  }
+
+  .cart-tool {
+    width: 29px;
+    height: 32px;
+  }
+
+  .cart-tool svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .cart-qty {
+    height: 32px;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .cart-qty button {
+    width: 21px;
+    height: 24px;
+    font-size: 16px;
+  }
+
+  .cart-qty span {
+    min-width: 15px;
+    font-size: 12px;
+  }
+
+  .cart-buy {
+    min-height: 32px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+}    
     </style>
 
     <div class="premium-product">
@@ -3196,9 +3393,22 @@ root.querySelectorAll('[data-card-minus]').forEach(b => {
 function renderCart() {
   const selectedItems = cart.filter(i => i.selected !== false);
   const total = selectedItems.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const allSelected = cart.length > 0 && cart.every(i => i.selected !== false);
 
   $('cartItems').innerHTML = cart.length
-    ? cart.map(i => {
+    ? `
+      <div class="cart-select-all-row">
+        <button type="button"
+          class="cart-select-all ${allSelected ? 'active' : ''}"
+          data-select-all
+          aria-label="Выбрать все товары"
+          aria-pressed="${allSelected}">
+          ${allSelected ? '✓' : ''}
+        </button>
+        <span>Выбрать все</span>
+      </div>
+
+      ${cart.map(i => {
         const product = products.find(p => String(p.id) === String(i.id));
         const isSelected = i.selected !== false;
         const isFavorite = favorites.includes(String(i.id));
@@ -3214,6 +3424,7 @@ function renderCart() {
               ${i.image_url
                 ? `<img src="${safe(i.image_url)}" alt="">`
                 : '<div class="cartthumb"></div>'}
+
               <button type="button"
                 class="cart-select ${isSelected ? 'active' : ''}"
                 data-select="${safe(i.id)}"
@@ -3234,23 +3445,30 @@ function renderCart() {
               <div class="small">${delivery}</div>
               <div class="small">${rub(i.price)} за шт.</div>
               <div class="small"><strong>${i.qty} шт.</strong></div>
+
               <div class="small cart-line-total">
                 ${rub(i.price * i.qty)}
               </div>
 
               <div class="cart-actions">
                 <div class="cart-tools">
-                  <button type="button" class="cart-tool"
+                  <button type="button"
+                    class="cart-tool cart-fav ${isFavorite ? 'active' : ''}"
                     data-fav="${safe(i.id)}"
                     aria-label="Избранное">
-                    ${isFavorite ? '♥' : '♡'}
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                    </svg>
                   </button>
 
-                  <button type="button" class="cart-tool"
+                  <button type="button"
+                    class="cart-tool cart-delete"
                     data-remove="${safe(i.id)}"
                     data-size="${safe(i.size || '')}"
-                    aria-label="Удалить">
-                    🗑
+                    aria-label="Удалить товар">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/>
+                    </svg>
                   </button>
                 </div>
 
@@ -3268,7 +3486,8 @@ function renderCart() {
                     aria-label="Увеличить">+</button>
                 </div>
 
-                <button type="button" class="cart-buy"
+                <button type="button"
+                  class="cart-buy"
                   data-buy="${safe(i.id)}"
                   data-size="${safe(i.size || '')}">
                   Купить
@@ -3277,8 +3496,23 @@ function renderCart() {
             </div>
           </div>
         `;
-      }).join('')
+      }).join('')}
+    `
     : '<div class="empty"><strong>Корзина пуста</strong>Добавьте товары из каталога.</div>';
+
+  const selectAllButton = $('cartItems').querySelector('[data-select-all]');
+
+  if (selectAllButton) {
+    selectAllButton.onclick = () => {
+      const shouldSelect = !cart.every(i => i.selected !== false);
+
+      cart.forEach(i => {
+        i.selected = shouldSelect;
+      });
+
+      persist();
+    };
+  }
 
   $('cartItems').querySelectorAll('[data-select]').forEach(b => {
     b.onclick = () => {
@@ -3488,7 +3722,6 @@ function renderCart() {
     });
   }
 }
-
 function changeQty(id, delta, size = '') {
   const item = cart.find(i =>
     String(i.id) === String(id) &&
