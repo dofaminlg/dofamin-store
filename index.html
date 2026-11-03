@@ -1382,7 +1382,33 @@ html {
   touch-action: manipulation;
 }  
 /* DOFAMIN — оформление корзины */
+/* Кнопка Купить в корзине */
+.cart-buy {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 11px;
+  background: #55565a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
 
+.cart-buy:active {
+  background: #3f4044;
+  transform: scale(.97);
+}
+
+@media (max-width: 400px) {
+  .cart-buy {
+    min-height: 32px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+}
 /* Кнопки избранного и удаления */
 .cart-tools {
   display: flex;
@@ -1506,6 +1532,124 @@ html {
   transform: rotate(45deg);
   margin-top: -2px;
 }  
+ /* Расположение товаров в корзине */
+.cartitem {
+  display: grid;
+  grid-template-columns: minmax(90px, .85fr) minmax(0, 1.5fr);
+  gap: 12px;
+  align-items: stretch;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.cartphoto {
+  position: relative;
+  min-width: 0;
+  min-height: 145px;
+}
+
+.cartphoto > img,
+.cartphoto > .cartthumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 145px;
+  aspect-ratio: 1 / 1.1;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #222;
+}
+
+.cart-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.cartname {
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.cart-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.cart-qty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 0;
+  padding: 4px;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 11px;
+  background: #2c2c2e;
+}
+
+.cart-qty button {
+  width: 27px;
+  height: 27px;
+  border: 0;
+  border-radius: 8px;
+  background: #48484a;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.cart-qty span {
+  min-width: 19px;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+
+@media (max-width: 400px) {
+  .cartitem {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 9px;
+    padding: 8px;
+  }
+
+  .cartphoto,
+  .cartphoto > img,
+  .cartphoto > .cartthumb {
+    min-height: 125px;
+  }
+
+  .cart-actions {
+    gap: 5px;
+  }
+
+  .cart-qty {
+    height: 32px;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .cart-qty button {
+    width: 21px;
+    height: 24px;
+    font-size: 16px;
+  }
+
+  .cart-qty span {
+    min-width: 15px;
+    font-size: 12px;
+  }
+}   
   </style>
 </head>
 <body>
@@ -2579,18 +2723,7 @@ function openProduct(id) {
   border: 1px solid #555 !important;
   box-sizing: border-box;
 }
-/* DOFAMIN — оформление карточек корзины */
-.cartitem {
-  display: grid;
-  grid-template-columns: minmax(90px, 0.85fr) minmax(0, 1.5fr);
-  gap: 12px;
-  align-items: stretch;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 10px;
-  margin: 10px 0;
-}
+
 
 .cartphoto {
   position: relative;
@@ -2760,203 +2893,7 @@ function openProduct(id) {
     font-size: 12px;
   }
 }    
-/* DOFAMIN — обновлённый дизайн корзины */
 
-/* Галочка на фотографии — справа сверху */
-.cart-select {
-  left: auto !important;
-  right: 9px;
-  top: 9px;
-  width: 30px;
-  height: 30px;
-  border: 2px solid #168be8;
-  border-radius: 50%;
-  background: rgba(35, 35, 38, 0.85);
-  color: #fff;
-  font-size: 17px;
-  line-height: 1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-}
-
-.cart-select.active {
-  background: #168be8;
-  border-color: #168be8;
-}
-
-.cart-select:not(.active) {
-  background: rgba(35, 35, 38, 0.85);
-  border-color: rgba(255, 255, 255, 0.8);
-}
-
-/* Выбрать все */
-.cart-select-all-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 4px 2px 14px;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 650;
-}
-
-.cart-select-all {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #8b8b91;
-  border-radius: 50%;
-  background: transparent;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.cart-select-all.active {
-  background: #168be8;
-  border-color: #168be8;
-}
-
-/* Кнопки сердца и удаления */
-.cart-tools {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.cart-tool {
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 11px;
-  background: #2C2C2E;
-  color: #e8e8eb;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.cart-tool svg {
-  width: 19px;
-  height: 19px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.cart-fav.active {
-  color: #ff5b78;
-}
-
-.cart-fav.active svg {
-  fill: #ff5b78;
-  stroke: #ff5b78;
-}
-
-.cart-delete {
-  color: #d2d2d6;
-}
-
-/* Счётчик количества */
-.cart-qty {
-  height: 36px;
-  padding: 4px;
-  gap: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 11px;
-  background: #2C2C2E;
-}
-
-.cart-qty button {
-  width: 27px;
-  height: 27px;
-  border-radius: 8px;
-  background: #48484A;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.cart-qty span {
-  min-width: 19px;
-  font-size: 14px;
-}
-
-/* Кнопка Купить */
-.cart-buy {
-  min-height: 36px;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 11px;
-  background: #55565a;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 750;
-  letter-spacing: 0.1px;
-  white-space: nowrap;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.cart-buy:active {
-  background: #3f4044;
-  transform: scale(0.97);
-}
-
-/* Расположение элементов */
-.cart-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  gap: 7px;
-}
-
-@media (max-width: 400px) {
-  .cart-actions {
-    gap: 5px;
-  }
-
-  .cart-tool {
-    width: 29px;
-    height: 32px;
-  }
-
-  .cart-tool svg {
-    width: 17px;
-    height: 17px;
-  }
-
-  .cart-qty {
-    height: 32px;
-    gap: 2px;
-    padding: 3px;
-  }
-
-  .cart-qty button {
-    width: 21px;
-    height: 24px;
-    font-size: 16px;
-  }
-
-  .cart-qty span {
-    min-width: 15px;
-    font-size: 12px;
-  }
-
-  .cart-buy {
-    min-height: 32px;
-    padding: 0 8px;
-    font-size: 11px;
-  }
-}    
     </style>
 
     <div class="premium-product">
