@@ -2533,15 +2533,45 @@ showPage('product');
 
      ${(() => {
   const sizes = Array.isArray(p.sizes) ? p.sizes : [];
+  const cartItems = cart.filter(i => String(i.id) === id);
 
   return `
     <div class="card-buy-area" onclick="event.stopPropagation()">
 
-      <button type="button"
-        class="btn primary"
-        data-add="${safe(id)}">
-        В корзину
-      </button>
+      ${cartItems.map(item => `
+        <div class="card-cart-row">
+          <div class="card-cart-status">
+            <strong>В КОРЗИНЕ</strong>
+            <small>
+              ${item.size ? 'Размер: ' + safe(item.size) + ' · ' : ''}
+              ${p.delivery_value
+                ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
+                  (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
+                : 'Срок доставки уточняйте'}
+            </small>
+          </div>
+
+          <div class="card-cart-qty">
+            <button type="button"
+              data-card-minus="${safe(id)}"
+              data-size="${safe(item.size || '')}">−</button>
+
+            <span>${item.qty}</span>
+
+            <button type="button"
+              data-card-plus="${safe(id)}"
+              data-size="${safe(item.size || '')}">+</button>
+          </div>
+        </div>
+      `).join('')}
+
+      ${!cartItems.length || sizes.length ? `
+        <button type="button"
+          class="btn primary"
+          data-add="${safe(id)}">
+          ${cartItems.length ? 'Добавить ещё' : 'В корзину'}
+        </button>
+      ` : ''}
 
       <button type="button"
         class="btn primary"
