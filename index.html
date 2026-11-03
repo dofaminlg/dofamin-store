@@ -2923,6 +2923,39 @@ function openProduct(id) {
     box-sizing: border-box;
   }
 }
+/* Корзина: исправление на узком экране */
+@media (max-width: 600px) {
+  .cart-content {
+    min-width: 0 !important;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .cart-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .cart-tools,
+  .cart-qty {
+    max-width: 100%;
+    min-width: 0;
+    align-self: flex-start;
+  }
+
+  .cart-buy {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}    
     </style>
 
     <div class="premium-product">
