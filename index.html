@@ -3139,7 +3139,18 @@ function addProductToCart(p, size = '') {
       openProduct(p.id);
     });
   });
+root.querySelectorAll('[data-card-buy]').forEach(b => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
 
+    const id = String(b.dataset.cardBuy);
+    const p = products.find(x => String(x.id) === id);
+
+    if (!p) return;
+
+    openProduct(p.id);
+  });
+});
   root.querySelectorAll('[data-add]').forEach(b => {
   b.addEventListener('click', e => {
     e.stopPropagation();
