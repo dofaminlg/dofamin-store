@@ -1381,6 +1381,131 @@ select {
 html {
   touch-action: manipulation;
 }  
+/* DOFAMIN — оформление корзины */
+
+/* Кнопки избранного и удаления */
+.cart-tools {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cart-tool {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #444448;
+  border-radius: 50%;
+  background: #2c2c2e;
+  color: #eee;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.cart-tool svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cart-fav.active {
+  color: #ff5475;
+}
+
+.cart-fav.active svg {
+  fill: #ff5475;
+  stroke: #ff5475;
+}
+
+/* Круглая галочка на фотографии */
+.cartphoto {
+  position: relative;
+}
+
+.cart-select {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  left: auto;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255,255,255,.8);
+  border-radius: 50%;
+  background: rgba(35,35,38,.85);
+  color: white;
+  font-size: 0;
+}
+
+.cart-select.active {
+  background: #168be8;
+  border-color: #168be8;
+}
+
+.cart-select.active::after {
+  content: "";
+  width: 7px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+  margin-top: -3px;
+}
+
+/* Кнопка «Выбрать все» */
+.cart-select-all-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 2px 14px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.cart-select-all {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #8b8b91;
+  border-radius: 50%;
+  background: transparent;
+  color: white;
+  font-size: 0;
+  cursor: pointer;
+}
+
+.cart-select-all.active {
+  background: #168be8;
+  border-color: #168be8;
+}
+
+.cart-select-all.active::after {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}  
   </style>
 </head>
 <body>
