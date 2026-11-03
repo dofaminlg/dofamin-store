@@ -3238,29 +3238,7 @@ root.querySelectorAll('[data-size-confirm]').forEach(b => {
     toast('Добавлено в корзину');
   });
 });
-// Кнопка «Купить» в карточке товара
-root.querySelectorAll('[data-card-buy]').forEach(b => {
-  b.addEventListener('click', e => {
-    e.stopPropagation();
 
-    const id = String(b.dataset.cardBuy);
-    const p = products.find(x => String(x.id) === id);
-    if (!p) return;
-
-    const sizes = Array.isArray(p.sizes) ? p.sizes : [];
-    const picker = root.querySelector(`[data-size-picker="${id}"]`);
-
-    if (sizes.length && picker) {
-      picker.hidden = false;
-      picker.dataset.sizeAction = 'buy';
-      return;
-    }
-
-    addProductToCart(p, '');
-    renderCart();
-    showPage('cart');
-  });
-});
     root.querySelectorAll('[data-card-plus]').forEach(b => {
   b.addEventListener('click', e => {
     e.stopPropagation();
