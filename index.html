@@ -2440,16 +2440,22 @@ function openProduct(id) {
   color: white;
   font-size: 15px;
 }    
-/* Рамка зелёной части */
-.product-cart-status {
-  border: 1px solid #16834a !important;
+/* Убираем общую зелёную рамку панели */
+.product-cart-line {
+  border: none !important;
 }
 
-/* Серая рамка вокруг счётчика */
+/* Зелёная часть — зелёная рамка */
+.product-cart-status {
+  border: 1px solid #16834a !important;
+  box-sizing: border-box;
+}
+
+/* Серая часть со счётчиком — серая рамка */
 .product-cart-top .card-cart-qty {
   border: 1px solid #555 !important;
   box-sizing: border-box;
-}    
+}
     </style>
 
     <div class="premium-product">
