@@ -2527,34 +2527,40 @@ function openProduct(id) {
   });
 
   $('premiumAdd').addEventListener('click', () => {
-    if (!selectedSize && hasSizes) {
-      toast('Сначала выберите размер');
-      return;
-    }
+  const chosenSize = document.querySelector(
+    '[data-premium-size].active'
+  )?.dataset.premiumSize || '';
 
-    const found = cart.find(i =>
-      String(i.id) === String(p.id) &&
-      String(i.size || '') === String(selectedSize)
-    );
+  if (!chosenSize && hasSizes) {
+    toast('Сначала выберите размер');
+    return;
+  }
 
-    if (found) {
-      found.qty++;
-    } else {
-      cart.push({
-        id: p.id,
-        name: p.name,
-        price: Number(p.price) || 0,
-        image_url: p.image_url || '',
-        size: selectedSize,
-        qty: 1
-      });
-    }
+  const found = cart.find(i =>
+    String(i.id) === String(p.id) &&
+    String(i.size || '') === String(chosenSize)
+  );
 
-    persist();
-    renderPremiumCartLines();
-    renderCart();    
-    toast('Добавлено в корзину');
-  });
+  if (found) {
+    found.qty++;
+  } else {
+    cart.push({
+      id: p.id,
+      name: p.name,
+      price: Number(p.price) || 0,
+      image_url: p.image_url || '',
+      size: chosenSize,
+      qty: 1
+    });
+  }
+
+  selectedSize = chosenSize;
+
+  persist();
+  renderPremiumCartLines();
+  renderCart();
+  toast('Добавлено в корзину');
+});
 function renderPremiumCartLines() {
   const container = $('premiumCartLines');
   if (!container) return;
