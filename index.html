@@ -2363,7 +2363,28 @@ function openProduct(id) {
 .product-cart-info small {
   color: #aaa;
   font-size: 10px;
-}    
+}
+.product-cart-line {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.product-cart-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.product-cart-status {
+  background: #16834a;
+  color: #fff;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
     </style>
 
     <div class="premium-product">
@@ -2587,10 +2608,7 @@ function openProduct(id) {
 
   persist();
   renderPremiumCartLines();
-const addButton = $('premiumAdd');
-addButton.textContent = 'В корзине';
-addButton.style.background = '#16834a';
-addButton.style.color = '#ffffff';  
+  
     renderCart();
   toast('Добавлено в корзину');
 });
@@ -2603,24 +2621,32 @@ function renderPremiumCartLines() {
   );
 
   container.innerHTML = items.map(item => `
-  <div class="product-cart-line">
-    <div class="card-cart-qty">
-      <button type="button" data-product-minus="${safe(item.size || '')}">−</button>
-      <span>${item.qty}</span>
-      <button type="button" data-product-plus="${safe(item.size || '')}">+</button>
-    </div>
+    <div class="product-cart-line">
+      <div class="product-cart-top">
+        <button type="button" class="product-cart-status">
+          В корзине
+        </button>
 
-    <div class="product-cart-info">
-      <strong>В корзине · ${safe(item.size || 'Без размера')}</strong>
-      <small>
-        ${p.delivery_value
-          ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
-            (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
-          : 'Срок доставки уточняйте'}
-      </small>
+        <div class="card-cart-qty">
+          <button type="button"
+            data-product-minus="${safe(item.size || '')}">−</button>
+          <span>${item.qty}</span>
+          <button type="button"
+            data-product-plus="${safe(item.size || '')}">+</button>
+        </div>
+      </div>
+
+      <div class="product-cart-info">
+        <strong>Размер: ${safe(item.size || 'Без размера')}</strong>
+        <small>
+          ${p.delivery_value
+            ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
+              (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
+            : 'Срок доставки уточняйте'}
+        </small>
+      </div>
     </div>
-  </div>
-`).join('');
+  `).join('');
 
   container.querySelectorAll('[data-product-plus]').forEach(btn => {
     btn.addEventListener('click', () => {
