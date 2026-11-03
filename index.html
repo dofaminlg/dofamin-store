@@ -2558,7 +2558,8 @@ function openProduct(id) {
   document.querySelectorAll('[data-premium-size]').forEach(btn => {
     btn.addEventListener('click', () => {
       selectedSize = btn.dataset.premiumSize;
-
+renderPremiumCartLines();
+      
       document.querySelectorAll('[data-premium-size]').forEach(b => {
         b.classList.toggle('active', b === btn);
       });
@@ -2619,11 +2620,21 @@ function openProduct(id) {
 });
 function renderPremiumCartLines() {
   const container = $('premiumCartLines');
-  if (!container) return;
+  const addButton = $('premiumAdd');
+
+  if (!container || !addButton) return;
 
   const items = cart.filter(item =>
     String(item.id) === String(p.id)
   );
+
+  const activeSize = selectedSize || '';
+
+  const alreadyAdded = items.some(item =>
+    String(item.size || '') === String(activeSize)
+  );
+
+  addButton.style.display = alreadyAdded ? 'none' : '';
 
   container.innerHTML = items.map(item => `
     <div class="product-cart-line">
