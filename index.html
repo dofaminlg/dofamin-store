@@ -2282,7 +2282,59 @@ function openProduct(id) {
   border-color: #d9a3ff !important;
   box-shadow: 0 0 8px #a020f0, 0 0 16px #a020f0 !important;
 }
+.card-cart-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #d7ff3f55;
+  border-radius: 12px;
+  background: #171717;
+}
 
+.card-cart-status {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.card-cart-status strong {
+  color: #d7ff3f;
+  font-size: 13px;
+}
+
+.card-cart-status small {
+  color: #aaa;
+  font-size: 11px;
+}
+
+.card-cart-qty {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+}
+
+.card-cart-qty button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #222;
+  color: white;
+  font-size: 19px;
+  cursor: pointer;
+}
+
+.card-cart-qty span {
+  color: white;
+  font-weight: 700;
+  min-width: 12px;
+  text-align: center;
+}
     </style>
 
     <div class="premium-product">
@@ -2758,25 +2810,22 @@ root.querySelectorAll('[data-card-buy]').forEach(b => {
   });
 });
     root.querySelectorAll('[data-card-plus]').forEach(b => {
-  b.addEventListener('click', () => {
-    changeQty(b.dataset.cardPlus, 1);
+  b.addEventListener('click', e => {
+    e.stopPropagation();
+
+    changeQty(b.dataset.cardPlus, 1, b.dataset.size || '');
+
     renderProducts();
     renderFavorites();
   });
 });
 
 root.querySelectorAll('[data-card-minus]').forEach(b => {
-  b.addEventListener('click', () => {
-    changeQty(b.dataset.cardMinus, -1);
-    renderProducts();
-    renderFavorites();
-  });
-});
+  b.addEventListener('click', e => {
+    e.stopPropagation();
 
-root.querySelectorAll('[data-card-remove]').forEach(b => {
-  b.addEventListener('click', () => {
-    cart = cart.filter(i => String(i.id) !== String(b.dataset.cardRemove));
-    persist();
+    changeQty(b.dataset.cardMinus, -1, b.dataset.size || '');
+
     renderProducts();
     renderFavorites();
   });
