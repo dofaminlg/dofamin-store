@@ -2073,11 +2073,12 @@ function openProduct(id) {
   border-color: white;
 }
 
-.card-size-picker .premium-size.active {
-  background: #d7ff3f;
-  color: #111;
-  border: 2px solid #d7ff3f;
-  box-shadow: 0 0 12px rgba(215, 255, 63, 0.55);
+.card-size-picker .premium-size.active,
+.card-size-picker button.premium-size.active {
+  background: #d7ff3f !important;
+  color: #111 !important;
+  border: 2px solid #d7ff3f !important;
+  box-shadow: 0 0 14px rgba(215, 255, 63, 0.7) !important;
   transform: scale(1.06);
 }
       .premium-actions {
@@ -2734,14 +2735,7 @@ root.querySelectorAll('[data-card-remove]').forEach(b => {
     renderFavorites();
   });
 });
-root.querySelectorAll('[data-card-buy]').forEach(b => {
-  b.addEventListener('click', e => {
-    e.stopPropagation();
 
-    const id = b.dataset.cardBuy;
-    openProduct(id);
-  });
-});
     root.querySelectorAll('[data-fav]').forEach(b=>b.addEventListener('click',()=>{
     const id=b.dataset.fav;
     favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
