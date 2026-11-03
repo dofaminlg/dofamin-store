@@ -2471,13 +2471,18 @@ function openProduct(id) {
           </div>
 
           <div class="premium-actions">
-            <button class="premium-buy" id="premiumAdd" style="background:#269bd6;color:#fff;">
-              В корзину
-            </button>
-            <button class="premium-fav" id="premiumFavorite">
-              ${isFavorite ? '♥ В избранном' : '♡ В избранное'}
-            </button>
-          </div>
+  <div id="premiumCartLines"></div>
+
+  <button class="premium-buy" id="premiumAdd"
+    style="background:#269bd6;color:#fff;">
+    В корзину
+  </button>
+
+  <button class="premium-fav" id="premiumFavorite">
+    ${isFavorite ? '♥ В избранном' : '♡ В избранное'}
+  </button>
+</div>
+           
 
           <div class="premium-benefits">
   <span>
