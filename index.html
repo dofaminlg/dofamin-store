@@ -2624,19 +2624,22 @@ function renderPremiumCartLines() {
 
   if (!container || !addButton) return;
 
-  const items = cart.filter(item =>
-    String(item.id) === String(p.id)
-  );
-
   const activeSize = selectedSize || '';
 
-  const alreadyAdded = items.some(item =>
+  const activeItem = cart.find(item =>
+    String(item.id) === String(p.id) &&
     String(item.size || '') === String(activeSize)
   );
 
-  addButton.style.display = alreadyAdded ? 'none' : '';
+  if (!activeItem) {
+    container.innerHTML = '';
+    addButton.style.display = '';
+    return;
+  }
 
-  container.innerHTML = items.map(item => `
+  addButton.style.display = 'none';
+
+  container.innerHTML = `
     <div class="product-cart-line">
       <div class="product-cart-top">
         <button type="button" class="product-cart-status">
@@ -2644,43 +2647,26 @@ function renderPremiumCartLines() {
         </button>
 
         <div class="card-cart-qty">
-          <button type="button"
-            data-product-minus="${safe(item.size || '')}">−</button>
-          <span>${item.qty}</span>
-          <button type="button"
-            data-product-plus="${safe(item.size || '')}">+</button>
+          <button type="button" id="productMinus">−</button>
+          <span>${activeItem.qty}</span>
+          <button type="button" id="productPlus">+</button>
         </div>
       </div>
-
-      <div class="product-cart-info">
-        <strong>Размер: ${safe(item.size || 'Без размера')}</strong>
-        <small>
-          ${p.delivery_value
-            ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
-              (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
-            : 'Срок доставки уточняйте'}
-        </small>
-      </div>
     </div>
-  `).join('');
+  `;
 
-  container.querySelectorAll('[data-product-plus]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      changeQty(p.id, 1, btn.dataset.productPlus);
-      renderPremiumCartLines();
-      renderCart();
-    });
-  });
+  $('productPlus').onclick = () => {
+    changeQty(p.id, 1, activeSize);
+    renderPremiumCartLines();
+    renderCart();
+  };
 
-  container.querySelectorAll('[data-product-minus]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      changeQty(p.id, -1, btn.dataset.productMinus);
-      renderPremiumCartLines();
-      renderCart();
-    });
-  });
+  $('productMinus').onclick = () => {
+    changeQty(p.id, -1, activeSize);
+    renderPremiumCartLines();
+    renderCart();
+  };
 }
-
 renderPremiumCartLines();
   const backButton = $('productBack');
 
