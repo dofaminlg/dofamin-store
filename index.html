@@ -2893,7 +2893,18 @@ function openProduct(id) {
     font-size: 12px;
   }
 }    
+/* Исправление кнопки Купить на ПК */
+@media (min-width: 401px) {
+  .cart-actions {
+    flex-wrap: wrap;
+  }
 
+  .cart-buy {
+    flex: 1 1 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
     </style>
 
     <div class="premium-product">
