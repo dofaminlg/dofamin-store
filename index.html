@@ -2450,8 +2450,8 @@ function openProduct(id) {
           </div>
 
           <div class="premium-actions">
-            <button class="premium-buy" id="premiumAdd">
-              ДОБАВИТЬ В КОРЗИНУ
+            <button class="premium-buy" id="premiumAdd" style="background:#269bd6;color:#fff;">
+              В корзину
             </button>
             <button class="premium-fav" id="premiumFavorite">
               ${isFavorite ? '♥ В избранном' : '♡ В избранное'}
@@ -2587,7 +2587,11 @@ function openProduct(id) {
 
   persist();
   renderPremiumCartLines();
-  renderCart();
+const addButton = $('premiumAdd');
+addButton.textContent = 'В корзине';
+addButton.style.background = '#16834a';
+addButton.style.color = '#ffffff';  
+    renderCart();
   toast('Добавлено в корзину');
 });
 function renderPremiumCartLines() {
