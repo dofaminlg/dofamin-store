@@ -2441,35 +2441,6 @@ function openProduct(id) {
             }
                     </div>
 
-          <div id="premiumCartLines">
-            ${
-              cart
-                .filter(item => String(item.id) === String(p.id))
-                .map(item => `
-                  <div class="card-cart-row">
-                    <div class="card-cart-status">
-                      <strong>В КОРЗИНЕ</strong>
-                      <small>
-                        ${item.size ? 'Размер: ' + safe(item.size) + ' · ' : ''}
-                        ${p.delivery_value
-                          ? 'Доставка: ' + safe(p.delivery_value) + ' ' +
-                            (p.delivery_unit === 'weeks' ? 'нед.' : 'дн.')
-                          : 'Срок доставки уточняйте'}
-                      </small>
-                    </div>
-
-                    <div class="card-cart-qty">
-                      <button type="button"
-                        data-product-minus="${safe(item.size || '')}">−</button>
-                      <span>${item.qty}</span>
-                      <button type="button"
-                        data-product-plus="${safe(item.size || '')}">+</button>
-                    </div>
-                  </div>
-                `).join('')
-            }
-          </div>
-
           <div class="premium-actions">
   <button class="premium-buy" id="premiumAdd"
     style="background:#269bd6;color:#fff;">
