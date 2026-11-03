@@ -1596,18 +1596,34 @@ html {
 }
 
 .cart-tool {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
-  border: 0;
-  border-radius: 9px;
-  background: #2C2C2E;
+
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 50%;
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.18),
+    rgba(255,255,255,.04)
+  );
   color: #fff;
-  font-size: 17px;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.22),
+    0 3px 10px rgba(0,0,0,.22);
+
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: transform .2s ease, background .2s ease;
 }
 
 .cart-buy {
@@ -1616,17 +1632,52 @@ html {
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  min-height: 36px;
+  min-height: 40px;
   padding: 0 13px;
   box-sizing: border-box;
-  border: 0;
-  border-radius: 12px;
-  background: #777;
+
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,.24),
+    rgba(255,255,255,.07)
+  );
   color: #fff;
-  font-weight: 700;
+  font-weight: 750;
+  letter-spacing: .2px;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.25),
+    0 4px 14px rgba(0,0,0,.25);
+
   cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+.cart-tool:active,
+.cart-buy:active,
+.cart-qty button:active {
+  transform: scale(.95);
+  background-color: rgba(255,255,255,.2);
 }
 
+.cart-qty {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.12);
+}
+
+.cart-qty button {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.16);
+  color: #fff;
+}
+    
 .cart-qty {
   display: flex;
   align-items: center;
