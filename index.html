@@ -3090,47 +3090,13 @@ showPage('product');
   return `
     <div class="card-buy-area" onclick="event.stopPropagation()">
 
-      <button type="button"
-        class="btn primary"
-        data-add="${safe(id)}">
-        В корзину
-      </button>
+  <button type="button"
+    class="btn primary"
+    data-card-buy="${safe(id)}">
+    Купить
+  </button>
 
-      <button type="button"
-        class="btn primary"
-        data-card-buy="${safe(id)}">
-        Купить
-      </button>
-
-      ${
-        sizes.length
-          ? `
-            <div class="card-size-picker" data-size-picker="${safe(id)}" hidden>
-              <div class="premium-heading">Выберите размер</div>
-
-              <div class="premium-sizes">
-                ${sizes.map(size => `
-                  <button type="button"
-                    class="premium-size"
-                    data-card-size="${safe(id)}"
-                    data-size-value="${safe(size)}">
-                    ${safe(size)}
-                  </button>
-                `).join('')}
-              </div>
-
-              <button type="button"
-                class="btn primary"
-                data-size-confirm="${safe(id)}"
-                data-size-action="">
-                Подтвердить
-              </button>
-            </div>
-          `
-          : ''
-      }
-
-    </div>
+</div>
   `;
 })()}
     </div>
