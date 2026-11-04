@@ -1796,6 +1796,21 @@ html {
     font-size: 12px;
   }
 }   
+/* DOFAMIN — эффект нажатия на странице товара */
+
+#premiumAdd,
+#productMinus,
+#productPlus {
+  transition: transform .18s ease, filter .18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#premiumAdd:active,
+#productMinus:active,
+#productPlus:active {
+  transform: scale(.90);
+  filter: brightness(1.2);
+}  
   </style>
 </head>
 <body>
