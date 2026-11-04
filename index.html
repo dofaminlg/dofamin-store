@@ -2869,7 +2869,75 @@ function openProduct(id) {
 }
 
 
+/* DOFAMIN — GLASS EFFECT WITHOUT COLOR CHANGES */
 
+/* Размеры */
+.premium-size {
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.18),
+    0 4px 12px rgba(0,0,0,.2);
+}
+
+/* Синяя кнопка В корзину */
+.premium-buy {
+  background-color: rgba(38,155,214,.82) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.3),
+    inset 0 -1px 2px rgba(0,0,0,.12),
+    0 5px 18px rgba(0,0,0,.25);
+}
+
+/* Избранное */
+.premium-fav {
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.18),
+    0 4px 14px rgba(0,0,0,.2);
+}
+
+/* Зелёная кнопка В корзине */
+.product-cart-status {
+  background: rgba(22,131,74,.82) !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.25),
+    0 4px 14px rgba(0,0,0,.2);
+}
+
+/* Серая панель количества */
+.product-cart-top .card-cart-qty {
+  background: rgba(85,85,85,.82) !important;
+  border: 1px solid rgba(255,255,255,.2) !important;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.2);
+}
+
+/* Серые кнопки минус и плюс */
+.product-cart-top .card-cart-qty button {
+  background: rgba(51,51,51,.85) !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.18);
+}
+
+/* Мягкий эффект нажатия */
+.premium-buy:active,
+.premium-fav:active,
+.premium-size:active,
+.product-cart-top .card-cart-qty button:active {
+  filter: brightness(1.12);
+  transform: scale(.97);
+}
     </style>
 
     <div class="premium-product">
