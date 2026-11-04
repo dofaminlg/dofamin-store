@@ -1930,7 +1930,7 @@ html {
 
 .premium-swipe-track {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
   height: auto;
   overflow-x: auto;
@@ -1949,7 +1949,10 @@ html {
 .premium-swipe-slide {
   flex: 0 0 100%;
   width: 100%;
-  height: auto;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   scroll-snap-align: start;
 }
 
@@ -1958,6 +1961,7 @@ html {
   width: 100%;
   height: auto;
   max-height: 520px;
+  margin: auto; 
   object-fit: contain;
   padding: 0;
   box-sizing: border-box;
