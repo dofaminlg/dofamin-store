@@ -3861,12 +3861,50 @@ function changeQty(id, delta, size = '') {
   function syncSearch(source){searchText=$(source).value;['search','search2'].forEach(id=>{if($(id)!==$(source))$(id).value=searchText;});renderProducts();}
   $('search').addEventListener('input',()=>syncSearch('search'));$('search2').addEventListener('input',()=>syncSearch('search2'));
   $('sort').addEventListener('change',()=>{$('sort2').value=$('sort').value;renderProducts();});$('sort2').addEventListener('change',()=>{$('sort').value=$('sort2').value;renderProducts();});
-  async function loadProducts(){
-    if(!db){$('productsGrid').innerHTML='<div class="empty"><strong>Остался один шаг подключения</strong>В коде найдите SUPABASE_PUBLISHABLE_KEY и замените текст ВСТАВЬТЕ_СЮДА_ВАШ_sb_publishable_КЛЮЧ на свой Publishable key. Сохраните файл и обновите страницу.</div>';$('productsGrid2').innerHTML=$('productsGrid').innerHTML;return;}
-    const {data,error}=await db.from('products').select('*').eq('is_active',true).order('created_at',{ascending:false});
-    if(error){console.error(error);$('productsGrid').innerHTML='<div class="empty"><strong>Не удалось загрузить товары</strong>Проверьте таблицу products и публичную RLS-политику SELECT для активных товаров в Supabase.</div>';$('productsGrid2').innerHTML=$('productsGrid').innerHTML;return;}
-    products=data||[];renderCategories();renderProducts();renderFavorites();
+ 
+async function loadProducts(){
+  if(!db){
+    $('productsGrid').innerHTML='<div class="empty"><strong>Остался один шаг подключения</strong>В коде найдите SUPABASE_PUBLISHABLE_KEY и замените текст ВСТАВЬТЕ_СЮДА_ВАШ_sb_publishable_КЛЮЧ на свой Publishable key. Сохраните файл и обновите страницу.</div>';
+    $('productsGrid2').innerHTML=$('productsGrid').innerHTML;
+    return;
   }
+
+  const {data,error}=await db
+    .from('products')
+    .select('*')
+    .eq('is_active',true)
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.error(error);
+    $('productsGrid').innerHTML='<div class="empty"><strong>Не удалось загрузить товары</strong>Проверьте таблицу products и публичную RLS-политику SELECT для активных товаров в Supabase.</div>';
+    $('productsGrid2').innerHTML=$('productsGrid').innerHTML;
+    return;
+  }
+
+  const {data:categories, error:categoriesError}=await db
+    .from('categories')
+    .select('id,name');
+
+  if(categoriesError){
+    console.error('Ошибка загрузки категорий:',categoriesError);
+  }
+
+  const categoryMap={};
+  (categories||[]).forEach(category=>{
+    categoryMap[String(category.id)]=category.name;
+  });
+
+  products=(data||[]).map(product=>({
+    ...product,
+    category:categoryMap[String(product.category_id)]||''
+  }));
+
+  renderCategories();
+  renderProducts();
+  renderFavorites();
+}
+
  
   // ===== DOFAMIN ADMIN PANEL =====
   async function adminRequest(action, extra = {}) {
