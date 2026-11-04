@@ -1919,6 +1919,128 @@ html {
     position: relative;
     z-index: 2;
 }  
+.premium-main-photo {
+  overflow: hidden;
+  position: relative;
+}
+
+.premium-swipe-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+
+.premium-swipe-track::-webkit-scrollbar {
+  display: none;
+}
+
+.premium-swipe-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+
+.premium-swipe-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.premium-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 0 2px;
+}
+
+.premium-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #666;
+  transition: .2s ease;
+}
+
+.premium-dot.active {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  box-shadow: 0 0 7px #fff;
+}  
+ .card-gallery {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #171717;
+  border-radius: 18px;
+}
+
+.card-gallery-track {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+
+.card-gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.card-gallery-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+
+.card-gallery-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.card-gallery-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 0 10px;
+}
+
+.card-gallery-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #666;
+  transition: .2s ease;
+}
+
+.card-gallery-dot.active {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  box-shadow: 0 0 7px #fff;
+} 
   </style>
 </head>
 <body>
@@ -3000,28 +3122,28 @@ function openProduct(id) {
       <div class="premium-top">
         <div class="premium-gallery">
           <div class="premium-main-photo" id="premiumMainPhoto">
-            ${
-              photos.length
-                ? `<img src="${safe(photos[0])}" alt="${safe(p.name)}">`
-                : '<div class="placeholder">◇</div>'
-            }
-            <span class="premium-photo-count" id="premiumPhotoCount">
-              1 / ${Math.max(photos.length, 1)}
-            </span>
-          </div>
-          ${
-            photos.length > 1
-              ? `<div class="premium-thumbs" id="premiumThumbs">
-                  ${photos.map((url, index) => `
-                    <button type="button"
-                      class="premium-thumb ${index === 0 ? 'active' : ''}"
-                      data-premium-photo="${index}">
-                      <img src="${safe(url)}" alt="Фото ${index + 1}">
-                    </button>
-                  `).join('')}
-                </div>`
-              : ''
-          }
+  <div class="premium-swipe-track" id="premiumSwipeTrack">
+    ${
+      photos.length
+        ? photos.map((url,index)=>`
+            <div class="premium-swipe-slide">
+              <img src="${safe(url)}" alt="${safe(p.name)}">
+            </div>
+          `).join('')
+        : '<div class="placeholder">◇</div>'
+    }
+  </div>
+</div>
+
+${
+  photos.length > 1
+    ? `<div class="premium-dots" id="premiumDots">
+        ${photos.map((_,index)=>`
+          <span class="premium-dot ${index===0?'active':''}"></span>
+        `).join('')}
+      </div>`
+    : ''
+}
         </div>
 
         <div class="premium-info">
@@ -3113,27 +3235,22 @@ function openProduct(id) {
     </div>
   `;
 
-  function showPhoto(index) {
-    if (!photos.length) return;
+  const swipeTrack = $('premiumSwipeTrack');
+const dots = $('premiumDots');
 
-    currentPhoto = (index + photos.length) % photos.length;
+if (swipeTrack && photos.length > 1 && dots) {
+  swipeTrack.addEventListener('scroll', () => {
+    const index = Math.round(
+      swipeTrack.scrollLeft / swipeTrack.clientWidth
+    );
 
-    const main = $('premiumMainPhoto');
-    main.querySelector('img').src = photos[currentPhoto];
-
-    $('premiumPhotoCount').textContent =
-      `${currentPhoto + 1} / ${photos.length}`;
-
-    document.querySelectorAll('[data-premium-photo]').forEach((btn, i) => {
-      btn.classList.toggle('active', i === currentPhoto);
+    dots.querySelectorAll('.premium-dot').forEach((dot,i) => {
+      dot.classList.toggle('active', i === index);
     });
-  }
+  }, { passive: true });
+}
 
-  document.querySelectorAll('[data-premium-photo]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      showPhoto(Number(btn.dataset.premiumPhoto));
-    });
-  });
+   
 
   document.querySelectorAll('[data-premium-size]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -3258,8 +3375,43 @@ showPage('product');
 }
  
   function productCard(p){
-    const id=String(p.id), fav=favorites.includes(id), image=p.image_url;
-   const photo=image?`<img class="photo" src="${safe(image)}" alt="${safe(p.name)}" loading="lazy" style="width:100%;aspect-ratio:1/1;height:auto;object-fit:contain;background:#171717;padding:10px;border-radius:18px;box-sizing:border-box"" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'">`:`<div class="placeholder">◇</div>`;
+    const id = String(p.id);
+const fav = favorites.includes(id);
+
+const photos = Array.isArray(p.images) && p.images.length
+  ? p.images
+  : (p.image_url ? [p.image_url] : []);
+
+const photo = `
+  <div class="card-gallery" data-card-gallery="${safe(id)}">
+    <div class="card-gallery-track">
+      ${
+        photos.length
+          ? photos.map(url => `
+              <div class="card-gallery-slide">
+                <img
+                  src="${safe(url)}"
+                  alt="${safe(p.name)}"
+                  loading="lazy"
+                  onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'"
+                >
+              </div>
+            `).join('')
+          : '<div class="placeholder">◇</div>'
+      }
+    </div>
+
+    ${
+      photos.length > 1
+        ? `<div class="card-gallery-dots">
+            ${photos.map((_, index) => `
+              <span class="card-gallery-dot ${index === 0 ? 'active' : ''}"></span>
+            `).join('')}
+          </div>`
+        : ''
+    }
+  </div>
+`;
     const tags=[p.is_hit?'ХИТ':'',p.is_new?'НОВИНКА':''].filter(Boolean).join(' · ');
     return `
   <article class="product" data-open-product="${safe(id)}">
@@ -3350,7 +3502,23 @@ function addProductToCart(p, size = '') {
   persist();
 }
   function bindCards(root){
-  root.querySelectorAll('[data-open-product]').forEach(el => {
+   root.querySelectorAll('[data-card-gallery]').forEach(gallery => {
+    const track = gallery.querySelector('.card-gallery-track');
+    const dots = gallery.querySelectorAll('.card-gallery-dot');
+
+    if (!track || !dots.length) return;
+
+    track.addEventListener('scroll', () => {
+      const index = Math.round(
+        track.scrollLeft / track.clientWidth
+      );
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }, { passive: true });
+  }); 
+    root.querySelectorAll('[data-open-product]').forEach(el => {
     el.addEventListener('click', e => {
       if (e.target.closest('button')) return;
 
