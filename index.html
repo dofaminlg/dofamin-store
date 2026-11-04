@@ -1794,6 +1794,68 @@ html {
   color: #fff;
   box-shadow: inset 0 1px 1px rgba(255,255,255,.12);
 }  
+
+/* DOFAMIN — Glass effect для кнопок товара */
+
+/* Синяя кнопка «В корзину» */
+.product-add-btn,
+.add-to-cart,
+button.add-to-cart {
+    background: rgba(35, 125, 255, 0.38) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(130, 190, 255, 0.55) !important;
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.3),
+        0 4px 18px rgba(30, 120, 255, 0.2);
+    border-radius: 16px;
+    transition: all 0.25s ease;
+}
+
+/* Зелёная кнопка «В корзине» */
+.product-in-cart,
+.in-cart,
+button.in-cart {
+    background: rgba(35, 200, 115, 0.32) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(130, 255, 190, 0.5) !important;
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.3),
+        0 4px 18px rgba(30, 220, 120, 0.18);
+    border-radius: 16px;
+    transition: all 0.25s ease;
+}
+
+/* Счётчик количества − 1 + */
+.product-quantity,
+.quantity-control,
+.quantity-selector {
+    background: rgba(150, 150, 160, 0.2) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.15);
+    border-radius: 14px;
+}
+
+/* Эффект при наведении */
+.product-add-btn:hover,
+.add-to-cart:hover,
+.product-in-cart:hover,
+.in-cart:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+}
+
+/* Эффект нажатия */
+.product-add-btn:active,
+.add-to-cart:active,
+.product-in-cart:active,
+.in-cart:active {
+    transform: scale(0.97);
+}
+  
   </style>
 </head>
 <body>
