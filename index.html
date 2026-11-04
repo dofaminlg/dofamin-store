@@ -2041,6 +2041,32 @@ html {
   background: #fff;
   box-shadow: 0 0 7px #fff;
 } 
+.card-gallery-slide,
+.premium-swipe-slide {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.card-gallery-blur,
+.premium-photo-blur {
+  position: absolute;
+  inset: -18px;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(18px) brightness(.65);
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+.card-gallery-slide img,
+.premium-swipe-slide img {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}  
   </style>
 </head>
 <body>
@@ -3127,8 +3153,12 @@ function openProduct(id) {
       photos.length
         ? photos.map((url,index)=>`
             <div class="premium-swipe-slide">
-              <img src="${safe(url)}" alt="${safe(p.name)}">
-            </div>
+  <div class="premium-photo-blur"
+    style="background-image:url('${safe(url)}')">
+  </div>
+
+  <img src="${safe(url)}" alt="${safe(p.name)}">
+</div>
           `).join('')
         : '<div class="placeholder">◇</div>'
     }
@@ -3389,13 +3419,17 @@ const photo = `
         photos.length
           ? photos.map(url => `
               <div class="card-gallery-slide">
-                <img
-                  src="${safe(url)}"
-                  alt="${safe(p.name)}"
-                  loading="lazy"
-                  onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'"
-                >
-              </div>
+  <div class="card-gallery-blur"
+    style="background-image:url('${safe(url)}')">
+  </div>
+
+  <img
+    src="${safe(url)}"
+    alt="${safe(p.name)}"
+    loading="lazy"
+    onerror="this.outerHTML='<div class=&quot;placeholder&quot;>◇</div>'"
+  >
+</div>
             `).join('')
           : '<div class="placeholder">◇</div>'
       }
