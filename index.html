@@ -1920,14 +1920,19 @@ html {
     z-index: 2;
 }  
 .premium-main-photo {
+  width: 100%;
+  height: auto;
+  min-height: 0;
   overflow: hidden;
   position: relative;
+  background: #171717;
 }
 
 .premium-swipe-track {
   display: flex;
+  align-items: flex-start;
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -1944,15 +1949,17 @@ html {
 .premium-swipe-slide {
   flex: 0 0 100%;
   width: 100%;
-  height: 100%;
+  height: auto;
   scroll-snap-align: start;
 }
 
 .premium-swipe-slide img {
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 520px;
   object-fit: contain;
-  padding: 12px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -1988,8 +1995,9 @@ html {
 
 .card-gallery-track {
   display: flex;
+  align-items: flex-start;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: auto;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -2006,16 +2014,17 @@ html {
 .card-gallery-slide {
   flex: 0 0 100%;
   width: 100%;
-  height: 100%;
+  height: auto;
   scroll-snap-align: start;
 }
 
 .card-gallery-slide img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 420px;
   object-fit: contain;
-  padding: 10px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -2040,7 +2049,7 @@ html {
   height: 8px;
   background: #fff;
   box-shadow: 0 0 7px #fff;
-} 
+}
 .card-gallery-slide,
 .premium-swipe-slide {
   position: relative;
