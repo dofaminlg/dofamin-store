@@ -2425,12 +2425,39 @@ header {
     <option value="name">По названию</option>
   </select>
 
-  <div class="dof-sort-buttons" data-sort-buttons="sort">
-    <button type="button" class="dof-sort-btn active" data-sort-value="new"><span class="new-label">NEW</span></button>
-    <button type="button" class="dof-sort-btn" data-sort-value="low"><span class="sort-icon">₽↓</span></button>
-    <button type="button" class="dof-sort-btn" data-sort-value="high"><span class="sort-icon">₽↑</span></button>
-    <button type="button" class="dof-sort-btn" data-sort-value="name"><span class="sort-icon">A–Z</span></button>
-  </div>
+  
+<div class="dof-sort-buttons" data-sort-buttons="sort">
+  <button type="button" class="dof-sort-btn active" data-sort-value="new" aria-label="Сначала новые">
+    <svg class="sort-svg sort-new-svg" viewBox="0 0 48 28" fill="none">
+      <rect x="1" y="1" width="46" height="26" rx="8" stroke="#ff4054" stroke-width="1.3"/>
+      <text x="24" y="18.5" text-anchor="middle" fill="white" font-size="12" font-weight="900" letter-spacing="1">NEW</text>
+    </svg>
+  </button>
+
+  <button type="button" class="dof-sort-btn" data-sort-value="low" aria-label="Сначала дешевле">
+    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 10V5h16l7 7-12 12-11-11z"/>
+      <circle cx="11" cy="10" r="1.5"/>
+      <path d="M18 13v10m-4-4 4 4 4-4"/>
+    </svg>
+  </button>
+
+  <button type="button" class="dof-sort-btn" data-sort-value="high" aria-label="Сначала дороже">
+    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 10V5h16l7 7-12 12-11-11z"/>
+      <circle cx="11" cy="10" r="1.5"/>
+      <path d="M18 23V13m-4 4 4-4 4 4"/>
+    </svg>
+  </button>
+
+  <button type="button" class="dof-sort-btn" data-sort-value="name" aria-label="По названию">
+    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 24 11 8l6 16M7.5 18h7"/>
+      <path d="M21 9h7l-7 9h7M21 23h7"/>
+    </svg>
+  </button>
+</div>
+
 </div>
     <div class="grid" id="productsGrid"><div class="empty"><strong>Подключаем каталог</strong>Загружаем товары из магазина…</div></div>
   </section>
@@ -2446,12 +2473,36 @@ header {
     <option value="name">По названию</option>
   </select>
 
-  <div class="dof-sort-buttons" data-sort-buttons="sort2">
-    <button type="button" class="dof-sort-btn active" data-sort-value="new"><span class="new-label">NEW</span></button>
-    <button type="button" class="dof-sort-btn" data-sort-value="low"><span class="sort-icon">₽↓</span></button>
-    <button type="button" class="dof-sort-btn" data-sort-value="high"><span class="sort-icon">₽↑</span></button>
-    <button type="button" class="dof-sort-btn" data-sort-value="name"><span class="sort-icon">A–Z</span></button>
-  </div>
+  
+<div class="dof-sort-buttons" data-sort-buttons="sort2">
+  <button type="button" class="dof-sort-btn active" data-sort-value="new" aria-label="Сначала новые">
+    <svg class="sort-svg sort-new-svg" viewBox="0 0 48 28" fill="none">
+      <rect x="1" y="1" width="46" height="26" rx="8" stroke="#ff4054" stroke-width="1.3"/>
+      <text x="24" y="18.5" text-anchor="middle" fill="white" font-size="12" font-weight="900" letter-spacing="1">NEW</text>
+    </svg>
+  </button>
+  <button type="button" class="dof-sort-btn" data-sort-value="low" aria-label="Сначала дешевле">
+    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 10V5h16l7 7-12 12-11-11z"/>
+      <circle cx="11" cy="10" r="1.5"/>
+      <path d="M18 13v10m-4-4 4 4 4-4"/>
+    </svg>
+  </button>
+  <button type="button" class="dof-sort-btn" data-sort-value="high" aria-label="Сначала дороже">
+    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 10V5h16l7 7-12 12-11-11z"/>
+      <circle cx="11" cy="10" r="1.5"/>
+      <path d="M18 23V13m-4 4 4-4 4 4"/>
+    </svg>
+  </button>
+  <button type="button" class="dof-sort-btn" data-sort-value="name" aria-label="По названию">
+    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 24 11 8l6 16M7.5 18h7"/>
+      <path d="M21 9h7l-7 9h7M21 23h7"/>
+    </svg>
+  </button>
+</div>
+
 </div>
     <div class="grid" id="productsGrid2"></div>
   </section>
@@ -3778,6 +3829,30 @@ function openProduct(id) {
     0 0 5px #ff3548,
     0 0 10px rgba(255,53,72,.55);
 }
+
+/* DOFAMIN PREMIUM SVG SORT ICONS */
+.dof-sort-btn .sort-svg {
+  width: 29px;
+  height: 29px;
+  display: block;
+  color: #fff;
+  filter: drop-shadow(0 0 3px rgba(255,255,255,.18));
+}
+
+.dof-sort-btn .sort-new-svg {
+  width: 41px;
+  height: 24px;
+  filter: drop-shadow(0 0 3px rgba(255,53,72,.35));
+}
+
+.dof-sort-btn.active .sort-svg:not(.sort-new-svg) {
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.45));
+}
+
+.dof-sort-btn.active .sort-new-svg {
+  filter: drop-shadow(0 0 6px rgba(255,53,72,.65));
+}
+    
     </style>
 
     <div class="premium-product">
