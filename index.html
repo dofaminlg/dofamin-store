@@ -4956,7 +4956,14 @@ async function loadAdminOrders() {
     const idEl = document.getElementById('dofTelegramId');
     const avatarEl = document.getElementById('dofUserAvatar');
     const copyBtn = document.getElementById('dofCopyTelegramId');
+    const ordersBtn = document.getElementById('dofOpenOrders');
 
+    if (ordersBtn) {
+      ordersBtn.onclick = () => {
+        document.getElementById('dofOrdersSection')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+    }
     if (!nameEl || !idEl || !avatarEl || !copyBtn) return;
 
     if (!user) {
