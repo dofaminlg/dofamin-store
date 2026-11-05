@@ -2417,13 +2417,42 @@ header {
     <div class="sectionhead"><h2>Каталог</h2><span class="count" id="homeCount"></span></div>
     <div class="searchrow"><input class="field" id="search" placeholder="🔎 Поиск товаров..." aria-label="Поиск товаров"></div>
     <div class="filters" id="categories"></div>
-    <div class="sortrow"><select class="field" id="sort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select></div>
+    <div class="sortrow">
+  <select class="field sort-native" id="sort" aria-label="Сортировка">
+    <option value="new">Сначала новые</option>
+    <option value="low">Сначала дешевле</option>
+    <option value="high">Сначала дороже</option>
+    <option value="name">По названию</option>
+  </select>
+
+  <div class="dof-sort-buttons" data-sort-buttons="sort">
+    <button type="button" class="dof-sort-btn active" data-sort-value="new"><span class="new-label">NEW</span></button>
+    <button type="button" class="dof-sort-btn" data-sort-value="low"><span class="sort-icon">₽↓</span></button>
+    <button type="button" class="dof-sort-btn" data-sort-value="high"><span class="sort-icon">₽↑</span></button>
+    <button type="button" class="dof-sort-btn" data-sort-value="name"><span class="sort-icon">A–Z</span></button>
+  </div>
+</div>
     <div class="grid" id="productsGrid"><div class="empty"><strong>Подключаем каталог</strong>Загружаем товары из магазина…</div></div>
   </section>
   <section id="catalogPage" class="page">
     <div class="sectionhead"><h2>Каталог</h2><span class="count" id="catalogCount"></span></div>
     <div class="searchrow"><input class="field" id="search2" placeholder="🔎 Поиск товаров..." aria-label="Поиск товаров"></div>
-    <div class="filters" id="categories2"></div><div class="sortrow"><select class="field" id="sort2" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select></div>
+<div class="filters" id="categories2"></div>
+<div class="sortrow">
+  <select class="field sort-native" id="sort2" aria-label="Сортировка">
+    <option value="new">Сначала новые</option>
+    <option value="low">Сначала дешевле</option>
+    <option value="high">Сначала дороже</option>
+    <option value="name">По названию</option>
+  </select>
+
+  <div class="dof-sort-buttons" data-sort-buttons="sort2">
+    <button type="button" class="dof-sort-btn active" data-sort-value="new"><span class="new-label">NEW</span></button>
+    <button type="button" class="dof-sort-btn" data-sort-value="low"><span class="sort-icon">₽↓</span></button>
+    <button type="button" class="dof-sort-btn" data-sort-value="high"><span class="sort-icon">₽↑</span></button>
+    <button type="button" class="dof-sort-btn" data-sort-value="name"><span class="sort-icon">A–Z</span></button>
+  </div>
+</div>
     <div class="grid" id="productsGrid2"></div>
   </section>
  <section id="productPage" class="page">
@@ -3681,7 +3710,74 @@ function openProduct(id) {
   box-sizing: border-box;
 }
 
+/* DOFAMIN PREMIUM SORT */
+.sort-native {
+  display: none !important;
+}
 
+.dof-sort-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 0;
+}
+
+.dof-sort-btn {
+  width: 54px;
+  height: 48px;
+  flex: 1;
+  max-width: 70px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 15px;
+  background: rgba(255,255,255,.055);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: .2s ease;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.dof-sort-btn:active {
+  transform: scale(.94);
+}
+
+.dof-sort-btn.active {
+  background: rgba(255,255,255,.13);
+  border-color: rgba(255,255,255,.65);
+  box-shadow:
+    0 0 12px rgba(255,255,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.dof-sort-btn .sort-icon {
+  font-size: 21px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.8px;
+}
+
+.dof-sort-btn .new-label {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #fff;
+  -webkit-text-stroke: .35px #ff3548;
+  text-shadow:
+    0 0 3px #ff3548,
+    0 0 7px rgba(255,53,72,.35);
+}
+
+.dof-sort-btn.active .new-label {
+  text-shadow:
+    0 0 5px #ff3548,
+    0 0 10px rgba(255,53,72,.55);
+}
     </style>
 
     <div class="premium-product">
@@ -5234,6 +5330,35 @@ if (backBtn && profileHome && ordersView) {
 
   updateCount();renderCart();loadProducts();
 })();
+// DOFAMIN PREMIUM SORT BUTTONS
+document.querySelectorAll("[data-sort-buttons]").forEach(group => {
+  const selectId = group.dataset.sortButtons;
+  const select = document.getElementById(selectId);
+
+  if (!select) return;
+
+  const buttons = group.querySelectorAll("[data-sort-value]");
+
+  function updateActive() {
+    buttons.forEach(button => {
+      button.classList.toggle(
+        "active",
+        button.dataset.sortValue === select.value
+      );
+    });
+  }
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      select.value = button.dataset.sortValue;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      updateActive();
+    });
+  });
+
+  select.addEventListener("change", updateActive);
+  updateActive();
+});
 </script>
 </body>
 </html>
