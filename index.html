@@ -2970,37 +2970,7 @@ const renderOrderCards = list => list.map(order => {
 
 
 
-      return `
-        <article class="dof-order-card" style="padding:18px;border:1px solid #303030;border-radius:20px;margin-bottom:16px;background:#151515;color:#fff;box-sizing:border-box">
-          <div style="color:#aaa;font-size:11px;letter-spacing:1.5px;margin-bottom:8px">
-            DOFAMIN® ORDER
-          </div>
-
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
-            <strong style="font-size:13px;overflow-wrap:anywhere">
-              Заказ №${escapeHtml(order.id)}
-            </strong>
-            <span style="color:${statusColor};font-size:12px;font-weight:600">
-              ● ${escapeHtml(statusLabel)}
-            </span>
-          </div>
-
-          <div style="color:#888;font-size:12px;margin-top:8px">
-            ${escapeHtml(date)}
-          </div>
-
-          <div style="margin-top:12px">
-            ${itemsHtml}
-          </div>
-
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:16px;margin-top:8px">
-            <span style="color:#aaa;font-size:13px">Итого</span>
-            <strong style="color:#fff;font-size:20px;white-space:nowrap">
-              ${rub(order.total)}
-            </strong>
-          </div>
-        </article>`;
-    }).join('');
+     
 container.innerHTML = orders.length
   ? renderOrderCards(orders)
   : '<div class="dof-orders-empty"><h3>Новых заказов пока нет</h3></div>';
