@@ -2120,6 +2120,183 @@ html {
   margin: 0 !important;
   border-radius: 0 0 18px 18px;
 }  
+
+/* ===== DOFAMIN PROFILE REDESIGN ===== */
+
+#profilePage .dof-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 76px;
+  margin: 4px 0 22px;
+}
+
+#profilePage .dof-shop-avatar {
+  position: absolute;
+  left: 0;
+  width: 58px;
+  height: 58px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#profilePage .dof-shop-avatar span {
+  color: #fff;
+  font-size: 31px;
+  font-weight: 900;
+  letter-spacing: -3px;
+  transform: translateX(-1px);
+}
+
+#profilePage .dof-shop-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+#profilePage .dof-user-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background: #151515;
+  border: 1px solid #303030;
+  border-radius: 18px;
+}
+
+#profilePage .dof-user-avatar {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+}
+
+#profilePage .dof-user-avatar svg {
+  width: 29px;
+  height: 29px;
+}
+
+#profilePage .dof-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#profilePage .dof-user-info {
+  min-width: 0;
+  flex: 1;
+}
+
+#profilePage .dof-user-name {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+#profilePage .dof-user-id {
+  color: #929292;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+#profilePage .dof-copy-id {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border: 0;
+  border-radius: 10px;
+  background: #242424;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#profilePage .dof-copy-id svg {
+  width: 19px;
+  height: 19px;
+}
+
+#profilePage .dof-profile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 30px;
+}
+
+#profilePage .dof-profile-menu-item {
+  width: 100%;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 15px;
+  background: #151515;
+  border: 1px solid #303030;
+  border-radius: 15px;
+  color: #fff;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+#profilePage .dof-profile-menu-item:active {
+  background: #222;
+  border-color: #555;
+}
+
+#profilePage .dof-menu-icon {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  border-radius: 11px;
+  color: #fff;
+}
+
+#profilePage .dof-menu-icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+#profilePage .dof-menu-arrow {
+  margin-left: auto;
+  color: #777;
+  font-size: 23px;
+  font-weight: 400;
+}
+
+#profilePage .dof-orders-heading {
+  margin-top: 20px;
+}
+
+/* ===== END DOFAMIN PROFILE REDESIGN ===== */
+  
   </style>
 </head>
 <body>
@@ -2180,24 +2357,117 @@ html {
 </section> <section id="favoritesPage" class="page"><div class="sectionhead"><h2>Избранное ❤️</h2></div><div class="grid" id="favoritesGrid"></div></section>
   <section id="cartPage" class="page"><div class="sectionhead"><h2>Корзина 🛒</h2></div><div id="cartItems"></div><div id="cartCheckout"></div></section>
 
+
 <section id="profilePage" class="page">
-  <div class="sectionhead">
-    <h2>Профиль</h2>
+
+  <!-- Шапка магазина -->
+  <div class="dof-profile-header">
+    <div class="dof-shop-avatar">
+      <span>D</span>
+    </div>
+    <div class="dof-shop-title">ДОФАМИН ШОП</div>
   </div>
 
-  <div class="adminnote dof-profile">
-    <div class="dof-profile-brand">DOFAMIN®</div>
-    <p class="small">Твой стиль. Твои покупки. Твои заказы.</p>
+  <!-- Карточка пользователя -->
+  <div class="dof-user-card">
+    <div class="dof-user-avatar" id="dofUserAvatar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21a8 8 0 0 1 16 0"/>
+      </svg>
+    </div>
 
-    <a href="https://t.me/DofaminMg"
-       target="_blank"
-       rel="noopener"
-       class="btn primary dof-manager-btn">
-      Написать менеджеру ↗
+    <div class="dof-user-info">
+      <div class="dof-user-name" id="dofUserName">Покупатель</div>
+      <div class="dof-user-id" id="dofTelegramId">Telegram ID не определён</div>
+    </div>
+
+    <button type="button" class="dof-copy-id" id="dofCopyTelegramId"
+            aria-label="Скопировать Telegram ID">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.7" stroke-linecap="round"
+           stroke-linejoin="round">
+        <rect x="8" y="8" width="12" height="12" rx="2"/>
+        <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Меню профиля -->
+  <div class="dof-profile-menu">
+
+    <button type="button" class="dof-profile-menu-item" id="dofOpenOrders">
+      <span class="dof-menu-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round"
+             stroke-linejoin="round">
+          <path d="M6 3h9l4 4v14H6z"/>
+          <path d="M14 3v5h5M9 12h7M9 16h7"/>
+        </svg>
+      </span>
+      <span>Мои заказы</span>
+      <span class="dof-menu-arrow">›</span>
+    </button>
+
+    <a href="https://t.me/DofaminMg" target="_blank" rel="noopener"
+       class="dof-profile-menu-item">
+      <span class="dof-menu-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round"
+             stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4M12 17h.01"/>
+        </svg>
+      </span>
+      <span>Поддержка</span>
+      <span class="dof-menu-arrow">↗</span>
     </a>
+
+    <a href="https://t.me/+47v_EHUngYI3YzJi" target="_blank" rel="noopener"
+       class="dof-profile-menu-item">
+      <span class="dof-menu-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round"
+             stroke-linejoin="round">
+          <path d="M5 9a10 10 0 0 1 14 0M8 12a6 6 0 0 1 8 0M11 15a2 2 0 0 1 2 0"/>
+          <circle cx="12" cy="19" r=".8" fill="currentColor"/>
+        </svg>
+      </span>
+      <span>Канал магазина</span>
+      <span class="dof-menu-arrow">↗</span>
+    </a>
+
+    <button type="button" class="dof-profile-menu-item" id="dofOpenAgreement">
+      <span class="dof-menu-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round"
+             stroke-linejoin="round">
+          <path d="M6 3h9l4 4v14H6z"/>
+          <path d="M14 3v5h5M9 12h7M9 16h7"/>
+        </svg>
+      </span>
+      <span>Пользовательское соглашение</span>
+      <span class="dof-menu-arrow">›</span>
+    </button>
+
+    <button type="button" class="dof-profile-menu-item" id="dofOpenGuide">
+      <span class="dof-menu-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round"
+             stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="m15.5 8.5-2.5 5-5 2.5 2.5-5z"/>
+        </svg>
+      </span>
+      <span>Гид по магазину</span>
+      <span class="dof-menu-arrow">›</span>
+    </button>
+
   </div>
 
-  <div class="sectionhead dof-orders-heading">
+  <!-- Мои заказы -->
+  <div class="sectionhead dof-orders-heading" id="dofOrdersSection">
     <h2>Мои заказы</h2>
     <span class="count" id="myOrdersCount">0</span>
   </div>
@@ -2217,30 +2487,33 @@ html {
       <button type="button" class="btn primary" data-page="catalog">
         Перейти в каталог
       </button>
-       </div>
+    </div>
   </div>
 
+  <!-- История покупок -->
   <section class="dof-orders-history" style="margin-top:28px">
-  <button type="button" id="historyToggle"
-    style="width:100%;display:flex;justify-content:space-between;align-items:center;background:#151515;color:#fff;border:1px solid #303030;border-radius:14px;padding:16px;font-size:17px;font-weight:600;cursor:pointer">
-    <span>История покупок</span>
-    <span id="historyArrow">＋</span>
-  </button>
+    <button type="button" id="historyToggle"
+      style="width:100%;display:flex;justify-content:space-between;align-items:center;background:#151515;color:#fff;border:1px solid #303030;border-radius:14px;padding:16px;font-size:17px;font-weight:600;cursor:pointer">
+      <span>История покупок</span>
+      <span id="historyArrow">＋</span>
+    </button>
 
-  <div id="historyContent" style="display:none;margin-top:14px">
-  <div class="sectionhead dof-orders-heading">
-    <h2>История покупок</h2>
-    <span class="count" id="purchaseHistoryCount">0</span>
-  </div>
+    <div id="historyContent" style="display:none;margin-top:14px">
+      <div class="sectionhead dof-orders-heading">
+        <h2>История покупок</h2>
+        <span class="count" id="purchaseHistoryCount">0</span>
+      </div>
 
-  <div id="purchaseHistoryList" class="dof-orders-list">
-    <div class="dof-orders-empty">
-      Здесь пока нет завершённых покупок.
-    </div>
-    </div>
+      <div id="purchaseHistoryList" class="dof-orders-list">
+        <div class="dof-orders-empty">
+          Здесь пока нет завершённых покупок.
+        </div>
+      </div>
     </div>
   </section>
+
 </section>
+
 
   <div class="footer">DOFAMIN® — БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА.</div>
 </main>
