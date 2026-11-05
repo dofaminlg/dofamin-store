@@ -2369,7 +2369,7 @@ header {
 
 /* ===== КОНЕЦ ОБЩЕЙ ШАПКИ ===== */  
 
-/* ===== DOFAMIN PREMIUM SORT BUTTONS ===== */
+/* ===== DOFAMIN PREMIUM SORT POPUP ===== */
 
 .sortrow {
   display: flex;
@@ -2382,59 +2382,121 @@ header {
   display: none !important;
 }
 
-.dof-sort-buttons {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.dof-sort-popup-wrap {
+  position: relative;
+  z-index: 20;
 }
 
-.dof-sort-btn {
-  width: 44px;
-  height: 44px;
-  padding: 8px;
+.dof-sort-trigger {
+  width: 46px;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255,255,255,.20);
-  border-radius: 14px;
+  padding: 11px;
   color: #fff;
-  background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.035));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 15px;
+  background: linear-gradient(145deg, rgba(255,255,255,.15), rgba(255,255,255,.035));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow: inset 0 1px 2px rgba(255,255,255,.12);
+  cursor: pointer;
   transition: .2s ease;
 }
 
-.dof-sort-btn.active {
-  border-color: rgba(255,255,255,.55);
-  background: rgba(255,255,255,.18);
-  box-shadow: 0 0 12px rgba(255,255,255,.10);
+.dof-sort-trigger svg {
+  width: 25px;
+  height: 25px;
 }
 
-.sort-svg {
-  width: 27px;
-  height: 27px;
-  display: block;
-}
-
-.sort-new-svg {
-  width: 38px;
-  height: 23px;
-  filter: drop-shadow(0 0 3px rgba(255,53,72,.35));
-}
-
-.dof-sort-btn:active {
+.dof-sort-trigger:active {
   transform: scale(.93);
 }
 
-@media (max-width: 380px) {
-  .dof-sort-btn {
-    width: 40px;
-    height: 40px;
-  }
+.dof-sort-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 225px;
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 17px;
+  background: rgba(20,20,24,.94);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.48), inset 0 1px 1px rgba(255,255,255,.08);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-7px) scale(.97);
+  transform-origin: top right;
+  transition: .2s ease;
 }
 
-/* ===== END PREMIUM SORT BUTTONS ===== */
+.dof-sort-popup-wrap.open .dof-sort-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.dof-sort-option {
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 11px;
+  color: rgba(255,255,255,.82);
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.dof-sort-option svg {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dof-sort-option.active {
+  color: #fff;
+  background: rgba(255,255,255,.09);
+  border-color: rgba(255,255,255,.12);
+}
+
+.dof-sort-option:active {
+  transform: scale(.97);
+}
+
+.sort-new-badge {
+  width: 38px;
+  height: 23px;
+  flex: 0 0 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border: 1px solid rgba(255,64,84,.85);
+  border-radius: 7px;
+  background: rgba(255,45,65,.09);
+  box-shadow: 0 0 9px rgba(255,45,65,.22);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+
   
   </style>
 </head>
@@ -2494,36 +2556,34 @@ header {
   </select>
 
   
-<div class="dof-sort-buttons" data-sort-buttons="sort">
-  <button type="button" class="dof-sort-btn active" data-sort-value="new" aria-label="Сначала новые">
-    <svg class="sort-svg sort-new-svg" viewBox="0 0 48 28" fill="none">
-      <rect x="1" y="1" width="46" height="26" rx="8" stroke="#ff4054" stroke-width="1.3"/>
-      <text x="24" y="18.5" text-anchor="middle" fill="white" font-size="12" font-weight="900" letter-spacing="1">NEW</text>
+<div class="dof-sort-popup-wrap" data-sort-popup="sort">
+  <button type="button" class="dof-sort-trigger" aria-label="Сортировка">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M4 7h16M7 12h10m-7 5h4"/>
     </svg>
   </button>
 
-  <button type="button" class="dof-sort-btn" data-sort-value="low" aria-label="Сначала дешевле">
-    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M5 10V5h16l7 7-12 12-11-11z"/>
-      <circle cx="11" cy="10" r="1.5"/>
-      <path d="M18 13v10m-4-4 4 4 4-4"/>
-    </svg>
-  </button>
+  <div class="dof-sort-menu">
+    <button type="button" class="dof-sort-option active" data-sort-value="new">
+      <span class="sort-new-badge">NEW</span>
+      <span>Сначала новые</span>
+    </button>
 
-  <button type="button" class="dof-sort-btn" data-sort-value="high" aria-label="Сначала дороже">
-    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M5 10V5h16l7 7-12 12-11-11z"/>
-      <circle cx="11" cy="10" r="1.5"/>
-      <path d="M18 23V13m-4 4 4-4 4 4"/>
-    </svg>
-  </button>
+    <button type="button" class="dof-sort-option" data-sort-value="low">
+      <svg viewBox="0 0 24 24"><path d="M7 7l5 5 5-5M12 12v8"/></svg>
+      <span>Сначала дешевле</span>
+    </button>
 
-  <button type="button" class="dof-sort-btn" data-sort-value="name" aria-label="По названию">
-    <svg class="sort-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M5 24 11 8l6 16M7.5 18h7"/>
-      <path d="M21 9h7l-7 9h7M21 23h7"/>
-    </svg>
-  </button>
+    <button type="button" class="dof-sort-option" data-sort-value="high">
+      <svg viewBox="0 0 24 24"><path d="M7 17l5-5 5 5M12 12V4"/></svg>
+      <span>Сначала дороже</span>
+    </button>
+
+    <button type="button" class="dof-sort-option" data-sort-value="name">
+      <svg viewBox="0 0 24 24"><path d="M4 19 10 5l6 14M6.5 14h7M18 7h4l-4 5h4"/></svg>
+      <span>По названию</span>
+    </button>
+  </div>
 </div>
 
 </div>
@@ -5539,34 +5599,58 @@ if (backBtn && profileHome && ordersView) {
 
   updateCount();renderCart();loadProducts();
 })();
-// DOFAMIN PREMIUM SORT BUTTONS
-document.querySelectorAll("[data-sort-buttons]").forEach(group => {
-  const selectId = group.dataset.sortButtons;
+// DOFAMIN PREMIUM SORT POPUP
+document.querySelectorAll("[data-sort-popup]").forEach(group => {
+  const selectId = group.dataset.sortPopup;
   const select = document.getElementById(selectId);
+  const trigger = group.querySelector(".dof-sort-trigger");
+  const menu = group.querySelector(".dof-sort-menu");
+  const options = group.querySelectorAll("[data-sort-value]");
 
-  if (!select) return;
+  if (!select || !trigger || !menu) return;
 
-  const buttons = group.querySelectorAll("[data-sort-value]");
+  trigger.addEventListener("click", event => {
+    event.stopPropagation();
+    group.classList.toggle("open");
+  });
 
-  function updateActive() {
-    buttons.forEach(button => {
-      button.classList.toggle(
-        "active",
-        button.dataset.sortValue === select.value
-      );
-    });
-  }
-
-  buttons.forEach(button => {
-    button.addEventListener("click", () => {
-      select.value = button.dataset.sortValue;
+  options.forEach(option => {
+    option.addEventListener("click", () => {
+      select.value = option.dataset.sortValue;
       select.dispatchEvent(new Event("change", { bubbles: true }));
-      updateActive();
+
+      options.forEach(item => {
+        item.classList.toggle(
+          "active",
+          item.dataset.sortValue === select.value
+        );
+      });
+
+      group.classList.remove("open");
     });
   });
 
-  select.addEventListener("change", updateActive);
-  updateActive();
+  select.addEventListener("change", () => {
+    options.forEach(item => {
+      item.classList.toggle(
+        "active",
+        item.dataset.sortValue === select.value
+      );
+    });
+  });
+
+  document.addEventListener("click", event => {
+    if (!group.contains(event.target)) {
+      group.classList.remove("open");
+    }
+  });
+
+  options.forEach(item => {
+    item.classList.toggle(
+      "active",
+      item.dataset.sortValue === select.value
+    );
+  });
 });
 </script>
 </body>
