@@ -2395,6 +2395,7 @@ html {
   </div>
 
   <!-- Меню профиля -->
+  <div id="dofProfileHome">
   <div class="dof-profile-menu">
 
     <button type="button" class="dof-profile-menu-item" id="dofOpenOrders">
@@ -2465,9 +2466,20 @@ html {
       </span>
       <span>Гид по магазину</span>
       <span class="dof-menu-arrow">›</span>
-    </button>
+        </button>
 
   </div>
+
+</div>
+
+<div id="dofOrdersView" style="display:none">
+
+  <button type="button" id="dofBackToProfile"
+    class="dof-profile-menu-item"
+    style="margin-bottom:20px">
+    <span class="dof-menu-arrow" style="margin-left:0">‹</span>
+    <span>Назад в профиль</span>
+  </button>
 
   <!-- Мои заказы -->
   <div class="sectionhead dof-orders-heading" id="dofOrdersSection">
@@ -2513,12 +2525,13 @@ html {
         </div>
       </div>
     </div>
-  </section>
+    </section>
+
+</div>
 
 </section>
 
-
-  <div class="footer">DOFAMIN® — БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА.</div>
+<div class="footer">DOFAMIN® — БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА.</div>
 </main>
 
 <nav class="bottomnav" aria-label="Основная навигация">
@@ -4959,15 +4972,30 @@ async function loadAdminOrders() {
     const idEl = document.getElementById('dofTelegramId');
     const avatarEl = document.getElementById('dofUserAvatar');
     const copyBtn = document.getElementById('dofCopyTelegramId');
-    const ordersBtn = document.getElementById('dofOpenOrders');
+   if (!nameEl || !idEl || !avatarEl || !copyBtn) return;
 
-    if (ordersBtn) {
-      ordersBtn.onclick = () => {
-        document.getElementById('dofOrdersSection')
-          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      };
-    }
-    if (!nameEl || !idEl || !avatarEl || !copyBtn) return;
+const ordersBtn = document.getElementById('dofOpenOrders');
+const backBtn = document.getElementById('dofBackToProfile');
+
+const profileHome = document.getElementById('dofProfileHome');
+const ordersView = document.getElementById('dofOrdersView');
+
+if (ordersBtn && profileHome && ordersView) {
+  ordersBtn.onclick = () => {
+    profileHome.style.display = 'none';
+    ordersView.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+}
+
+if (backBtn && profileHome && ordersView) {
+  backBtn.onclick = () => {
+    ordersView.style.display = 'none';
+    profileHome.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+}
+   
 
     if (!user) {
       nameEl.textContent = 'Покупатель';
