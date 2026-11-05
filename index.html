@@ -3852,6 +3852,72 @@ function openProduct(id) {
 .dof-sort-btn.active .sort-new-svg {
   filter: drop-shadow(0 0 6px rgba(255,53,72,.65));
 }
+
+/* DOFAMIN SORT - FINAL FIX */
+
+.sortrow select.sort-native,
+.sortrow .sort-native {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.sortrow .dof-sort-buttons {
+  display: flex !important;
+  width: 100% !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding: 8px 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+.sortrow .dof-sort-btn {
+  display: flex !important;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: 70px !important;
+  height: 50px !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  border-radius: 15px !important;
+  background: rgba(255,255,255,.07) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.1) !important;
+  cursor: pointer;
+}
+
+.sortrow .dof-sort-btn.active {
+  background: rgba(255,255,255,.16) !important;
+  border-color: rgba(255,255,255,.75) !important;
+  box-shadow: 0 0 13px rgba(255,255,255,.16) !important;
+}
+
+.sortrow .dof-sort-btn svg.sort-svg {
+  display: block !important;
+  width: 29px !important;
+  height: 29px !important;
+  min-width: 29px !important;
+  color: #fff !important;
+  overflow: visible !important;
+}
+
+.sortrow .dof-sort-btn svg.sort-new-svg {
+  width: 41px !important;
+  height: 24px !important;
+  min-width: 41px !important;
+}
+
+.sortrow .dof-sort-btn.active svg {
+  filter: drop-shadow(0 0 5px rgba(255,255,255,.4));
+}
+
+.sortrow .dof-sort-btn.active .sort-new-svg {
+  filter: drop-shadow(0 0 5px rgba(255,53,72,.65));
+}
     
     </style>
 
