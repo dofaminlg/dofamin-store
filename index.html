@@ -2145,12 +2145,16 @@ html {
   justify-content: center;
 }
 
-#profilePage .dof-shop-avatar span {
-  color: #fff;
-  font-size: 31px;
-  font-weight: 900;
-  letter-spacing: -3px;
-  transform: translateX(-1px);
+#profilePage .dof-shop-avatar {
+  overflow: hidden;
+}
+
+#profilePage .dof-shop-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
 #profilePage .dof-shop-title {
@@ -2363,8 +2367,11 @@ html {
   <!-- Шапка магазина -->
   <div class="dof-profile-header">
     <div class="dof-shop-avatar">
-      <span>D</span>
-    </div>
+  <img
+    src="https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/channel-avatar"
+    alt="DOFAMIN"
+  >
+</div>
     <div class="dof-shop-title">ДОФАМИН ШОП</div>
   </div>
 
