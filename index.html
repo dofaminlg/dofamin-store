@@ -2497,7 +2497,77 @@ header {
 }
 
 
-  
+/* ===== DOFAMIN GALLERY NATURAL IMAGE SIZE FIX ===== */
+
+/* Убираем размытые подложки */
+.card-gallery-blur,
+.premium-photo-blur {
+  display: none !important;
+}
+
+/* Карточки каталога */
+.card-gallery {
+  height: auto !important;
+  aspect-ratio: auto !important;
+  background: #050505 !important;
+}
+
+.card-gallery-track {
+  height: auto !important;
+  align-items: flex-start !important;
+  background: #050505 !important;
+}
+
+.card-gallery-slide {
+  height: auto !important;
+  min-height: 0 !important;
+  background: #050505 !important;
+}
+
+.card-gallery-slide img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  background: #050505 !important;
+}
+
+/* Страница отдельного товара */
+.premium-gallery {
+  height: auto !important;
+  aspect-ratio: auto !important;
+  background: #050505 !important;
+}
+
+.premium-swipe-track {
+  height: auto !important;
+  align-items: flex-start !important;
+  background: #050505 !important;
+}
+
+.premium-swipe-slide {
+  height: auto !important;
+  min-height: 0 !important;
+  background: #050505 !important;
+}
+
+.premium-swipe-slide img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  background: #050505 !important;
+}
+
+/* Точки галерей */
+.card-gallery-dots,
+.premium-dots {
+  background: #050505 !important;
+}
+
+/* ===== END GALLERY FIX ===== */  
   </style>
 </head>
 <body>
