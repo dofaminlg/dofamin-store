@@ -2368,6 +2368,74 @@ header {
 }
 
 /* ===== КОНЕЦ ОБЩЕЙ ШАПКИ ===== */  
+
+/* ===== DOFAMIN PREMIUM SORT BUTTONS ===== */
+
+.sortrow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.sortrow .sort-native {
+  display: none !important;
+}
+
+.dof-sort-buttons {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.dof-sort-btn {
+  width: 44px;
+  height: 44px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,.20);
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.035));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.12);
+  transition: .2s ease;
+}
+
+.dof-sort-btn.active {
+  border-color: rgba(255,255,255,.55);
+  background: rgba(255,255,255,.18);
+  box-shadow: 0 0 12px rgba(255,255,255,.10);
+}
+
+.sort-svg {
+  width: 27px;
+  height: 27px;
+  display: block;
+}
+
+.sort-new-svg {
+  width: 38px;
+  height: 23px;
+  filter: drop-shadow(0 0 3px rgba(255,53,72,.35));
+}
+
+.dof-sort-btn:active {
+  transform: scale(.93);
+}
+
+@media (max-width: 380px) {
+  .dof-sort-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ===== END PREMIUM SORT BUTTONS ===== */
+  
   </style>
 </head>
 <body>
