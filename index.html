@@ -4947,6 +4947,52 @@ async function loadAdminOrders() {
     }
   }
 
+  // ===== DOFAMIN TELEGRAM PROFILE =====
+  function initDofaminProfile() {
+    const tg = window.Telegram?.WebApp;
+    const user = tg?.initDataUnsafe?.user;
+
+    const nameEl = document.getElementById('dofUserName');
+    const idEl = document.getElementById('dofTelegramId');
+    const avatarEl = document.getElementById('dofUserAvatar');
+    const copyBtn = document.getElementById('dofCopyTelegramId');
+
+    if (!nameEl || !idEl || !avatarEl || !copyBtn) return;
+
+    if (!user) {
+      nameEl.textContent = 'Покупатель';
+      idEl.textContent = 'Открой магазин через Telegram';
+      copyBtn.style.display = 'none';
+      return;
+    }
+
+    const fullName = [user.first_name, user.last_name]
+      .filter(Boolean)
+      .join(' ');
+
+    nameEl.textContent = fullName || user.username || 'Покупатель';
+    idEl.textContent = 'Telegram ID ' + user.id;
+
+    if (user.photo_url) {
+      const img = document.createElement('img');
+      img.src = user.photo_url;
+      img.alt = 'Аватар пользователя';
+      avatarEl.replaceChildren(img);
+    }
+
+    copyBtn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(String(user.id));
+        toast('Telegram ID скопирован!');
+      } catch (error) {
+        toast('Не удалось скопировать ID');
+      }
+    };
+  }
+
+  initDofaminProfile();
+  // ===== END DOFAMIN TELEGRAM PROFILE =====
+
   initializeAdmin();
   // ===== END DOFAMIN ADMIN PANEL =====
 
