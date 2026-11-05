@@ -4512,21 +4512,53 @@ function addProductToCart(p, size = '') {
 }
   function bindCards(root){
    root.querySelectorAll('[data-card-gallery]').forEach(gallery => {
-    const track = gallery.querySelector('.card-gallery-track');
-    const dots = gallery.querySelectorAll('.card-gallery-dot');
+  const track = gallery.querySelector('.card-gallery-track');
+  const slides = Array.from(
+    gallery.querySelectorAll('.card-gallery-slide')
+  );
+  const dots = gallery.querySelectorAll('.card-gallery-dot');
 
-    if (!track || !dots.length) return;
+  if (!track || !slides.length) return;
 
-    track.addEventListener('scroll', () => {
-      const index = Math.round(
-        track.scrollLeft / track.clientWidth
-      );
+  function updateGallery() {
+    const width = track.clientWidth;
+    if (!width) return;
 
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
-      });
-    }, { passive: true });
-  }); 
+    const index = Math.max(
+      0,
+      Math.min(slides.length - 1, Math.round(track.scrollLeft / width))
+    );
+
+    const activeSlide = slides[index];
+    const img = activeSlide.querySelector('img');
+
+    if (img && img.complete && img.naturalHeight) {
+      const imageHeight = img.getBoundingClientRect().height;
+      track.style.height = imageHeight + 'px';
+    }
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+
+  slides.forEach(slide => {
+    const img = slide.querySelector('img');
+
+    if (img) {
+      img.addEventListener('load', updateGallery);
+    }
+  });
+
+  track.addEventListener('scroll', updateGallery, {
+    passive: true
+  });
+
+  window.addEventListener('resize', updateGallery);
+
+  updateGallery();
+  setTimeout(updateGallery, 300);
+});
     root.querySelectorAll('[data-open-product]').forEach(el => {
     el.addEventListener('click', e => {
       if (e.target.closest('button')) return;
