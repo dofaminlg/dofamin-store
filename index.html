@@ -2640,6 +2640,77 @@ header {
 }
 
 /* END PREMIUM GALLERY FIX */
+
+/* ===== DOFAMIN — ГАЛЕРЕЯ: ЕДИНЫЙ ФИКС ===== */
+.premium-gallery,
+.card-gallery {
+  --gal-bg: #0a0a0a;
+  background: var(--gal-bg) !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}
+
+.premium-main-photo {
+  height: auto !important;
+  min-height: 0 !important;
+  display: block !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--gal-bg) !important;
+}
+
+.premium-swipe-track,
+.card-gallery-track {
+  display: flex !important;
+  align-items: stretch !important;
+  height: auto !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory !important;
+  scroll-behavior: auto !important;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  background: var(--gal-bg) !important;
+}
+
+.premium-swipe-slide,
+.card-gallery-slide {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  min-height: 0 !important;
+  aspect-ratio: 3 / 4 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  scroll-snap-align: center !important;
+  scroll-snap-stop: always;
+  background: var(--gal-bg) !important;
+}
+
+.premium-swipe-slide img,
+.card-gallery-slide img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  background: transparent !important;
+}
+
+.premium-dots,
+.card-gallery-dots {
+  background: var(--gal-bg) !important;
+  margin: 0 !important;
+  padding: 8px 0 10px !important;
+}
+
+@media (min-width: 700px) {
+  .premium-swipe-slide { aspect-ratio: 1 / 1 !important; }
+}
+/* ===== END ГАЛЕРЕЯ: ЕДИНЫЙ ФИКС ===== */
   </style>
 </head>
 <body>
@@ -3020,6 +3091,7 @@ header {
 <script>
 (() => {
   'use strict';
+  window.Telegram?.WebApp?.disableVerticalSwipes?.();
   // Публичные настройки проекта. Publishable key предназначен для браузера;
   // безопасность данных обеспечивается RLS-политиками Supabase.
   const SUPABASE_URL = 'https://nigcbsunnavrlkwtktua.supabase.co';
@@ -4600,14 +4672,6 @@ function addProductToCart(p, size = '') {
       0,
       Math.min(slides.length - 1, Math.round(track.scrollLeft / width))
     );
-
-    const activeSlide = slides[index];
-    const img = activeSlide.querySelector('img');
-
-    if (img && img.complete && img.naturalHeight) {
-      const imageHeight = img.getBoundingClientRect().height;
-      track.style.height = imageHeight + 'px';
-    }
 
     dots.forEach((dot, i) => {
       dot.classList.toggle('active', i === index);
