@@ -2955,6 +2955,95 @@ a.pp-infocard:active{transform:scale(.98);border-color:rgba(255,255,255,.35)}
 #productPage .premium-description{background:linear-gradient(160deg,#121212,#0b0b0b);border:1px solid #232323;border-radius:20px;padding:20px;margin-top:22px}
 #productPage .premium-description h3{font-size:15px;letter-spacing:.3px;margin:0 0 10px}
 #productPage .premium-description p{color:#b5b5b5;line-height:1.65;font-size:14.5px}
+
+/* ===== DOFAMIN v3: категории, «Каталог», баннеры, NEW, профиль ===== */
+.filters{gap:10px;margin:0 -16px;padding:4px 16px 12px;scroll-snap-type:x proximity}
+.chip.cat{display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 17px 0 8px;border-radius:15px;scroll-snap-align:start;background:linear-gradient(145deg,#171717,#0b0b0b);border:1px solid #272727;color:#d6d6d6;font-weight:650;font-size:14px;transition:all .22s ease}
+.chip.cat .ci{width:31px;height:31px;border-radius:10px;background:#212121;display:grid;place-items:center;transition:all .22s ease}
+.chip.cat svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.chip.cat:active{transform:scale(.96)}
+.chip.cat.active{background:#fff;color:#111;border-color:#fff;font-weight:800;box-shadow:0 0 20px rgba(255,255,255,.22)}
+.chip.cat.active .ci{background:#111;color:#fff}
+.sortrow{display:flex!important;justify-content:flex-end;margin:4px 0 14px}
+.dd{position:relative}
+.dd-btn{display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 13px;border-radius:13px;background:#121212;border:1px solid #2a2a2a;color:#fff;font-weight:700;transition:border-color .2s}
+.dd-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dd-btn .chev{transition:transform .2s}.dd.open .dd-btn .chev{transform:rotate(180deg)}.dd.open .dd-btn{border-color:#fff}
+.dd-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:230px;z-index:30;background:rgba(18,18,18,.97);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid #333;border-radius:15px;padding:6px;box-shadow:0 18px 40px rgba(0,0,0,.6);opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .18s ease}
+.dd.open .dd-menu{opacity:1;visibility:visible;transform:none}
+.dd-item{display:flex;align-items:center;width:100%;border:0;background:transparent;color:#cfcfcf;padding:12px;border-radius:10px;text-align:left;font-weight:600}
+.dd-item .ck{margin-left:auto;opacity:0;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.dd-item.active{background:rgba(255,255,255,.1);color:#fff}.dd-item.active .ck{opacity:1}
+.bn{position:relative;margin:18px 0 14px;border-radius:22px;overflow:hidden;border:1px solid #2a2a2a;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.bn-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.bn-track::-webkit-scrollbar{display:none}
+.bn-slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;display:block;position:relative;aspect-ratio:2.1/1;background:#0b0b0b;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.bn-slide img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;user-select:none}
+.bn-slide::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.5))}
+.bn-dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:6px;z-index:2}
+.bn-dots i{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.45);transition:all .3s;cursor:pointer}
+.bn-dots i.on{width:20px;background:#fff}
+.bn-arr{display:none;position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.5);color:#fff;font-size:20px}
+.bn-arr.l{left:10px}.bn-arr.r{right:10px}
+@media(hover:hover){.bn-arr{display:block}}
+.card-gallery{position:relative}
+.new-flag{position:absolute;left:9px;bottom:9px;z-index:3;font-size:10px;font-weight:900;letter-spacing:1.3px;line-height:1;color:#fff;background:linear-gradient(135deg,#ff3b4e,#d4122b);padding:4px 7px;border-radius:6px;box-shadow:0 0 12px rgba(255,59,78,.55);pointer-events:none}
+.dof-newbox{border:1px solid #2b2b2b;border-radius:14px;padding:12px;background:#101010;display:grid;gap:10px}
+.dof-newbox .nb-row{display:flex;gap:10px;align-items:center}.dof-newbox .nb-row>select{flex:1}
+.dof-newbox .nb-preview{font-size:10px;font-weight:900;letter-spacing:1.3px;color:#fff;background:linear-gradient(135deg,#ff3b4e,#d4122b);padding:4px 7px;border-radius:6px}
+#profilePage .dof-user-card{position:relative;flex-direction:column;text-align:center;gap:12px;padding:28px 18px 22px;border-radius:26px;border:1px solid #2c2c2c;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,rgba(255,255,255,.13),transparent 60%),linear-gradient(160deg,#1b1b1b,#0a0a0a)}
+#profilePage .dof-user-avatar{width:88px;height:88px;flex:none;border:2px solid rgba(255,255,255,.9);box-shadow:0 0 0 6px rgba(255,255,255,.07),0 0 34px rgba(255,255,255,.2)}
+#profilePage .dof-user-avatar svg{width:44px;height:44px}
+#profilePage .dof-user-info{flex:none;width:100%}
+#profilePage .dof-user-name{font-size:21px;font-weight:800;margin-bottom:8px}
+#profilePage .dof-user-id{display:inline-block;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#bdbdbd}
+#profilePage .dof-copy-id{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}
+.dof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 18px}
+.dof-stat{border:1px solid #272727;background:linear-gradient(160deg,#161616,#0c0c0c);color:#fff;border-radius:18px;padding:14px 6px;text-align:center;transition:transform .15s}
+.dof-stat:active{transform:scale(.96)}
+.dof-stat b{display:block;font-size:22px;font-weight:900;line-height:1.1}
+.dof-stat span{display:block;margin-top:4px;font-size:12px;color:#9a9a9a}
+#profilePage .dof-profile-menu{gap:10px}
+#profilePage .dof-profile-menu-item{min-height:64px;border-radius:18px;background:linear-gradient(160deg,#151515,#0c0c0c);border:1px solid #262626}
+#profilePage .dof-menu-icon{width:40px;height:40px;flex:0 0 40px;border-radius:13px;background:linear-gradient(145deg,#2c2c2c,#181818);border:1px solid #333}
+#profilePage .dof-menu-arrow{font-size:22px;color:#666}
+
+/* ===== DOFAMIN v4: нижняя панель, избранное, промокоды ===== */
+.wrap{padding-bottom:120px}.toast{bottom:106px!important}
+nav.bottomnav{left:12px!important;right:12px!important;bottom:calc(10px + env(safe-area-inset-bottom))!important;width:auto!important;max-width:520px;margin:0 auto!important;padding:7px!important;gap:4px!important;border-radius:26px!important;background:rgba(22,22,22,.74)!important;-webkit-backdrop-filter:blur(26px) saturate(170%)!important;backdrop-filter:blur(26px) saturate(170%)!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:0 14px 40px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.08)!important}
+nav.bottomnav .navbtn{position:relative;margin:0!important;padding:9px 2px 8px!important;border:0!important;border-radius:20px!important;background:transparent!important;color:rgba(255,255,255,.55)!important;font-size:10.5px!important;font-weight:650;gap:4px!important;box-shadow:none!important;transition:all .25s ease}
+nav.bottomnav .navbtn svg{width:22px;height:22px}
+nav.bottomnav .navbtn:active{transform:scale(.94)}
+nav.bottomnav .navbtn.active{background:#fff!important;color:#0a0a0a!important;box-shadow:0 4px 18px rgba(255,255,255,.28)!important}
+nav.bottomnav .navbtn.active b{text-shadow:none!important}
+.nb-badge{position:absolute;top:3px;left:calc(50% + 5px);min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:#ff3b4e;color:#fff;font-size:10px;font-weight:800;line-height:17px;text-align:center;box-shadow:0 0 0 2px #171717}
+.navbtn.active .nb-badge{box-shadow:0 0 0 2px #fff}
+.fav-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:22px 0 16px}
+.fav-head h2{margin:0;font-size:27px}.fav-sub{display:block;margin-top:4px;color:var(--muted);font-size:13px}
+.fav-clear{height:36px;padding:0 14px;border-radius:99px;border:1px solid #2e2e2e;background:#121212;color:#bbb;font-weight:600;font-size:13px}
+.fav-grid .product{border-radius:20px;background:linear-gradient(160deg,#161616,#0a0a0a);border:1px solid #262626;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.fav-grid .heart{background:rgba(255,59,78,.18);border-color:rgba(255,59,78,.5);color:#ff4d5e;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.fav-empty{grid-column:1/-1;text-align:center;padding:44px 22px;border:1px dashed #333;border-radius:24px;background:radial-gradient(100% 80% at 50% 0%,rgba(255,59,78,.1),transparent 70%)}
+.fav-empty .fe-ic{width:76px;height:76px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:rgba(255,59,78,.12);border:1px solid rgba(255,59,78,.35);box-shadow:0 0 30px rgba(255,59,78,.25)}
+.fav-empty svg{width:34px;height:34px;stroke:#ff4d5e;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fav-empty h3{margin:0 0 6px;font-size:19px}.fav-empty p{margin:0 auto 20px;max-width:280px;color:var(--muted)}
+.co-promo{display:flex;gap:8px}.co-promo .field{text-transform:uppercase;letter-spacing:1px;font-weight:700}.co-promo .btn{white-space:nowrap}
+.co-promo-msg{font-size:12px;margin-top:8px;min-height:16px;color:#ff6b7a}
+.co-promo-ok{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:1px dashed rgba(110,231,160,.55);background:rgba(60,200,120,.08)}
+.co-promo-ok .pi{width:38px;height:38px;flex:none;border-radius:12px;background:#1f3a2a;color:#6ee7a0;display:grid;place-items:center;font-weight:900}
+.co-promo-ok b{letter-spacing:1px}.co-promo-ok small{display:block;color:#8fd9ae}
+.co-promo-ok button{margin-left:auto;border:0;background:transparent;color:#9a9a9a;font-weight:600}
+.co-sum.disc{color:#6ee7a0}
+.dof-tabs{overflow-x:auto;scrollbar-width:none}.dof-tabs::-webkit-scrollbar{display:none}.dof-tabs button{white-space:nowrap}
+.pm-form{display:grid;gap:10px;margin-bottom:16px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.pm-row{display:flex;gap:8px}.pm-row .field{flex:1;min-width:0}
+.pm-pcts{display:flex;gap:8px;align-items:center}.pm-pcts .field{flex:1;min-width:0}
+.pm-pct{flex:none;min-width:54px;height:42px;border-radius:12px;border:1px solid #2a2a2a;background:#121212;color:#fff;font-weight:800}
+.pm-pct.on{background:#fff;color:#111;border-color:#fff}
+.pm-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:10px}
+.pm-item.off{opacity:.55}.pm-item .pm-code{font-weight:900;letter-spacing:1.5px;font-size:16px}
+.pm-item .pm-pc{flex:none;min-width:54px;text-align:center;padding:8px 6px;border-radius:12px;background:#fff;color:#111;font-weight:900}
+.pm-item .pm-info{flex:1;min-width:0}.pm-item .pm-acts{display:flex;gap:6px}
 </style>
 </head>
 <body>
@@ -2974,26 +3063,7 @@ a.pp-infocard:active{transform:scale(.98);border-color:rgba(255,255,255,.35)}
 <main class="wrap">
   <section id="homePage" class="page active">
   
-<div class="dof-carousel">
-  <div class="dof-carousel-track" id="dofCarouselTrack">
-
-    <div class="dof-slide">
-      <img src="./dofamin-banner.png" alt="DOFAMIN">
-    </div>
-
-    <a class="dof-slide"
-       href="https://t.me/+47v_EHUngYI3YzJi"
-       target="_blank" rel="noopener noreferrer">
-      <img src="./reviews-banner.png" alt="Отзывы DOFAMIN">
-    </a>
-
-  </div>
-
-  <div class="dof-carousel-dots" id="dofCarouselDots">
-    <span class="active"></span>
-    <span></span>
-  </div>
-</div>
+<div class="bn" id="bn"><div class="bn-track" id="bnTrack"></div><button type="button" class="bn-arr l" id="bnPrev" aria-label="Назад">‹</button><button type="button" class="bn-arr r" id="bnNext" aria-label="Вперёд">›</button><div class="bn-dots" id="bnDots"></div></div>
   
 
   
@@ -3005,19 +3075,10 @@ a.pp-infocard:active{transform:scale(.98);border-color:rgba(255,255,255,.35)}
     <div class="searchrow"><input class="field" id="search" placeholder="Поиск товаров" aria-label="Поиск товаров"></div>
     <div class="filters" id="categories"></div>
     <div class="sortrow">
-  <select class="field sort-native" id="sort" aria-label="Сортировка">
-    <option value="new">Сначала новые</option>
-    <option value="low">Сначала дешевле</option>
-    <option value="high">Сначала дороже</option>
-    <option value="name">По названию</option>
-  </select>
-
-  
-<div class="dof-sortbar" role="group" aria-label="Сортировка" data-sortbar="sort">
-    <button type="button" class="dof-sortchip active" data-sort-value="new" aria-label="Сначала новые"><span class="dof-newbadge">NEW</span></button>
-    <button type="button" class="dof-sortchip" data-sort-value="low"><svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Дешевле</button>
-    <button type="button" class="dof-sortchip" data-sort-value="high"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Дороже</button>
-    <button type="button" class="dof-sortchip" data-sort-value="name"><svg viewBox="0 0 24 24"><path d="M4 18 9 6l5 12M5.8 14h6.4M17 7h4l-4 5h4"/></svg>А–Я</button>
+  <select class="field sort-native" id="sort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select>
+  <div class="dd" data-sortbar="sort">
+    <button type="button" class="dd-btn" aria-haspopup="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg>Каталог<svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="dd-menu" role="menu"><button type="button" class="dd-item active" data-sort-value="new">Сначала новые<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><button type="button" class="dd-item" data-sort-value="low">Сначала дешевле<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><button type="button" class="dd-item" data-sort-value="high">Сначала дороже<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><button type="button" class="dd-item" data-sort-value="name">По названию<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button></div>
   </div>
 </div>
     <div class="grid" id="productsGrid"><div class="empty"><strong>Подключаем каталог</strong>Загружаем товары из магазина…</div></div>
@@ -3027,19 +3088,10 @@ a.pp-infocard:active{transform:scale(.98);border-color:rgba(255,255,255,.35)}
     <div class="searchrow"><input class="field" id="search2" placeholder="Поиск товаров" aria-label="Поиск товаров"></div>
 <div class="filters" id="categories2"></div>
 <div class="sortrow">
-  <select class="field sort-native" id="sort2" aria-label="Сортировка">
-    <option value="new">Сначала новые</option>
-    <option value="low">Сначала дешевле</option>
-    <option value="high">Сначала дороже</option>
-    <option value="name">По названию</option>
-  </select>
-
-  
-<div class="dof-sortbar" role="group" aria-label="Сортировка" data-sortbar="sort2">
-    <button type="button" class="dof-sortchip active" data-sort-value="new" aria-label="Сначала новые"><span class="dof-newbadge">NEW</span></button>
-    <button type="button" class="dof-sortchip" data-sort-value="low"><svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Дешевле</button>
-    <button type="button" class="dof-sortchip" data-sort-value="high"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Дороже</button>
-    <button type="button" class="dof-sortchip" data-sort-value="name"><svg viewBox="0 0 24 24"><path d="M4 18 9 6l5 12M5.8 14h6.4M17 7h4l-4 5h4"/></svg>А–Я</button>
+  <select class="field sort-native" id="sort2" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select>
+  <div class="dd" data-sortbar="sort2">
+    <button type="button" class="dd-btn" aria-haspopup="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg>Каталог<svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="dd-menu" role="menu"><button type="button" class="dd-item active" data-sort-value="new">Сначала новые<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><button type="button" class="dd-item" data-sort-value="low">Сначала дешевле<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><button type="button" class="dd-item" data-sort-value="high">Сначала дороже<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><button type="button" class="dd-item" data-sort-value="name">По названию<svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button></div>
   </div>
 </div>
     <div class="grid" id="productsGrid2"></div>
@@ -3050,7 +3102,7 @@ a.pp-infocard:active{transform:scale(.98);border-color:rgba(255,255,255,.35)}
   </button>
 
   <div id="productDetails" style="margin-top:18px"></div>
-</section> <section id="favoritesPage" class="page"><div class="sectionhead"><h2>Избранное</h2></div><div class="grid" id="favoritesGrid"></div></section>
+</section> <section id="favoritesPage" class="page"><div class="fav-head"><div><h2>Избранное</h2><span class="fav-sub" id="favSub"></span></div><button type="button" class="fav-clear" id="favClear" hidden>Очистить</button></div><div class="grid fav-grid" id="favoritesGrid"></div></section>
   <section id="cartPage" class="page"><div class="sectionhead"><h2>Корзина</h2></div><div id="cartItems"></div><div id="cartCheckout"></div></section>
 
 
@@ -3082,6 +3134,12 @@ a.pp-infocard:active{transform:scale(.98);border-color:rgba(255,255,255,.35)}
         <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>
       </svg>
     </button>
+  </div>
+
+  <div class="dof-stats">
+    <button type="button" class="dof-stat" data-go="orders"><b id="dofStOrders">0</b><span>Заказы</span></button>
+    <button type="button" class="dof-stat" data-go="favorites"><b id="dofStFav">0</b><span>Избранное</span></button>
+    <button type="button" class="dof-stat" data-go="cart"><b id="dofStCart">0</b><span>Корзина</span></button>
   </div>
 
   <!-- Меню профиля -->
@@ -3299,53 +3357,6 @@ async function ordersRequest(action, extra = {}) {
   return result;
 }
 
-// Карусель DOFAMIN
-const carouselTrack = document.getElementById('dofCarouselTrack');
-const carouselSlides = document.querySelectorAll('.dof-slide');
-const carouselDots = document.querySelectorAll('#dofCarouselDots span');
-
-let carouselIndex = 0;
-let carouselStartX = 0;
-
-function showCarouselSlide(index) {
-  if (!carouselTrack || !carouselSlides.length) return;
-
-  carouselIndex = (index + carouselSlides.length) % carouselSlides.length;
-
-  carouselTrack.style.transform =
-    `translateX(-${carouselIndex * 100}%)`;
-
-  carouselDots.forEach((dot, i) => {
-    dot.classList.toggle('active', i === carouselIndex);
-  });
-}
-
-// Переключение нажатием на кружочки
-carouselDots.forEach((dot, index) => {
-  dot.style.cursor = 'pointer';
-
-  dot.addEventListener('click', () => {
-    showCarouselSlide(index);
-  });
-});
-
-// Перелистывание пальцем
-if (carouselTrack) {
-  carouselTrack.addEventListener('touchstart', event => {
-    carouselStartX = event.touches[0].clientX;
-  }, { passive: true });
-
-  carouselTrack.addEventListener('touchend', event => {
-    const difference =
-      event.changedTouches[0].clientX - carouselStartX;
-
-    if (Math.abs(difference) > 45) {
-      showCarouselSlide(
-        carouselIndex + (difference < 0 ? 1 : -1)
-      );
-    }
-  }, { passive: true });
-}
 const historyToggle = document.getElementById('historyToggle');
 const historyContent = document.getElementById('historyContent');
 const historyArrow = document.getElementById('historyArrow');
@@ -4171,6 +4182,9 @@ if (backButton) {
 showPage('product');
 }
  
+  function isNewActive(p){
+    return !!p.is_new && (!p.new_until || new Date(p.new_until) > new Date());
+  }
   function productCard(p){
     const id = String(p.id);
 const fav = favorites.includes(id);
@@ -4213,14 +4227,15 @@ const photo = `
     }
   </div>
 `;
-    const tags=[p.is_hit?'ХИТ':'',p.is_new?'НОВИНКА':''].filter(Boolean).join(' · ');
+    const tags=[p.is_hit?'ХИТ':''].filter(Boolean).join(' · ');
+    const photoHtml=isNewActive(p)?photo.replace(/<\/div>\s*$/,'<span class="new-flag">NEW</span></div>'):photo;
     return `
   <article class="product" data-open-product="${safe(id)}">
     ${tags ? `<div class="tag">${safe(tags)}</div>` : ''}
     <button class="heart" data-fav="${safe(id)}" aria-label="Добавить в избранное">
       ${fav ? '♥' : '♡'}
     </button>
-    ${photo}
+    ${photoHtml}
     <div class="pbody">
       <div class="pname">${safe(p.name || 'Товар DOFAMIN')}</div>
       <div class="pdesc">${safe(p.description || p.category || '')}</div>
@@ -4490,14 +4505,27 @@ root.querySelectorAll('[data-card-minus]').forEach(b => {
     bindCards($('productsGrid'));bindCards($('productsGrid2'));
     $('homeCount').textContent=`${list.length} шт.`;$('catalogCount').textContent=`${list.length} шт.`;
   }
+  function catIcon(n){
+    const t=String(n).toLowerCase();
+    const P=/^все/.test(t)?'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z'
+      :/обув|кросс|ботин|кед|туфл/.test(t)?'M3 17v-4l5-3 3 2h4l6 3v2zM3 20h18'
+      :/штан|джинс|шорт|брюк/.test(t)?'M7 3h10l1 18h-4l-2-9-2 9H6z'
+      :/кепк|шапк|панам|головн/.test(t)?'M4 15a8 8 0 0 1 16 0M2 15h20v3H2z'
+      :/сумк|рюкзак|аксесс/.test(t)?'M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0'
+      :/лонг|футбол|майк|рубаш|свитш|топ|поло|худи|толст|куртк|пальт|жилет|зип/.test(t)?'M8 4 3 7l2 4 2-1v10h10V10l2 1 2-4-5-3a4 4 0 0 1-8 0Z'
+      :'M3 12V4h8l10 10-8 8zM7.5 8h.01';
+    return `<svg viewBox="0 0 24 24"><path d="${P}"/></svg>`;
+  }
   function renderCategories(){
     const cats=['Все',...new Set(products.map(p=>p.category).filter(Boolean))];
     categories=cats;
-    ['categories','categories2'].forEach(id=>{$(id).innerHTML=cats.map(c=>`<button class="chip ${activeCategory===c?'active':''}" data-category="${safe(c)}">${safe(c)}</button>`).join('');$(id).querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{activeCategory=b.dataset.category;renderCategories();renderProducts();}));});
+    ['categories','categories2'].forEach(id=>{$(id).innerHTML=cats.map(c=>`<button class="chip cat ${activeCategory===c?'active':''}" data-category="${safe(c)}"><span class="ci">${catIcon(c)}</span>${safe(c)}</button>`).join('');$(id).querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{activeCategory=b.dataset.category;renderCategories();renderProducts();}));});
   }
   function renderFavorites(){
     const list=products.filter(p=>favorites.includes(String(p.id)));
-    $('favoritesGrid').innerHTML=list.length?list.map(productCard).join(''):'<div class="empty"><strong>Здесь пока пусто</strong>Нажимайте ♡ на карточках, чтобы сохранять понравившиеся товары.</div>';
+    $('favoritesGrid').innerHTML=list.length?list.map(productCard).join(''):'<div class="fav-empty"><div class="fe-ic"><svg viewBox="0 0 24 24"><path d="M20.2 8.7c0 5-8.2 10-8.2 10s-8.2-5-8.2-10A4.5 4.5 0 0 1 12 6.1a4.5 4.5 0 0 1 8.2 2.6Z"/></svg></div><h3>Здесь пока пусто</h3><p>Нажимайте ♡ на карточках, чтобы сохранять понравившиеся товары.</p><button type="button" class="btn primary" data-go="catalog">Перейти в каталог</button></div>';
+    if($('favSub'))$('favSub').textContent=list.length?list.length+' шт. · сохранено вами':'';
+    if($('favClear'))$('favClear').hidden=!list.length;
     bindCards($('favoritesGrid'));
   }
 function renderCart() {
@@ -4856,6 +4884,7 @@ async function loadProducts(){
         <button type="button" class="active" data-act="tab" data-tab="products">Товары</button>
         <button type="button" data-act="tab" data-tab="orders">Заказы <span class="dof-badge" id="aOrdersBadge" hidden>0</span></button>
         <button type="button" data-act="tab" data-tab="categories">Категории</button>
+        <button type="button" data-act="tab" data-tab="promo">Промокоды</button>
       </div>
 
       <div id="aTabProducts">
@@ -4887,6 +4916,22 @@ async function loadProducts(){
         <div id="aCatList"></div>
       </div>
 
+      <div id="aTabPromo" hidden>
+        <div class="pm-form">
+          <div class="pm-row"><input class="field" id="pmCode" maxlength="24" placeholder="Код, например SALE10" autocapitalize="characters" autocomplete="off"><button type="button" class="btn" data-act="promo-gen">Случайный</button></div>
+          <div class="pm-pcts" id="pmPcts">
+            <button type="button" class="pm-pct" data-act="promo-pct" data-p="10">10%</button>
+            <button type="button" class="pm-pct" data-act="promo-pct" data-p="20">20%</button>
+            <button type="button" class="pm-pct" data-act="promo-pct" data-p="30">30%</button>
+            <button type="button" class="pm-pct" data-act="promo-pct" data-p="50">50%</button>
+            <input class="field" id="pmPercent" type="number" inputmode="numeric" min="1" max="90" placeholder="др. %">
+          </div>
+          <div class="pm-row"><input class="field" id="pmMax" type="number" inputmode="numeric" min="1" placeholder="Лимит применений (пусто = без лимита)"><input class="field" id="pmDays" type="number" inputmode="numeric" min="1" placeholder="Срок, дней (пусто = без срока)"></div>
+          <button type="button" class="btn primary" data-act="promo-add">Создать промокод</button>
+        </div>
+        <div id="aPromoList"></div>
+      </div>
+
       <div class="dof-sheet" id="adminSheet" hidden></div>
     `;
 
@@ -4894,6 +4939,10 @@ async function loadProducts(){
     $('aProdSearch').addEventListener('input', e => { A.pq = e.target.value.trim().toLowerCase(); renderAdminProducts(); });
     $('aOrdSearch').addEventListener('input', e => { A.oq = e.target.value.trim().toLowerCase(); renderAdminOrders(); });
     page.addEventListener('change', onAdminChange);
+    page.addEventListener('input', e => {
+      if (e.target.id === 'pmCode') e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+      if (e.target.id === 'pmPercent') markPct();
+    });
   }
 
   function openAdminPage() {
@@ -4909,6 +4958,8 @@ async function loadProducts(){
     $('aTabProducts').hidden = tab !== 'products';
     $('aTabOrders').hidden = tab !== 'orders';
     $('aTabCategories').hidden = tab !== 'categories';
+    $('aTabPromo').hidden = tab !== 'promo';
+    if (tab === 'promo') loadAdminPromos();
   }
 
   function onAdminClick(e) {
@@ -4931,6 +4982,11 @@ async function loadProducts(){
       return renderAdminOrders();
     }
     if (act === 'archive') return adminArchiveOrder(id, el);
+    if (act === 'promo-gen') return promoGen();
+    if (act === 'promo-pct') { $('pmPercent').value = el.dataset.p; return markPct(); }
+    if (act === 'promo-add') return adminAddPromo();
+    if (act === 'promo-del') return adminDeletePromo(id);
+    if (act === 'promo-toggle') return adminTogglePromo(id);
     if (act === 'cat-add') return adminAddCategory();
     if (act === 'cat-del') return adminDeleteCategory(id);
     if (act === 'ph-add') return $('aFile') && $('aFile').click();
@@ -5107,6 +5163,11 @@ async function loadProducts(){
               <input class="field" name="delivery_value" type="number" inputmode="numeric" min="1" max="365" required placeholder="14">
               <select class="field" name="delivery_unit"><option value="days">Дней</option><option value="weeks">Недель</option></select>
             </div></div>
+          <div class="dof-newbox">
+            <label class="dof-switch"><input type="checkbox" name="is_new"><span>Метка <b class="nb-preview">NEW</b> на карточке</span></label>
+            <div class="nb-row" id="aNewRow"><span class="small">Показывать</span>
+              <select class="field" name="new_days"><option value="3">3 дня</option><option value="7">7 дней</option><option value="14">14 дней</option><option value="30">30 дней</option><option value="0">Без срока</option><option value="keep" hidden>Текущий срок</option></select></div>
+          </div>
           <label class="dof-switch"><input type="checkbox" name="active"><span>Показывать товар в магазине</span></label>
         </form>
       </div>
@@ -5126,6 +5187,16 @@ async function loadProducts(){
     E.delivery_value.value = p && p.delivery_value ? p.delivery_value : '';
     E.delivery_unit.value = p && p.delivery_unit === 'weeks' ? 'weeks' : 'days';
     E.active.checked = p ? p.is_active !== false : true;
+    A.ed.newUntil = p && p.new_until ? p.new_until : null;
+    E.is_new.checked = !!p && isNewActive(p);
+    E.new_days.value = '7';
+    if (E.is_new.checked && A.ed.newUntil) {
+      const k = E.new_days.querySelector('[value=keep]');
+      k.hidden = false; k.textContent = 'Оставить (до ' + new Date(A.ed.newUntil).toLocaleDateString('ru-RU') + ')';
+      E.new_days.value = 'keep';
+    }
+    const syncNew = () => { $('aNewRow').style.display = E.is_new.checked ? 'flex' : 'none'; };
+    E.is_new.addEventListener('change', syncNew); syncNew();
 
     $('aFile').addEventListener('change', onEditorFiles);
     f.addEventListener('submit', onEditorSubmit);
@@ -5218,7 +5289,12 @@ async function loadProducts(){
         category_id: E.category_id.value || null,
         delivery_value: Number(E.delivery_value.value),
         delivery_unit: E.delivery_unit.value,
-        is_active: E.active.checked
+        is_active: E.active.checked,
+        is_new: E.is_new.checked,
+        new_until: !E.is_new.checked ? null
+          : E.new_days.value === 'keep' ? ed.newUntil
+          : E.new_days.value === '0' ? null
+          : new Date(Date.now() + Number(E.new_days.value) * 864e5).toISOString()
       };
 
       if (ed.id) await adminRequest('update', { id: ed.id, ...payload });
@@ -5330,6 +5406,79 @@ async function loadProducts(){
     }
   }
 
+  /* ---------- Промокоды ---------- */
+  function promoGen() {
+    const a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = '';
+    for (let i = 0; i < 6; i++) c += a[Math.floor(Math.random() * a.length)];
+    $('pmCode').value = c;
+  }
+  function markPct() {
+    const v = Number($('pmPercent').value);
+    document.querySelectorAll('#pmPcts .pm-pct').forEach(b => b.classList.toggle('on', Number(b.dataset.p) === v));
+  }
+  async function loadAdminPromos() {
+    const list = $('aPromoList'); if (!list) return;
+    try {
+      const r = await adminRequest('promo_list');
+      A.promos = r.promos || [];
+      renderAdminPromos();
+    } catch (error) {
+      list.innerHTML = `<div class="dof-orders-empty">Не удалось загрузить промокоды: ${safe(error.message)}</div>`;
+    }
+  }
+  function renderAdminPromos() {
+    const list = $('aPromoList'); if (!list) return;
+    const arr = A.promos || [];
+    list.innerHTML = arr.length ? arr.map(p => {
+      const exp = p.expires_at ? new Date(p.expires_at) : null;
+      const expired = exp && exp < new Date();
+      const used = Number(p.used_count || 0);
+      const out = p.max_uses != null && used >= Number(p.max_uses);
+      const off = p.is_active === false || expired || out;
+      const meta = [
+        'Использовано: ' + used + (p.max_uses != null ? ' из ' + p.max_uses : ''),
+        exp ? (expired ? 'истёк ' : 'до ') + exp.toLocaleDateString('ru-RU') : 'бессрочный',
+        p.is_active === false ? 'выключен' : ''
+      ].filter(Boolean).join(' · ');
+      return `<div class="pm-item ${off ? 'off' : ''}">
+        <div class="pm-pc">−${Number(p.percent)}%</div>
+        <div class="pm-info"><div class="pm-code">${safe(p.code)}</div><div class="small">${safe(meta)}</div></div>
+        <div class="pm-acts">
+          <button type="button" class="btn" data-act="promo-toggle" data-id="${safe(p.id)}">${p.is_active === false ? 'Вкл' : 'Выкл'}</button>
+          <button type="button" class="btn danger" data-act="promo-del" data-id="${safe(p.id)}">✕</button>
+        </div></div>`;
+    }).join('') : '<div class="dof-orders-empty">Промокодов пока нет</div>';
+  }
+  async function adminAddPromo() {
+    const code = $('pmCode').value.trim().toUpperCase();
+    const percent = Math.round(Number($('pmPercent').value));
+    const max = $('pmMax').value.trim(), days = $('pmDays').value.trim();
+    if (!/^[A-Z0-9_-]{3,24}$/.test(code)) { toast('Код: 3–24 символа, латиница и цифры'); return; }
+    if (!(percent >= 1 && percent <= 90)) { toast('Выберите скидку от 1% до 90%'); return; }
+    try {
+      await adminRequest('promo_add', {
+        code, percent,
+        max_uses: max ? Math.max(1, Math.round(Number(max))) : null,
+        expires_at: days ? new Date(Date.now() + Number(days) * 864e5).toISOString() : null
+      });
+      ['pmCode', 'pmPercent', 'pmMax', 'pmDays'].forEach(id => $(id).value = '');
+      markPct();
+      await loadAdminPromos();
+      toast('Промокод создан');
+    } catch (error) { toast('Ошибка: ' + error.message); }
+  }
+  async function adminTogglePromo(id) {
+    const p = (A.promos || []).find(x => String(x.id) === String(id)); if (!p) return;
+    try { await adminRequest('promo_toggle', { id: p.id, is_active: p.is_active === false }); await loadAdminPromos(); }
+    catch (error) { toast('Ошибка: ' + error.message); }
+  }
+  async function adminDeletePromo(id) {
+    const p = (A.promos || []).find(x => String(x.id) === String(id)); if (!p) return;
+    if (!(await askConfirm(`Удалить промокод ${p.code}?`))) return;
+    try { await adminRequest('promo_delete', { id: p.id }); await loadAdminPromos(); toast('Промокод удалён'); }
+    catch (error) { toast('Ошибка: ' + error.message); }
+  }
+
   /* ---------- Категории ---------- */
   function renderAdminCategories() {
     const list = $('aCatList');
@@ -5433,6 +5582,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
   // ===== DOFAMIN: отдельная страница оплаты =====
   let checkoutPay = 'card';
   const checkoutDraft = { name: '', telegram: '', city: '' };
+  let checkoutPromo = null;
 
   const ICON_LOCK = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
   const PAY_METHODS = {
@@ -5449,6 +5599,49 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       icon: '<svg viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/></svg>'
     }
   };
+
+  function checkoutSum() {
+    const items = cart.filter(i => i.selected !== false);
+    const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const count = items.reduce((s, i) => s + i.qty, 0);
+    const disc = checkoutPromo ? Math.round(total * checkoutPromo.percent / 100) : 0;
+    return { total, count, disc, pay: Math.max(0, total - disc) };
+  }
+  function sumCardHtml() {
+    const t = checkoutSum();
+    return `<h3 class="co-title"><span>Итого</span></h3>
+      <div class="co-sum"><span>Товары (${t.count})</span><span>${rub(t.total)}</span></div>
+      ${t.disc ? `<div class="co-sum disc"><span>Промокод ${safe(checkoutPromo.code)} (−${Number(checkoutPromo.percent)}%)</span><span>−${rub(t.disc)}</span></div>` : ''}
+      <div class="co-sum"><span>Доставка</span><span>Уточнит менеджер</span></div>
+      <div class="co-sum big"><span>К оплате</span><span>${rub(t.pay)}</span></div>`;
+  }
+  function promoBoxHtml(msg) {
+    if (checkoutPromo) return `<div class="co-promo-ok"><span class="pi">%</span><div><b>${safe(checkoutPromo.code)}</b><small>Скидка ${Number(checkoutPromo.percent)}% применена</small></div><button type="button" id="coPromoRm">Убрать</button></div>`;
+    return `<div class="co-promo"><input class="field" id="coPromoIn" maxlength="24" autocapitalize="characters" autocomplete="off" placeholder="Введите промокод"><button type="button" class="btn primary" id="coPromoApply">Применить</button></div><div class="co-promo-msg" id="coPromoMsg">${safe(msg || '')}</div>`;
+  }
+  function refreshCheckoutTotals() {
+    if ($('coSumCard')) $('coSumCard').innerHTML = sumCardHtml();
+    const b = $('coPay'), l = b && b.querySelector('span');
+    if (l && !b.disabled) l.textContent = 'Оплатить ' + rub(checkoutSum().pay);
+  }
+  async function applyPromo() {
+    const inp = $('coPromoIn'); if (!inp) return;
+    const code = inp.value.trim().toUpperCase();
+    if (!code) { $('coPromoMsg').textContent = 'Введите промокод'; return; }
+    const btn = $('coPromoApply'); btn.disabled = true; btn.textContent = '…';
+    try {
+      const r = await ordersRequest('promo_check', { code });
+      const pr = r.promo || {};
+      if (!pr.percent) throw new Error('Промокод не найден');
+      checkoutPromo = { code: String(pr.code || code), percent: Number(pr.percent) };
+      $('coPromoBox').innerHTML = promoBoxHtml();
+      refreshCheckoutTotals();
+      toast('Промокод применён: −' + checkoutPromo.percent + '%');
+    } catch (error) {
+      $('coPromoBox').innerHTML = promoBoxHtml(error.message || 'Не удалось проверить промокод');
+      const again = $('coPromoIn'); if (again) again.value = code;
+    }
+  }
 
   function renderCheckout() {
     const view = $('checkoutView');
@@ -5524,18 +5717,15 @@ const ordersBtn = document.getElementById('dofOpenOrders');
           </div>
         </section>
 
-        <section class="co-card">
-          <h3 class="co-title"><span>Итого</span></h3>
-          <div class="co-sum"><span>Товары (${count})</span><span>${rub(total)}</span></div>
-          <div class="co-sum"><span>Доставка</span><span>Уточнит менеджер</span></div>
-          <div class="co-sum big"><span>К оплате</span><span>${rub(total)}</span></div>
-        </section>
+        <section class="co-card" id="coPromoCard"><h3 class="co-title"><span>Промокод</span></h3><div id="coPromoBox">${promoBoxHtml()}</div></section>
+
+        <section class="co-card" id="coSumCard">${sumCardHtml()}</section>
 
         <p class="co-note">Нажимая «Оплатить», вы подтверждаете заказ. Менеджер свяжется с вами в Telegram, подтвердит наличие и объяснит, как завершить оплату.</p>
       </div>
 
       <div class="co-bar"><div class="co-bar-in">
-        <button type="button" class="co-paybtn" id="coPay">${ICON_LOCK}<span>Оплатить ${rub(total)}</span></button>
+        <button type="button" class="co-paybtn" id="coPay">${ICON_LOCK}<span>Оплатить ${rub(checkoutSum().pay)}</span></button>
       </div></div>`;
 
     $('coName').value = checkoutDraft.name;
@@ -5545,6 +5735,11 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       $(id).addEventListener('input', e => { checkoutDraft[key] = e.target.value; e.target.classList.remove('err'); });
     });
 
+    $('coPromoCard').addEventListener('click', e => {
+      if (e.target.closest('#coPromoApply')) applyPromo();
+      if (e.target.closest('#coPromoRm')) { checkoutPromo = null; $('coPromoBox').innerHTML = promoBoxHtml(); refreshCheckoutTotals(); }
+    });
+    $('coPromoCard').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'coPromoIn') { e.preventDefault(); applyPromo(); } });
     $('coBack').onclick = () => showPage('cart');
     $('coPayList').addEventListener('change', e => {
       if (e.target.name !== 'pay') return;
@@ -5583,11 +5778,13 @@ const ordersBtn = document.getElementById('dofOpenOrders');
 
     try {
       const method = PAY_METHODS[checkoutPay];
+      const promoUsed = checkoutPromo;
       const result = await ordersRequest('create', {
         name,
         telegram,
         city,
-        comment: 'Оплата: ' + method.comment,
+        comment: 'Оплата: ' + method.comment + (promoUsed ? ' | Промокод: ' + promoUsed.code : ''),
+        promo_code: promoUsed ? promoUsed.code : undefined,
         items: items.map(i => ({ id: String(i.id), qty: Number(i.qty), size: i.size || '' }))
       });
       const order = result.order;
@@ -5595,13 +5792,14 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       const message =
         `Здравствуйте! Новый заказ DOFAMIN №${order.id}\n` +
         `Имя: ${name}\nTelegram: ${telegram}\nГород: ${city}\n` +
-        `Оплата: ${method.comment}\n\nТовары:\n` +
+        `Оплата: ${method.comment}\n` + (promoUsed ? `Промокод: ${promoUsed.code} (−${promoUsed.percent}%)\n` : '') + `\nТовары:\n` +
         items.map(i =>
           `${i.name}${i.size ? ' — Размер: ' + i.size : ''} × ${i.qty} — ${rub(i.price * i.qty)}`
         ).join('\n') +
         `\n\nИтого: ${rub(order.total)}`;
 
       cart = cart.filter(i => i.selected === false);
+      checkoutPromo = null;
       persist();
       renderCheckoutDone(order, items, message, method);
     } catch (error) {
@@ -5609,7 +5807,8 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       toast(error.message || 'Не удалось оформить заказ');
       btn.disabled = false;
       btn.classList.remove('busy');
-      label.textContent = 'Оплатить ' + rub(items.reduce((s, i) => s + i.price * i.qty, 0));
+      if (/промокод/i.test(error.message || '')) { checkoutPromo = null; if ($('coPromoBox')) $('coPromoBox').innerHTML = promoBoxHtml(error.message); refreshCheckoutTotals(); }
+      label.textContent = 'Оплатить ' + rub(checkoutSum().pay);
     }
   }
 
@@ -5700,6 +5899,88 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     });
     new MutationObserver(lazy).observe(document.body, { childList: true, subtree: true });
   })();
+
+  // ===== DOFAMIN v3: баннеры, меню «Каталог», статистика профиля =====
+  const BANNERS = [
+    { img: './dofamin-banner.png', alt: 'DOFAMIN', page: 'catalog' },
+    { img: './reviews-banner.png', alt: 'Отзывы DOFAMIN', href: 'https://t.me/+47v_EHUngYI3YzJi' }
+    // Добавить баннер: { img: 'url', alt: 'текст', href: 'https://…' } или { …, page: 'catalog' }
+  ];
+  (function initBanners() {
+    const tr = $('bnTrack'), dotsEl = $('bnDots');
+    if (!tr) return;
+    tr.innerHTML = BANNERS.map((b, i) =>
+      `<a class="bn-slide" href="${b.href ? safe(b.href) : '#'}" data-i="${i}"><img src="${safe(b.img)}" alt="${safe(b.alt || '')}" draggable="false"${i ? '' : ' fetchpriority="high"'}></a>`).join('');
+    dotsEl.innerHTML = BANNERS.map((_, i) => `<i data-d="${i}"></i>`).join('');
+    const w = () => tr.clientWidth || 1;
+    const cur = () => Math.max(0, Math.min(BANNERS.length - 1, Math.round(tr.scrollLeft / w())));
+    const go = i => tr.scrollTo({ left: ((i % BANNERS.length) + BANNERS.length) % BANNERS.length * w(), behavior: 'smooth' });
+    const mark = () => dotsEl.querySelectorAll('i').forEach((d, i) => d.classList.toggle('on', i === cur()));
+    let raf = 0;
+    tr.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(mark); }, { passive: true });
+    dotsEl.addEventListener('click', e => { const d = e.target.closest('[data-d]'); if (d) { go(+d.dataset.d); hold(); } });
+    $('bnPrev').onclick = () => { go(cur() - 1); hold(); };
+    $('bnNext').onclick = () => { go(cur() + 1); hold(); };
+    tr.addEventListener('click', e => {
+      const a = e.target.closest('.bn-slide'); if (!a) return;
+      e.preventDefault();
+      const b = BANNERS[+a.dataset.i];
+      if (b.page) showPage(b.page);
+      else if (b.href) {
+        if (/^https:\/\/t\.me\//.test(b.href)) openTg(b.href);
+        else { const t = window.Telegram?.WebApp; if (t?.openLink) t.openLink(b.href); else window.open(b.href, '_blank', 'noopener'); }
+      }
+    });
+    let pause = 0;
+    const hold = () => { pause = Date.now() + 8000; };
+    ['touchstart', 'pointerdown', 'wheel'].forEach(ev => tr.addEventListener(ev, hold, { passive: true }));
+    setInterval(() => { if (BANNERS.length > 1 && Date.now() > pause && tr.offsetParent) go(cur() + 1); }, 5000);
+    window.addEventListener('resize', () => go(cur()));
+    mark();
+  })();
+
+  // меню «Каталог»: открытие/закрытие
+  document.addEventListener('click', e => {
+    const dd = e.target.closest('.dd');
+    document.querySelectorAll('.dd.open').forEach(x => { if (x !== dd) x.classList.remove('open'); });
+    if (!dd) return;
+    if (e.target.closest('.dd-btn')) dd.classList.toggle('open');
+    else if (e.target.closest('.dd-item')) dd.classList.remove('open');
+  });
+
+  // профиль: счётчики
+  (function profileStats() {
+    const pp = $('profilePage'); if (!pp) return;
+    const upd = () => {
+      $('dofStFav').textContent = favorites.length;
+      $('dofStCart').textContent = cart.reduce((s, i) => s + Number(i.qty || 1), 0);
+      $('dofStOrders').textContent = (($('myOrdersCount') || {}).textContent || '0');
+    };
+    new MutationObserver(upd).observe(pp, { attributes: true, attributeFilter: ['class'] });
+    pp.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) showPage(b.dataset.go); });
+    upd();
+  })();
+
+  // ===== DOFAMIN v4: бейджи нижней панели, очистка избранного =====
+  function updateNavBadges() {
+    const set = (page, n) => {
+      const b = document.querySelector(`.bottomnav .navbtn[data-page="${page}"]`); if (!b) return;
+      let el = b.querySelector('.nb-badge');
+      if (!n) { if (el) el.remove(); return; }
+      if (!el) { el = document.createElement('i'); el.className = 'nb-badge'; b.appendChild(el); }
+      el.textContent = n > 99 ? '99+' : n;
+    };
+    try {
+      set('cart', cart.reduce((s, i) => s + Number(i.qty || 1), 0));
+      set('favorites', favorites.length);
+    } catch (e) {}
+  }
+  setInterval(updateNavBadges, 600); updateNavBadges();
+  $('favClear')?.addEventListener('click', async () => {
+    if (!(await askConfirm('Убрать все товары из избранного?'))) return;
+    favorites = []; persist(); renderProducts(); renderFavorites(); updateNavBadges();
+  });
+  $('favoritesPage')?.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) showPage(b.dataset.go); });
 
   updateCount();renderCart();loadProducts();
 })();
