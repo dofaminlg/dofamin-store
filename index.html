@@ -3120,6 +3120,14 @@ body.gd-open nav.bottomnav{display:none!important}
 .ord-notify.st-other{background:#fff;color:#111}
 @keyframes ordPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @media(prefers-reduced-motion:reduce){.ord-notify{animation:none}}
+
+/* ===== v13: блок «Ищешь что-то конкретное?» ===== */
+.req-card{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:22px 0 8px;padding:18px;border-radius:22px;border:1px solid #2a2a2a;background:radial-gradient(120% 140% at 0% 0%,rgba(255,255,255,.09),transparent 60%),linear-gradient(160deg,#171717,#0b0b0b);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.req-ic{flex:none;width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#2c2c2c,#181818);border:1px solid #363636}
+.req-ic svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.req-tx{flex:1 1 200px;min-width:0}.req-tx h3{margin:0 0 4px;font-size:17px}.req-tx p{margin:0;color:#a8a8a8;font-size:13.5px;line-height:1.45}
+.req-btn{flex:1 1 100%;height:46px;border-radius:14px;font-weight:800}
+@media(min-width:560px){.req-btn{flex:none;padding:0 22px}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
@@ -3161,6 +3169,12 @@ body.gd-open nav.bottomnav{display:none!important}
   </div>
 </div>
     <div class="grid" id="productsGrid"><div class="empty"><strong>Подключаем каталог</strong>Загружаем товары из магазина…</div></div>
+
+    <div class="req-card">
+      <div class="req-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></div>
+      <div class="req-tx"><h3>Ищешь что-то конкретное?</h3><p>Не можешь найти нужную модель? Напиши нам — постараемся помочь с поиском.</p></div>
+      <button type="button" class="btn primary req-btn" data-request>Написать нам</button>
+    </div>
   </section>
   <section id="catalogPage" class="page">
     <div class="sectionhead"><h2>Каталог</h2><span class="count" id="catalogCount"></span></div>
@@ -3174,6 +3188,12 @@ body.gd-open nav.bottomnav{display:none!important}
   </div>
 </div>
     <div class="grid" id="productsGrid2"></div>
+
+    <div class="req-card">
+      <div class="req-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></div>
+      <div class="req-tx"><h3>Ищешь что-то конкретное?</h3><p>Не можешь найти нужную модель? Напиши нам — постараемся помочь с поиском.</p></div>
+      <button type="button" class="btn primary req-btn" data-request>Написать нам</button>
+    </div>
   </section>
  <section id="productPage" class="page">
   <button class="btn" id="productBack" type="button">
@@ -6185,6 +6205,14 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     setInterval(() => { if (!document.hidden) check(); }, 90000);
     setTimeout(check, 1500);
   })();
+
+  // кнопка «Написать нам» (поиск конкретной модели)
+  document.addEventListener('click', e => {
+    if (!e.target.closest('[data-request]')) return;
+    const q = ($('search2')?.value || $('search')?.value || '').trim();
+    const text = 'Здравствуйте! Ищу конкретную модель' + (q ? ': ' + q : '') + '. Подскажите, пожалуйста, есть ли она в наличии?';
+    openTg('https://t.me/' + MANAGER_TELEGRAM + '?text=' + encodeURIComponent(text));
+  });
 
   updateCount();renderCart();loadProducts();
 })();
