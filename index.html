@@ -3105,6 +3105,11 @@ body.gd-open nav.bottomnav{display:none!important}
 .card-gallery-slide img{object-fit:cover!important;object-position:center!important;width:100%!important;height:100%!important;border-radius:inherit!important}
 .card-gallery-slide{border-radius:18px!important;overflow:hidden!important}
 .card-gallery{border-radius:18px!important;overflow:hidden!important}
+
+/* ===== v11: страница товара — вместо чёрных полос размытая подложка из самого фото ===== */
+#productPage .premium-swipe-slide{position:relative!important;overflow:hidden!important;isolation:isolate;background:#0a0a0a!important}
+#productPage .premium-photo-blur{display:block!important;position:absolute!important;inset:-24px!important;z-index:0!important;background-size:cover!important;background-position:center!important;filter:blur(24px) brightness(.55) saturate(1.15)!important;transform:scale(1.1);pointer-events:none}
+#productPage .premium-swipe-slide img{position:relative!important;z-index:1!important;background:transparent!important}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
