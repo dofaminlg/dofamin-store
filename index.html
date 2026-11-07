@@ -3052,18 +3052,57 @@ nav.bottomnav .navbtn b svg{width:23px!important;height:23px!important;min-width
 nav.bottomnav .navbtn.active,nav.bottomnav .navbtn.active b{color:#0a0a0a!important}
 nav.bottomnav .navbtn.active b svg{stroke:#0a0a0a!important;filter:none!important}
 nav.bottomnav .navbtn:not(.active) b svg{stroke:rgba(255,255,255,.6)!important}
+
+/* ===== v6: шапка и гид ===== */
+header{background:radial-gradient(90% 160% at 12% 0%,rgba(255,255,255,.10),transparent 60%),linear-gradient(180deg,rgba(20,20,20,.96),rgba(8,8,8,.94))!important;border-bottom:0!important;position:sticky;overflow:visible}
+header::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);box-shadow:0 0 14px 1px rgba(255,255,255,.35)}
+.brand-ring{position:relative;flex:0 0 58px;width:58px;height:58px;border-radius:50%;padding:2.5px;background:conic-gradient(from 0deg,#fff,#6b6b6b,#fff,#3a3a3a,#fff);animation:brSpin 8s linear infinite;box-shadow:0 0 18px rgba(255,255,255,.35),0 0 38px rgba(255,255,255,.12)}
+.brand-ring .brand-avatar{display:block;width:100%!important;height:100%!important;flex:none!important;border:2px solid #0a0a0a!important;box-shadow:none!important;background:#111;animation:brSpinBack 8s linear infinite}
+@keyframes brSpin{to{transform:rotate(360deg)}}@keyframes brSpinBack{to{transform:rotate(-360deg)}}
+.brand-text{display:flex;flex-direction:column;gap:5px;min-width:0}
+.brand-title{font-family:'Unbounded','Montserrat',system-ui,sans-serif!important;font-size:17px!important;font-weight:700!important;letter-spacing:1.6px!important;line-height:1;background:linear-gradient(100deg,#fff 0%,#fff 38%,#9d9d9d 50%,#fff 62%,#fff 100%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent!important;text-shadow:none!important;filter:drop-shadow(0 0 8px rgba(255,255,255,.35));animation:brShine 5s ease-in-out infinite}
+@keyframes brShine{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+@media(max-width:380px){.brand-ring{flex-basis:50px;width:50px;height:50px}.brand-title{font-size:14px!important;letter-spacing:1px!important}}
+@media(prefers-reduced-motion:reduce){.brand-ring,.brand-ring .brand-avatar,.brand-title{animation:none}}
+.gd{position:fixed;inset:0;z-index:80}.gd[hidden]{display:none}
+.gd-back{position:absolute;inset:0;background:rgba(0,0,0,.66);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);opacity:0;transition:opacity .25s}
+.gd-sheet{position:absolute;left:0;right:0;bottom:0;max-width:640px;margin:0 auto;max-height:90vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#171717,#0a0a0a);border:1px solid #2c2c2c;border-bottom:0;border-radius:28px 28px 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.7);transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.gd.open .gd-back{opacity:1}.gd.open .gd-sheet{transform:none}
+.gd-grab{width:42px;height:4px;border-radius:9px;background:#3a3a3a;margin:10px auto 2px}
+.gd-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:10px 18px 12px}
+.gd-head h2{margin:0;font-size:22px}.gd-head p{margin:5px 0 0;color:#9a9a9a;font-size:13px}
+.gd-x{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid #2e2e2e;background:#141414;color:#ccc;font-size:15px}
+.gd-body{overflow:auto;-webkit-overflow-scrolling:touch;padding:4px 14px 8px;display:grid;gap:10px}
+.gd-step{border:1px solid #272727;border-radius:18px;background:linear-gradient(160deg,#151515,#0c0c0c);overflow:hidden}
+.gd-st-head{width:100%;display:flex;align-items:center;gap:12px;padding:13px 14px;border:0;background:transparent;color:#fff;text-align:left;font-weight:700;font-size:15px}
+.gd-num{flex:none;width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#2c2c2c,#181818);border:1px solid #363636;font-weight:900;font-size:14px}
+.gd-chev{margin-left:auto;color:#777;transition:transform .2s}.gd-step.open .gd-chev{transform:rotate(180deg)}
+.gd-step.open .gd-num{background:#fff;color:#111;border-color:#fff}
+.gd-st-body{display:none;padding:0 16px 15px 58px;color:#c4c4c4;font-size:14px;line-height:1.5}
+.gd-step.open .gd-st-body{display:block}
+.gd-st-body ul{margin:0;padding-left:18px;display:grid;gap:6px}.gd-st-body b{color:#fff}
+.gd-foot{display:flex;gap:10px;padding:12px 14px calc(14px + env(safe-area-inset-bottom));border-top:1px solid #222}
+.gd-foot .btn{flex:1}
+
+/* ===== v7: нижняя панель строго по центру ===== */
+nav.bottomnav{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(520px,calc(100% - 24px))!important;max-width:none!important;margin:0!important;min-height:0!important;box-sizing:border-box!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;justify-items:stretch}
+nav.bottomnav::before,nav.bottomnav::after{display:none!important}
+nav.bottomnav .navbtn{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:0}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <header>
   <div class="head">
     <div class="brand-lockup">
-      <img
+      <span class="brand-ring"><img
         class="brand-avatar"
         src="https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/channel-avatar"
         alt="DOFAMIN"
-      >
-      <div class="brand-title">ДОФАМИН ШОП</div>
+      ></span>
+      <div class="brand-text">
+        <div class="brand-title">ДОФАМИН ШОП</div>
+      </div>
     </div>
     <div class="spacer"></div>
   </div>
@@ -3319,6 +3358,21 @@ nav.bottomnav .navbtn:not(.active) b svg{stroke:rgba(255,255,255,.6)!important}
 
 </nav>
   
+<div class="gd" id="gd" hidden>
+  <div class="gd-back" data-gd-close></div>
+  <div class="gd-sheet" role="dialog" aria-modal="true" aria-labelledby="gdTitle">
+    <div class="gd-grab"></div>
+    <div class="gd-head">
+      <div><h2 id="gdTitle">Гид по магазину</h2><p>Как выбрать и заказать товар за пару минут</p></div>
+      <button type="button" class="gd-x" data-gd-close aria-label="Закрыть">✕</button>
+    </div>
+    <div class="gd-body" id="gdBody"></div>
+    <div class="gd-foot">
+      <button type="button" class="btn primary" id="gdShop">В каталог</button>
+      <button type="button" class="btn" id="gdMgr">Менеджер</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -6011,6 +6065,37 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     favorites = []; persist(); renderProducts(); renderFavorites(); updateNavBadges();
   });
   $('favoritesPage')?.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) showPage(b.dataset.go); });
+
+  // ===== DOFAMIN v6: гид по магазину =====
+  (function initGuide() {
+    const STEPS = [
+      ['Найдите товар', '<ul><li><b>Главная</b> — баннеры и новинки. Нажмите на баннер, чтобы перейти по ссылке.</li><li>Вкладка <b>«Каталог»</b> внизу — все товары. Сверху выберите категорию: «Обувь», «Лонгслив» и другие.</li><li>Кнопка <b>«Каталог ▾»</b> сортирует: сначала новые, дешевле, дороже или по названию.</li><li>Строка поиска ищет товар по названию.</li></ul>'],
+      ['Откройте карточку товара', '<ul><li>Нажмите на товар: фото листаются свайпом, там цена, описание и срок доставки.</li><li>Красная метка <b>NEW</b> на фото — свежая новинка.</li><li>Сердечко <b>♡</b> сохраняет товар в «Избранное», чтобы не потерять.</li></ul>'],
+      ['Выберите размер и добавьте в корзину', '<ul><li>Выберите свой размер.</li><li>Нажмите <b>«В корзину»</b>. Вверху на иконке корзины появится счётчик товаров.</li></ul>'],
+      ['Проверьте корзину', '<ul><li>Вкладка <b>«Корзина»</b>: меняйте количество, удаляйте лишнее.</li><li>Снимите галочку с товара, если не хотите заказывать его сейчас.</li><li>Затем нажмите кнопку оформления заказа.</li></ul>'],
+      ['Заполните данные получателя', '<ul><li>Укажите <b>имя</b>, <b>Telegram</b> (например, @username) и <b>город</b>.</li><li>Выберите способ оплаты: <b>картой</b> (реквизиты пришлёт менеджер) или <b>наличными</b> при встрече в Луганске.</li></ul>'],
+      ['Примените промокод', '<ul><li>Есть промокод? Введите его в блоке <b>«Промокод»</b> и нажмите <b>«Применить»</b>.</li><li>Скидка сразу появится в итоговой сумме. Убрать код можно кнопкой «Убрать».</li></ul>'],
+      ['Нажмите «Оплатить»', '<ul><li>Заказ оформится, а на экране появится готовое сообщение для менеджера. Нажмите кнопку связи с менеджером и отправьте его.</li><li>Менеджер подтвердит наличие, объяснит оплату и доставку.</li></ul>'],
+      ['Следите за заказом', '<ul><li><b>Профиль → «Мои заказы»</b>: там статус каждого заказа — «Новый», «Оплачен», «В пути», «Доставлен».</li><li>Если доставка задерживается, статус тоже покажет это.</li></ul>'],
+      ['Остались вопросы?', '<ul><li>Нажмите кнопку <b>«Менеджер»</b> ниже — откроется личный чат, пишите в любое время.</li></ul>']
+    ];
+    const root = $('gd'), body = $('gdBody');
+    if (!root || !body) return;
+    body.innerHTML = STEPS.map((st, i) => `<div class="gd-step${i === 0 ? ' open' : ''}"><button type="button" class="gd-st-head"><span class="gd-num">${i + 1}</span><span>${st[0]}</span><span class="gd-chev">⌄</span></button><div class="gd-st-body">${st[1]}</div></div>`).join('');
+    body.addEventListener('click', e => {
+      const h = e.target.closest('.gd-st-head'); if (!h) return;
+      const step = h.parentElement, was = step.classList.contains('open');
+      body.querySelectorAll('.gd-step.open').forEach(x => x.classList.remove('open'));
+      if (!was) step.classList.add('open');
+    });
+    const open = () => { root.hidden = false; document.body.style.overflow = 'hidden'; requestAnimationFrame(() => root.classList.add('open')); };
+    const close = () => { root.classList.remove('open'); document.body.style.overflow = ''; setTimeout(() => { root.hidden = true; }, 300); };
+    $('dofOpenGuide')?.addEventListener('click', open);
+    root.addEventListener('click', e => { if (e.target.closest('[data-gd-close]')) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !root.hidden) close(); });
+    $('gdShop').onclick = () => { close(); showPage('catalog'); };
+    $('gdMgr').onclick = () => openTg('https://t.me/' + MANAGER_TELEGRAM);
+  })();
 
   updateCount();renderCart();loadProducts();
 })();
