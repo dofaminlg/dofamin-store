@@ -3044,6 +3044,14 @@ nav.bottomnav .navbtn.active b{text-shadow:none!important}
 .pm-item.off{opacity:.55}.pm-item .pm-code{font-weight:900;letter-spacing:1.5px;font-size:16px}
 .pm-item .pm-pc{flex:none;min-width:54px;text-align:center;padding:8px 6px;border-radius:12px;background:#fff;color:#111;font-weight:900}
 .pm-item .pm-info{flex:1;min-width:0}.pm-item .pm-acts{display:flex;gap:6px}
+
+/* ===== v5: исправление иконок нижней панели ===== */
+nav.bottomnav .navbtn b{width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;display:grid!important;place-items:center;font-size:inherit!important;color:inherit!important}
+nav.bottomnav .navbtn b::before,nav.bottomnav .navbtn b::after{display:none!important}
+nav.bottomnav .navbtn b svg{width:23px!important;height:23px!important;min-width:23px!important;min-height:23px!important;filter:none!important;stroke:currentColor!important;color:inherit!important}
+nav.bottomnav .navbtn.active,nav.bottomnav .navbtn.active b{color:#0a0a0a!important}
+nav.bottomnav .navbtn.active b svg{stroke:#0a0a0a!important;filter:none!important}
+nav.bottomnav .navbtn:not(.active) b svg{stroke:rgba(255,255,255,.6)!important}
 </style>
 </head>
 <body>
@@ -3335,7 +3343,7 @@ async function ordersRequest(action, extra = {}) {
     throw new Error('Открой магазин через Telegram');
   }
 
-  const response = await fetch(ORDERS_FUNCTION_URL, {
+  const doFetch = () => fetch(ORDERS_FUNCTION_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -3348,10 +3356,24 @@ async function ordersRequest(action, extra = {}) {
     })
   });
 
-  const result = await response.json();
+  let response;
+  try {
+    response = await doFetch();
+  } catch (e) {
+    // сеть моргнула — одна повторная попытка
+    await new Promise(r => setTimeout(r, 700));
+    try { response = await doFetch(); }
+    catch (e2) {
+      console.error('ordersRequest network error:', e2);
+      throw new Error('Нет связи с сервером заказов. Проверьте интернет и попробуйте ещё раз');
+    }
+  }
 
-  if (!response.ok || !result.ok) {
-    throw new Error(result.error || 'Не удалось выполнить запрос');
+  let result = null;
+  try { result = await response.json(); } catch (e) {}
+
+  if (!result || !response.ok || !result.ok) {
+    throw new Error((result && result.error) || ('Сервер заказов ответил ошибкой (' + response.status + ')'));
   }
 
   return result;
@@ -5297,10 +5319,18 @@ async function loadProducts(){
           : new Date(Date.now() + Number(E.new_days.value) * 864e5).toISOString()
       };
 
-      if (ed.id) await adminRequest('update', { id: ed.id, ...payload });
-      else await adminRequest('add', payload);
+      const send = p => ed.id ? adminRequest('update', { id: ed.id, ...p }) : adminRequest('add', p);
+      let newSaved = true;
+      try {
+        await send(payload);
+      } catch (e1) {
+        // скорее всего в БД/функции нет колонок для метки NEW — сохраняем товар без них
+        const { is_new, new_until, ...base } = payload;
+        try { await send({ ...base, is_new }); newSaved = false; }
+        catch (e2) { await send(base); newSaved = false; }
+      }
 
-      toast(ed.id ? 'Товар обновлён' : 'Товар добавлен');
+      toast(newSaved ? (ed.id ? 'Товар обновлён' : 'Товар добавлен') : 'Товар сохранён, но срок метки NEW не записан — добавьте колонку new_until в БД');
       closeAdminSheet();
       await loadAdminProducts();
       loadProducts();
