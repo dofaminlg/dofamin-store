@@ -3110,6 +3110,16 @@ body.gd-open nav.bottomnav{display:none!important}
 #productPage .premium-swipe-slide{position:relative!important;overflow:hidden!important;isolation:isolate;background:#0a0a0a!important}
 #productPage .premium-photo-blur{display:block!important;position:absolute!important;inset:-24px!important;z-index:0!important;background-size:cover!important;background-position:center!important;filter:blur(24px) brightness(.55) saturate(1.15)!important;transform:scale(1.1);pointer-events:none}
 #productPage .premium-swipe-slide img{position:relative!important;z-index:1!important;background:transparent!important}
+
+/* ===== v12: уведомление о статусе заказа ===== */
+.ord-notify{margin-left:auto;margin-right:8px;display:inline-flex;align-items:center;padding:5px 11px;border-radius:99px;font-size:12px;font-weight:800;white-space:nowrap;color:#07210f;background:#66d9a0;box-shadow:0 0 14px rgba(102,217,160,.45);animation:ordPulse 2s ease-in-out infinite}
+.ord-notify[hidden]{display:none}
+.ord-notify.st-way{background:#7cb8ff;color:#06182e;box-shadow:0 0 14px rgba(124,184,255,.45)}
+.ord-notify.st-paid{background:#e6c77a;color:#2a1f05;box-shadow:0 0 14px rgba(230,199,122,.45)}
+.ord-notify.st-late{background:#ffb45c;color:#2e1a05;box-shadow:0 0 14px rgba(255,180,92,.45)}
+.ord-notify.st-other{background:#fff;color:#111}
+@keyframes ordPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@media(prefers-reduced-motion:reduce){.ord-notify{animation:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
@@ -3225,6 +3235,7 @@ body.gd-open nav.bottomnav{display:none!important}
         </svg>
       </span>
       <span>Мои заказы</span>
+      <span class="ord-notify" id="ordNotify" hidden></span>
       <span class="dof-menu-arrow">›</span>
     </button>
 
@@ -6079,6 +6090,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     try {
       set('cart', cart.reduce((s, i) => s + Number(i.qty || 1), 0));
       set('favorites', favorites.length);
+      set('profile', typeof ordNotifyCount === 'number' ? ordNotifyCount : 0);
     } catch (e) {}
   }
   setInterval(updateNavBadges, 600); updateNavBadges();
@@ -6117,6 +6129,61 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !root.hidden) close(); });
     $('gdShop').onclick = () => { close(); showPage('catalog'); };
     $('gdMgr').onclick = () => openTg('https://t.me/' + MANAGER_TELEGRAM);
+  })();
+
+  // ===== DOFAMIN v12: уведомления о смене статуса заказа =====
+  var ordNotifyCount = 0;
+  (function orderNotify() {
+    if (!window.Telegram?.WebApp?.initData) return;
+    const KEY = 'dofamin_orders_seen';
+    const rd = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
+    const wr = m => { try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} };
+    let last = [], changed = [];
+    const cls = st => { st = String(st || '').toLowerCase();
+      return st.includes('доставлен') ? 'st-done' : st.includes('задерж') ? 'st-late' : st.includes('пути') ? 'st-way' : st.includes('оплач') ? 'st-paid' : 'st-other'; };
+    const label = st => /задерж/i.test(st) ? 'Задерживается' : st;
+    function render() {
+      ordNotifyCount = changed.length;
+      updateNavBadges();
+      const el = $('ordNotify'); if (!el) return;
+      if (!changed.length) { el.hidden = true; return; }
+      const st = String(changed[0].status || 'Новый'), c = cls(st);
+      el.className = 'ord-notify ' + c;
+      el.textContent = changed.length > 1 ? changed.length + ' новых' : (c === 'st-done' ? '✓ ' : '') + label(st);
+      el.hidden = false;
+    }
+    function markSeen() {
+      const m = {}; last.forEach(o => { m[String(o.id)] = String(o.status || ''); });
+      wr(m); changed = []; render();
+    }
+    const ordersOpen = () => $('ordersPage')?.classList.contains('active');
+    async function check() {
+      try {
+        const r = await ordersRequest('list');
+        last = r.orders || [];
+        const seen = rd();
+        if (!seen) { markSeen(); return; }            // первый запуск: запоминаем текущие статусы
+        if (ordersOpen()) { markSeen(); return; }
+        const prev = changed.length;
+        changed = last.filter(o => {
+          const id = String(o.id), st = String(o.status || '');
+          if (!(id in seen)) { if (!st || st === 'Новый') { seen[id] = st; return false; } return true; }
+          return seen[id] !== st;
+        });
+        wr(seen);
+        if (changed.length > prev) {
+          const o = changed[0], c = cls(o.status);
+          toast(c === 'st-done' ? 'Ваш заказ доставлен ✓' : 'Статус заказа обновлён: ' + label(String(o.status || '')));
+          try { window.Telegram.WebApp.HapticFeedback?.notificationOccurred('success'); } catch (e) {}
+        }
+        render();
+      } catch (e) { /* нет сети или не в Telegram — молча пропускаем */ }
+    }
+    const op = $('ordersPage');
+    if (op) new MutationObserver(() => { if (ordersOpen()) markSeen(); }).observe(op, { attributes: true, attributeFilter: ['class'] });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+    setInterval(() => { if (!document.hidden) check(); }, 90000);
+    setTimeout(check, 1500);
   })();
 
   updateCount();renderCart();loadProducts();
