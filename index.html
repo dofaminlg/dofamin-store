@@ -3100,6 +3100,11 @@ body.gd-open nav.bottomnav{display:none!important}
 /* ===== v9: список гида не сжимается, а прокручивается ===== */
 .gd-body{display:flex!important;flex-direction:column;gap:10px;overflow-y:auto!important}
 .gd-step{flex:none!important}
+
+/* ===== v10: фото в карточках заполняют всю карточку, углы везде скруглены ===== */
+.card-gallery-slide img{object-fit:cover!important;object-position:center!important;width:100%!important;height:100%!important;border-radius:inherit!important}
+.card-gallery-slide{border-radius:18px!important;overflow:hidden!important}
+.card-gallery{border-radius:18px!important;overflow:hidden!important}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
