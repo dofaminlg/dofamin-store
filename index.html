@@ -3088,6 +3088,18 @@ header::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px
 nav.bottomnav{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(520px,calc(100% - 24px))!important;max-width:none!important;margin:0!important;min-height:0!important;box-sizing:border-box!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;justify-items:stretch}
 nav.bottomnav::before,nav.bottomnav::after{display:none!important}
 nav.bottomnav .navbtn{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:0}
+
+/* ===== v8: гид на телефоне ===== */
+.gd{z-index:10050!important}
+.gd-sheet{max-height:88vh;max-height:88dvh;overflow:hidden}
+.gd-body{flex:1 1 auto;min-height:0;overscroll-behavior:contain;touch-action:pan-y}
+.gd-foot{flex:none}
+.gd-st-head{touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:56px}
+body.gd-open nav.bottomnav{display:none!important}
+
+/* ===== v9: список гида не сжимается, а прокручивается ===== */
+.gd-body{display:flex!important;flex-direction:column;gap:10px;overflow-y:auto!important}
+.gd-step{flex:none!important}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
@@ -6088,8 +6100,8 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       body.querySelectorAll('.gd-step.open').forEach(x => x.classList.remove('open'));
       if (!was) step.classList.add('open');
     });
-    const open = () => { root.hidden = false; document.body.style.overflow = 'hidden'; requestAnimationFrame(() => root.classList.add('open')); };
-    const close = () => { root.classList.remove('open'); document.body.style.overflow = ''; setTimeout(() => { root.hidden = true; }, 300); };
+    const open = () => { root.hidden = false; document.body.style.overflow = 'hidden'; document.body.classList.add('gd-open'); body.scrollTop = 0; requestAnimationFrame(() => root.classList.add('open')); };
+    const close = () => { root.classList.remove('open'); document.body.style.overflow = ''; document.body.classList.remove('gd-open'); setTimeout(() => { root.hidden = true; }, 300); };
     $('dofOpenGuide')?.addEventListener('click', open);
     root.addEventListener('click', e => { if (e.target.closest('[data-gd-close]')) close(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !root.hidden) close(); });
