@@ -5020,6 +5020,7 @@ async function loadProducts(){
         <button type="button" data-act="tab" data-tab="orders">Заказы <span class="dof-badge" id="aOrdersBadge" hidden>0</span></button>
         <button type="button" data-act="tab" data-tab="categories">Категории</button>
         <button type="button" data-act="tab" data-tab="promo">Промокоды</button>
+        <button type="button" data-act="tab" data-tab="admins">Админы</button>
       </div>
 
       <div id="aTabProducts">
@@ -5049,6 +5050,14 @@ async function loadProducts(){
           <button type="button" class="btn primary" data-act="cat-add">Добавить</button>
         </div>
         <div id="aCatList"></div>
+      </div>
+
+      <div id="aTabAdmins" hidden>
+        <div class="pm-form">
+          <div class="pm-row"><input class="field" id="admValue" maxlength="40" autocapitalize="none" autocomplete="off" placeholder="Telegram ID или @username"><button type="button" class="btn primary" data-act="admin-add">Добавить</button></div>
+          <div class="small">Пусть человек откроет магазин в Telegram. Если добавляете по @username, он получит доступ при первом входе. Надёжнее добавлять по цифровому ID.</div>
+        </div>
+        <div id="aAdminList"></div>
       </div>
 
       <div id="aTabPromo" hidden>
@@ -5094,6 +5103,8 @@ async function loadProducts(){
     $('aTabOrders').hidden = tab !== 'orders';
     $('aTabCategories').hidden = tab !== 'categories';
     $('aTabPromo').hidden = tab !== 'promo';
+    $('aTabAdmins').hidden = tab !== 'admins';
+    if (tab === 'admins') loadAdmins();
     if (tab === 'promo') loadAdminPromos();
   }
 
@@ -5117,6 +5128,8 @@ async function loadProducts(){
       return renderAdminOrders();
     }
     if (act === 'archive') return adminArchiveOrder(id, el);
+    if (act === 'admin-add') return adminAddAdmin();
+    if (act === 'admin-remove') return adminRemoveAdmin(id);
     if (act === 'promo-gen') return promoGen();
     if (act === 'promo-pct') { $('pmPercent').value = el.dataset.p; return markPct(); }
     if (act === 'promo-add') return adminAddPromo();
@@ -5619,6 +5632,53 @@ async function loadProducts(){
     const p = (A.promos || []).find(x => String(x.id) === String(id)); if (!p) return;
     if (!(await askConfirm(`Удалить промокод ${p.code}?`))) return;
     try { await adminRequest('promo_delete', { id: p.id }); await loadAdminPromos(); toast('Промокод удалён'); }
+    catch (error) { toast('Ошибка: ' + error.message); }
+  }
+
+  /* ---------- Администраторы ---------- */
+  let adminMeta = { isOwner: false, ownerId: '' };
+  async function loadAdmins() {
+    const list = $('aAdminList'); if (!list) return;
+    try {
+      const r = await adminRequest('admins_list');
+      A.admins = r.admins || [];
+      adminMeta = { isOwner: !!r.isOwner, ownerId: String(r.ownerId || '') };
+      renderAdmins();
+    } catch (error) {
+      list.innerHTML = `<div class="dof-orders-empty">Не удалось загрузить список: ${safe(error.message)}</div>`;
+    }
+  }
+  function renderAdmins() {
+    const list = $('aAdminList'); if (!list) return;
+    const owner = `<div class="pm-item"><div class="pm-pc">👑</div><div class="pm-info"><div class="pm-code">${safe(adminMeta.ownerId)}</div><div class="small">Владелец · полный доступ</div></div></div>`;
+    const rows = (A.admins || []).map(a => {
+      const who = a.telegram_id ? String(a.telegram_id) : '';
+      const name = a.username ? '@' + a.username : who;
+      const sub = a.telegram_id ? (a.username ? 'ID ' + a.telegram_id : 'ID ' + a.telegram_id) : 'ждёт первого входа';
+      return `<div class="pm-item">
+        <div class="pm-pc">🛡</div>
+        <div class="pm-info"><div class="pm-code">${safe(name)}</div><div class="small">${safe(sub)}</div></div>
+        ${adminMeta.isOwner ? `<div class="pm-acts"><button type="button" class="btn danger" data-act="admin-remove" data-id="${safe(a.id)}">✕</button></div>` : ''}
+      </div>`;
+    }).join('');
+    const empty = (A.admins || []).length ? '' : '<div class="dof-orders-empty">Дополнительных админов пока нет</div>';
+    list.innerHTML = owner + rows + empty + (adminMeta.isOwner ? '' : '<div class="small" style="margin-top:8px">Добавлять и удалять админов может только владелец.</div>');
+  }
+  async function adminAddAdmin() {
+    const v = $('admValue').value.trim();
+    if (!v) { toast('Введите Telegram ID или @username'); return; }
+    try {
+      await adminRequest('admin_add', { value: v });
+      $('admValue').value = '';
+      await loadAdmins();
+      toast('Админ добавлен');
+    } catch (error) { toast('Ошибка: ' + error.message); }
+  }
+  async function adminRemoveAdmin(id) {
+    const a = (A.admins || []).find(x => String(x.id) === String(id)); if (!a) return;
+    const name = a.username ? '@' + a.username : String(a.telegram_id || '');
+    if (!(await askConfirm(`Убрать ${name} из админов?`))) return;
+    try { await adminRequest('admin_remove', { id: a.id }); await loadAdmins(); toast('Админ удалён'); }
     catch (error) { toast('Ошибка: ' + error.message); }
   }
 
