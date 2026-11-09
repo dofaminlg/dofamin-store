@@ -3134,6 +3134,21 @@ body.kb-open .co-bar,body.kb-open nav.bottomnav{display:none!important}
 .co-wrap{padding-bottom:28px}
 body.kb-open .co-wrap{padding-bottom:45vh}
 .co-field .field{scroll-margin-top:90px;scroll-margin-bottom:260px}
+
+/* ===== баннеры: компактнее, без стрелок ===== */
+.bn{margin:12px 0 10px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#0b0b0b;box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.03) inset}
+.bn-arr,.bn-arr.l,.bn-arr.r{display:none!important}
+.bn-slide{aspect-ratio:2.6/1;border-radius:18px;overflow:hidden}
+.bn-slide img{transition:transform .6s ease}
+.bn-slide::after{background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.55) 100%)}
+.bn-dots{bottom:9px;left:auto;right:12px;width:auto;padding:4px 7px;border-radius:99px;background:rgba(10,10,10,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12)}
+.bn-dots i{width:5px;height:5px;background:rgba(255,255,255,.4)}
+.bn-dots i.on{width:14px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.5)}
+
+/* ===== индикаторы баннеров: по центру снизу, стекло с рамкой ===== */
+.bn-dots{left:50%!important;right:auto!important;bottom:10px!important;transform:translateX(-50%);width:max-content;padding:5px 9px;border-radius:99px;gap:7px;background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);border:1px solid rgba(255,255,255,.22);box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.18)}
+.bn-dots i{width:6px;height:6px;background:rgba(255,255,255,.35)}
+.bn-dots i.on{width:18px;background:linear-gradient(90deg,#fff,#dcdcdc);box-shadow:0 0 10px rgba(255,255,255,.55)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
