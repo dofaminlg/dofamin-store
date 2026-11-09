@@ -3128,6 +3128,12 @@ body.gd-open nav.bottomnav{display:none!important}
 .req-tx{flex:1 1 200px;min-width:0}.req-tx h3{margin:0 0 4px;font-size:17px}.req-tx p{margin:0;color:#a8a8a8;font-size:13.5px;line-height:1.45}
 .req-btn{flex:1 1 100%;height:46px;border-radius:14px;font-weight:800}
 @media(min-width:560px){.req-btn{flex:none;padding:0 22px}}
+
+/* ===== v16: клавиатура на телефоне не перекрывает поля оформления ===== */
+body.kb-open .co-bar,body.kb-open nav.bottomnav{display:none!important}
+.co-wrap{padding-bottom:28px}
+body.kb-open .co-wrap{padding-bottom:45vh}
+.co-field .field{scroll-margin-top:90px;scroll-margin-bottom:260px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
 </head>
@@ -6213,6 +6219,41 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     const text = 'Здравствуйте! Ищу конкретную модель' + (q ? ': ' + q : '') + '. Подскажите, пожалуйста, есть ли она в наличии?';
     openTg('https://t.me/' + MANAGER_TELEGRAM + '?text=' + encodeURIComponent(text));
   });
+
+
+  // ===== v16: поля оформления не прячутся под клавиатурой =====
+  (function keyboardFix() {
+    let hideT = 0;
+    const isField = el => el && el.matches && el.matches('.co-wrap input, .co-wrap textarea');
+    const keepVisible = el => {
+      const vv = window.visualViewport;
+      const top = 80;
+      const bottomLimit = vv ? vv.height - 16 : window.innerHeight - 16;
+      const r = el.getBoundingClientRect();
+      if (r.bottom > bottomLimit || r.top < top) {
+        const delta = r.bottom - bottomLimit > 0 ? r.bottom - bottomLimit + 24 : r.top - top - 12;
+        window.scrollBy({ top: delta, behavior: 'smooth' });
+      }
+    };
+    document.addEventListener('focusin', e => {
+      if (!isField(e.target)) return;
+      clearTimeout(hideT);
+      document.body.classList.add('kb-open');
+      setTimeout(() => keepVisible(e.target), 320);
+    });
+    document.addEventListener('focusout', e => {
+      if (!isField(e.target)) return;
+      hideT = setTimeout(() => {
+        if (!isField(document.activeElement)) document.body.classList.remove('kb-open');
+      }, 250);
+    });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        const a = document.activeElement;
+        if (isField(a)) keepVisible(a);
+      });
+    }
+  })();
 
   updateCount();renderCart();loadProducts();
 })();
