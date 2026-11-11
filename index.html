@@ -3501,7 +3501,7 @@ body.kb-open .co-wrap{padding-bottom:45vh}
 // ===== Реферальная программа =====
 // Впишите username бота без @ (например 'dofamin_shop_bot').
 // Если мини-приложение открывается по ссылке t.me/бот/приложение — впишите короткое имя приложения в REF_APP.
-const REF_BOT = 'ВПИШИ_USERNAME_БОТА';
+const REF_BOT = 'DofaminLg_bot';
 const REF_APP = '';
 const REF_MIN = 1000;
 const REF_PERCENT = 10;
@@ -5636,7 +5636,7 @@ async function loadProducts(){
               <select class="field" data-ostatus="${safe(order.id)}" aria-label="Статус заказа">
                 ${ADMIN_STATUSES.map(s => `<option value="${safe(s)}" ${s === status ? 'selected' : ''}>${safe(s)}</option>`).join('')}
               </select>
-              ${isDone(order) ? `<button type="button" class="btn" data-act="archive" data-id="${safe(order.id)}">В архив</button>` : ''}
+                ${(isDone(order) || String(order.status || '').toLowerCase().includes('отмен')) ? `<button type="button" class="btn" data-act="archive" data-id="${safe(order.id)}">В архив</button>` : ''}
             </div>
           </div>
         </article>`;
