@@ -2834,26 +2834,20 @@ img{max-width:100%}
 .dof-sortchip{flex:1 1 0;min-width:0;padding:0 6px;gap:5px;font-size:13px}
 .dof-sortchip[data-sort-value="new"]{flex:0 0 60px}
 @media(min-width:420px){.dof-sortchip{font-size:14px;gap:7px}.dof-sortbar{gap:8px}}
-/* ===== DOFAMIN: баланс ===== */
-.bal-card{display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:16px;border-radius:20px;border:1px solid #2c2c2c;background:radial-gradient(120% 120% at 0% 0%,rgba(255,255,255,.1),transparent 60%),linear-gradient(160deg,#171717,#0a0a0a)}
-.bal-ic{width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#2c2c2c,#181818);border:1px solid #333}
-.bal-ic svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.bal-info{flex:1;min-width:0}
-.bal-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:800}
-.bal-sum{font-size:26px;font-weight:800;line-height:1.15;margin-top:2px}
-.bal-hint{font-size:12px;color:#8a8a8a;margin-top:4px;line-height:1.35}
-.bal-top{flex:0 0 auto;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:700;border:1px solid #3a3a3a;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
-.co-opt.off{opacity:.55}
-.co-opt.off .tx span{color:#e5857b}
-/* ===== DOFAMIN: страница пополнения ===== */
-.tu-wrap{max-width:520px;margin:0 auto}
-.tu-cur{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:18px;border:1px solid #2c2c2c;background:linear-gradient(160deg,#171717,#0a0a0a);margin-bottom:14px;color:var(--muted);font-size:13px}
-.tu-cur b{color:#fff;font-size:18px}
-.tu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
-.tu-chip{padding:16px 6px;border-radius:16px;border:1px solid #2c2c2c;background:linear-gradient(160deg,#161616,#0c0c0c);color:#fff;font-size:16px;font-weight:800;cursor:pointer;transition:transform .15s}
-.tu-chip:active{transform:scale(.97)}
-.tu-chip.on{background:#fff;color:#111;border-color:#fff}
-.tu-note{font-size:12px;color:#8a8a8a;line-height:1.45;margin:12px 2px 0}
+/* ===== DOFAMIN: реферальный баланс ===== */
+.rf-card{margin:0 0 14px;padding:18px;border-radius:22px;border:1px solid #2c2c2c;background:radial-gradient(120% 120% at 0% 0%,rgba(255,255,255,.1),transparent 60%),linear-gradient(160deg,#171717,#0a0a0a)}
+.rf-head{display:flex;justify-content:space-between;align-items:flex-start}
+.rf-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:800}
+.rf-gift svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.rf-sum{font-size:34px;font-weight:800;line-height:1.1;margin:10px 0 8px}
+.rf-sub{font-size:14px;color:#cfcfcf;line-height:1.35}
+.rf-note{font-size:12px;color:#8a8a8a;line-height:1.4;margin-top:6px}
+.rf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.rf-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 10px;border-radius:14px;border:1px solid #2f2f2f;background:linear-gradient(160deg,#161616,#0c0c0c);color:#fff;font-size:14px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;cursor:pointer}
+.rf-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rf-btn.pri{background:#fff;color:#111;border-color:#fff}
+.rf-btn.wide{width:100%;margin-top:10px}
+.rf-btn:disabled{opacity:.4;cursor:default}
 /* ================= Страница оплаты ================= */
 body.no-nav .bottomnav{display:none!important}
 body.no-nav .wrap{padding-bottom:140px}
@@ -3283,14 +3277,20 @@ body.kb-open .co-wrap{padding-bottom:45vh}
     </button>
   </div>
 
-  <!-- Баланс -->
-  <div class="bal-card" id="balCard">
-    <div class="bal-ic"><svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a1 1 0 0 1 1 1v2"/><path d="M3 7.5V17a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1H5.5A2.5 2.5 0 0 1 3 7.5Z"/><circle cx="16.5" cy="13.5" r="1" fill="#fff"/></svg></div>
-    <div class="bal-info">
-      <div class="bal-label">Баланс</div>
-      <div class="bal-sum" id="balSum">0 ₽</div>
+  <!-- Реферальный баланс -->
+  <div class="rf-card" id="rfCard">
+    <div class="rf-head">
+      <div class="rf-label">Реферальный баланс</div>
+      <div class="rf-gift"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg></div>
     </div>
-    <button type="button" class="bal-top" id="balTopup">Пополнить</button>
+    <div class="rf-sum" id="rfSum">0 ₽</div>
+    <div class="rf-sub" id="rfSub">0 приглашено · вывод от 1 000 ₽</div>
+    <div class="rf-note">Друг купил по вашей ссылке — вы получаете 10% от суммы его заказа после доставки</div>
+    <div class="rf-row">
+      <button type="button" class="rf-btn pri" id="rfShare"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>Поделиться</button>
+      <button type="button" class="rf-btn" id="rfCopy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>Копировать</button>
+    </div>
+    <button type="button" class="rf-btn wide" id="rfWithdraw" disabled>Вывод от 1 000 ₽</button>
   </div>
 
   <div class="dof-stats">
@@ -3406,30 +3406,6 @@ body.kb-open .co-wrap{padding-bottom:45vh}
 
 <section id="adminPage" class="page"></section>
 
-<section id="topupPage" class="page">
-  <div class="dof-subhead">
-    <button type="button" class="dof-back" id="topupBack" aria-label="Назад">‹</button>
-    <h2>Пополнение баланса</h2>
-  </div>
-  <div class="tu-wrap">
-    <div class="tu-cur"><span>Ваш баланс</span><b id="tuBal">0 ₽</b></div>
-    <section class="co-card">
-      <h3 class="co-title"><span>Выберите сумму</span></h3>
-      <div class="tu-grid" id="tuChips">
-        <button type="button" class="tu-chip" data-sum="500">500 ₽</button>
-        <button type="button" class="tu-chip" data-sum="1000">1 000 ₽</button>
-        <button type="button" class="tu-chip" data-sum="2000">2 000 ₽</button>
-        <button type="button" class="tu-chip" data-sum="3000">3 000 ₽</button>
-        <button type="button" class="tu-chip" data-sum="5000">5 000 ₽</button>
-        <button type="button" class="tu-chip" data-sum="10000">10 000 ₽</button>
-      </div>
-      <input class="field" id="tuCustom" type="number" inputmode="numeric" min="100" placeholder="Или введите свою сумму, ₽">
-      <button type="button" class="btn primary" id="tuGo" style="width:100%;margin-top:12px" disabled>Пополнить</button>
-      <p class="tu-note">После нажатия откроется чат с администратором с готовым сообщением — отправьте его. Администратор пришлёт реквизиты и зачислит сумму на баланс.</p>
-    </section>
-  </div>
-</section>
-
 <section id="checkoutPage" class="page"><div id="checkoutView"></div></section>
 
 <div class="footer">DOFAMIN® — БОЛЬШЕ, ЧЕМ ПРОСТО ОДЕЖДА.</div>
@@ -3522,17 +3498,25 @@ body.kb-open .co-wrap{padding-bottom:45vh}
   const MANAGER_TELEGRAM = 'DofaminMg';
   const ADMIN_FUNCTION_URL =
   'https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/dofamin-admin';
+// ===== Реферальная программа =====
+// Впишите username бота без @ (например 'dofamin_shop_bot').
+// Если мини-приложение открывается по ссылке t.me/бот/приложение — впишите короткое имя приложения в REF_APP.
+const REF_BOT = 'ВПИШИ_USERNAME_БОТА';
+const REF_APP = '';
+const REF_MIN = 1000;
+const REF_PERCENT = 10;
+const REF_FUNCTION_URL = 'https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/dofamin-referral';
 const ORDERS_FUNCTION_URL =
   'https://nigcbsunnavrlkwtktua.supabase.co/functions/v1/dynamic-endpoint';
 
-async function ordersRequest(action, extra = {}) {
+async function ordersRequest(action, extra = {}, url = ORDERS_FUNCTION_URL) {
   const initData = window.Telegram?.WebApp?.initData;
 
   if (!initData) {
     throw new Error('Открой магазин через Telegram');
   }
 
-  const doFetch = () => fetch(ORDERS_FUNCTION_URL, {
+  const doFetch = () => fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -3923,23 +3907,44 @@ let products = [], categories = [], activeCategory = 'Все', searchText = '';
     count.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
   }
 }
-let myBalance = null;
-async function loadBalance() {
-  try {
-    const r = await ordersRequest('balance');
-    myBalance = Math.max(0, Number(r.balance) || 0);
-  } catch (e) {
-    myBalance = myBalance === null ? null : myBalance;
-  }
-  renderBalance();
+let refState = { balance: 0, invited: 0 };
+function tgUser() { return window.Telegram?.WebApp?.initDataUnsafe?.user || {}; }
+function refLink() {
+  const id = tgUser().id;
+  if (!id || !REF_BOT || REF_BOT.indexOf('ВПИШИ') === 0) return '';
+  return 'https://t.me/' + REF_BOT + (REF_APP ? '/' + REF_APP : '') + '?startapp=ref_' + id;
 }
-function renderBalance() {
-  const el = $('balSum');
-  if (el) el.textContent = rub(myBalance || 0);
-  if (typeof refreshBalanceOption === 'function') refreshBalanceOption();
+function renderRef() {
+  const bal = refState.balance;
+  if (!$('rfSum')) return;
+  $('rfSum').textContent = rub(bal);
+  $('rfSub').textContent = refState.invited + ' приглашено · ' + (bal >= REF_MIN
+    ? 'можно вывести'
+    : 'вывод от ' + rub(REF_MIN) + ' (не хватает ' + rub(REF_MIN - bal) + ')');
+  const w = $('rfWithdraw');
+  w.disabled = bal < REF_MIN;
+  w.textContent = bal >= REF_MIN ? 'Вывести ' + rub(bal) : 'Вывод от ' + rub(REF_MIN);
+}
+async function loadRef() {
+  try {
+    const start = String(window.Telegram?.WebApp?.initDataUnsafe?.start_param || '');
+    const r = await ordersRequest('info', { ref: start }, REF_FUNCTION_URL);
+    refState = { balance: Math.max(0, Number(r.balance) || 0), invited: Number(r.invited) || 0 };
+  } catch (e) { /* оставляем нули */ }
+  renderRef();
+}
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; }
+  catch (e) {
+    const a = document.createElement('textarea');
+    a.value = t; a.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(a); a.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
+    a.remove(); return ok;
+  }
 }
 let adminAllowed = false;
-const SUBPAGES = { product: 'catalog', orders: 'profile', admin: 'profile', checkout: 'cart', topup: 'profile' };
+const SUBPAGES = { product: 'catalog', orders: 'profile', admin: 'profile', checkout: 'cart' };
 
 function showPage(name) {
   if (name === 'admin' && !adminAllowed) name = 'profile';
@@ -3961,8 +3966,7 @@ function showPage(name) {
   if (name === 'cart') renderCart();
   if (name === 'favorites') renderFavorites();
   if (name === 'orders') loadMyOrders();
-  if (name === 'profile') loadBalance();
-  if (name === 'topup') renderTopup();
+  if (name === 'profile') loadRef();
   if (name === 'admin') openAdminPage();
   if (name === 'checkout') renderCheckout();
 
@@ -5114,7 +5118,7 @@ async function loadProducts(){
         <button type="button" data-act="tab" data-tab="categories">Категории</button>
         <button type="button" data-act="tab" data-tab="promo">Промокоды</button>
         <button type="button" data-act="tab" data-tab="admins">Админы</button>
-        <button type="button" data-act="tab" data-tab="balance">Балансы</button>
+        <button type="button" data-act="tab" data-tab="ref">Рефералы</button>
       </div>
 
       <div id="aTabProducts">
@@ -5154,14 +5158,13 @@ async function loadProducts(){
         <div id="aAdminList"></div>
       </div>
 
-      <div id="aTabBalance" hidden>
+      <div id="aTabRef" hidden>
         <div class="pm-form">
-          <input class="field" id="balUser" maxlength="40" autocapitalize="none" autocomplete="off" placeholder="Telegram ID или @username клиента">
-          <div class="pm-row"><input class="field" id="balAmount" type="number" inputmode="numeric" min="1" placeholder="Сумма, ₽"><button type="button" class="btn primary" data-act="bal-add">Пополнить</button><button type="button" class="btn" data-act="bal-sub">Списать</button></div>
-          <div class="small">Клиент должен хотя бы раз открыть магазин в Telegram. Надёжнее вводить цифровой ID — он виден в профиле клиента.</div>
+          <input class="field" id="refUser" maxlength="20" inputmode="numeric" autocomplete="off" placeholder="Telegram ID того, кому выплачиваете">
+          <div class="pm-row"><input class="field" id="refAmount" type="number" inputmode="numeric" min="1" placeholder="Сумма выплаты, ₽"><button type="button" class="btn primary" data-act="ref-credit">Начислить</button><button type="button" class="btn" data-act="ref-pay">Выплачено</button></div>
+          <div class="small">«Начислить» — добавляет сумму на реферальный баланс человека (вы делаете это сами, когда друг реально забрал заказ). «Выплачено» — списывает сумму, когда вы отправили ему деньги. Человек должен хотя бы раз открыть магазин.</div>
         </div>
-        <div class="dof-toolbar"><input class="field" id="balSearch" type="search" placeholder="Поиск по ID или @username" aria-label="Поиск клиента"><button type="button" class="btn" data-act="bal-refresh">Обновить</button></div>
-        <div id="aBalList"><div class="dof-orders-empty">Загружаем…</div></div>
+        <div id="aRefList"><div class="dof-orders-empty">Загружаем…</div></div>
       </div>
 
       <div id="aTabPromo" hidden>
@@ -5186,7 +5189,6 @@ async function loadProducts(){
     page.addEventListener('click', onAdminClick);
     $('aProdSearch').addEventListener('input', e => { A.pq = e.target.value.trim().toLowerCase(); renderAdminProducts(); });
     $('aOrdSearch').addEventListener('input', e => { A.oq = e.target.value.trim().toLowerCase(); renderAdminOrders(); });
-    $('balSearch').addEventListener('input', e => { A.bq = e.target.value.trim().toLowerCase().replace(/^@/, ''); renderAdminBalances(); });
     page.addEventListener('change', onAdminChange);
     page.addEventListener('input', e => {
       if (e.target.id === 'pmCode') e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, '');
@@ -5209,8 +5211,8 @@ async function loadProducts(){
     $('aTabCategories').hidden = tab !== 'categories';
     $('aTabPromo').hidden = tab !== 'promo';
     $('aTabAdmins').hidden = tab !== 'admins';
-    $('aTabBalance').hidden = tab !== 'balance';
-    if (tab === 'balance') loadAdminBalances();
+    $('aTabRef').hidden = tab !== 'ref';
+    if (tab === 'ref') loadAdminRefs();
     if (tab === 'admins') loadAdmins();
     if (tab === 'promo') loadAdminPromos();
   }
@@ -5240,10 +5242,9 @@ async function loadProducts(){
     if (act === 'promo-gen') return promoGen();
     if (act === 'promo-pct') { $('pmPercent').value = el.dataset.p; return markPct(); }
     if (act === 'promo-add') return adminAddPromo();
-    if (act === 'bal-add') return adminChangeBalance(1);
-    if (act === 'bal-sub') return adminChangeBalance(-1);
-    if (act === 'bal-refresh') return loadAdminBalances();
-    if (act === 'bal-pick') { $('balUser').value = el.dataset.id || ''; $('balAmount').focus(); return; }
+    if (act === 'ref-pay') return adminRefPay();
+    if (act === 'ref-credit') return adminRefCredit();
+    if (act === 'ref-pick') { $('refUser').value = el.dataset.id || ''; $('refAmount').value = el.dataset.sum || ''; $('refAmount').focus(); return; }
     if (act === 'promo-del') return adminDeletePromo(id);
     if (act === 'promo-toggle') return adminTogglePromo(id);
     if (act === 'cat-add') return adminAddCategory();
@@ -5748,40 +5749,48 @@ async function loadProducts(){
 
   /* ---------- Администраторы ---------- */
   let adminMeta = { isOwner: false, ownerId: '' };
-  // ===== DOFAMIN: балансы клиентов (админка) =====
-  async function loadAdminBalances() {
-    const list = $('aBalList'); if (!list) return;
+  // ===== DOFAMIN: рефералы (админка) =====
+  async function loadAdminRefs() {
+    const list = $('aRefList'); if (!list) return;
     try {
-      const r = await adminRequest('balance_list');
-      A.bal = r.balances || [];
-      renderAdminBalances();
+      const r = await adminRequest('ref_list');
+      const rows = r.refs || [];
+      list.innerHTML = rows.length ? rows.map(x => `
+        <div class="pm-item">
+          <div class="pm-pc">🎁</div>
+          <div class="pm-info"><div class="pm-code">${safe(x.username ? '@' + x.username : x.telegram_id)}</div><div class="small">ID ${safe(x.telegram_id)} · приглашено ${safe(x.invited)} · заработано ${rub(x.earned)} · выплачено ${rub(x.paid)}</div></div>
+          <div class="pm-acts"><b>${rub(x.balance)}</b> <button type="button" class="btn" data-act="ref-pick" data-id="${safe(x.telegram_id)}" data-sum="${safe(x.balance)}">Выплатить</button></div>
+        </div>`).join('') : '<div class="dof-orders-empty">Пока никто никого не пригласил</div>';
     } catch (error) {
-      list.innerHTML = `<div class="dof-orders-empty">Не удалось загрузить балансы: ${safe(error.message)}</div>`;
+      list.innerHTML = `<div class="dof-orders-empty">Не удалось загрузить: ${safe(error.message)}</div>`;
     }
   }
-  function renderAdminBalances() {
-    const list = $('aBalList'); if (!list) return;
-    const q = A.bq || '';
-    const rows = (A.bal || []).filter(b => !q || String(b.telegram_id).includes(q) || String(b.username || '').toLowerCase().includes(q));
-    list.innerHTML = rows.length ? rows.map(b => `
-      <div class="pm-item">
-        <div class="pm-pc">💳</div>
-        <div class="pm-info"><div class="pm-code">${safe(b.username ? '@' + b.username : b.telegram_id)}</div><div class="small">ID ${safe(b.telegram_id)}</div></div>
-        <div class="pm-acts"><b>${rub(b.balance)}</b> <button type="button" class="btn" data-act="bal-pick" data-id="${safe(b.telegram_id)}">Изменить</button></div>
-      </div>`).join('') : '<div class="dof-orders-empty">Клиентов пока нет</div>';
-  }
-  async function adminChangeBalance(sign) {
-    const user = $('balUser').value.trim();
-    const amount = Math.floor(Number($('balAmount').value));
-    if (!user) { toast('Введите Telegram ID или @username'); return; }
+  async function adminRefCredit() {
+    const id = $('refUser').value.trim();
+    const amount = Math.floor(Number($('refAmount').value));
+    if (!/^\d{5,15}$/.test(id)) { toast('Введите Telegram ID'); return; }
     if (!amount || amount < 1) { toast('Введите сумму'); return; }
     try {
-      const r = await adminRequest('balance_add', { user, amount: sign * amount });
-      toast((sign > 0 ? 'Пополнено: ' : 'Списано: ') + rub(amount) + (r.balance !== undefined ? ' · баланс ' + rub(r.balance) : ''));
-      $('balAmount').value = '';
-      await loadAdminBalances();
+      const r = await adminRequest('ref_credit', { referrer_id: id, amount });
+      toast('Начислено ' + rub(amount) + ' · баланс ' + rub(r.balance));
+      $('refAmount').value = '';
+      await loadAdminRefs();
     } catch (error) {
-      toast(error.message || 'Не удалось изменить баланс');
+      toast(error.message || 'Не удалось начислить');
+    }
+  }
+  async function adminRefPay() {
+    const id = $('refUser').value.trim();
+    const amount = Math.floor(Number($('refAmount').value));
+    if (!/^\d{5,15}$/.test(id)) { toast('Введите Telegram ID'); return; }
+    if (!amount || amount < 1) { toast('Введите сумму'); return; }
+    try {
+      const r = await adminRequest('ref_pay', { referrer_id: id, amount });
+      toast('Выплата ' + rub(amount) + ' записана · остаток ' + rub(r.balance));
+      $('refAmount').value = '';
+      await loadAdminRefs();
+    } catch (error) {
+      toast(error.message || 'Не удалось записать выплату');
     }
   }
 
@@ -5931,45 +5940,25 @@ const ordersBtn = document.getElementById('dofOpenOrders');
   // ===== END DOFAMIN ADMIN PANEL =====
 
   // ===== DOFAMIN: отдельная страница оплаты =====
-  let checkoutPay = 'cash';
+  let checkoutPay = 'card';
   const checkoutDraft = { name: '', telegram: '', city: '' };
   let checkoutPromo = null;
 
   const ICON_LOCK = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
   const PAY_METHODS = {
+    card: {
+      title: 'Картой',
+      sub: 'Перевод на карту — реквизиты пришлёт менеджер',
+      comment: 'перевод на карту после связи с менеджером',
+      icon: '<svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h3"/></svg>'
+    },
     cash: {
       title: 'Наличными',
       sub: 'При личной встрече в Луганске',
       comment: 'наличные при встрече в Луганске',
       icon: '<svg viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/></svg>'
-    },
-    balance: {
-      title: 'Балансом',
-      sub: 'Списание с вашего баланса в магазине',
-      comment: 'оплачено с баланса',
-      icon: '<svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a1 1 0 0 1 1 1v2"/><path d="M3 7.5V17a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1H5.5A2.5 2.5 0 0 1 3 7.5Z"/><circle cx="16.5" cy="13.5" r="1"/></svg>'
-    },
-    card: {
-      title: 'По карте',
-      sub: 'Перевод на карту — реквизиты пришлёт менеджер',
-      comment: 'перевод на карту после связи с менеджером',
-      icon: '<svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h3"/></svg>'
     }
   };
-
-  function refreshBalanceOption() {
-    const opt = document.querySelector('#coPayList input[value="balance"]');
-    if (!opt) return;
-    const label = opt.closest('.co-opt');
-    const sub = label.querySelector('.tx span');
-    const pay = checkoutSum().pay;
-    const bal = myBalance === null ? null : myBalance;
-    const short = bal !== null && bal < pay;
-    label.classList.toggle('off', short);
-    if (bal === null) sub.textContent = PAY_METHODS.balance.sub;
-    else if (short) sub.textContent = 'На балансе ' + rub(bal) + ' · не хватает ' + rub(pay - bal);
-    else sub.textContent = 'На балансе ' + rub(bal);
-  }
 
   function checkoutSum() {
     const items = cart.filter(i => i.selected !== false);
@@ -5994,7 +5983,6 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     if ($('coSumCard')) $('coSumCard').innerHTML = sumCardHtml();
     const b = $('coPay'), l = b && b.querySelector('span');
     if (l && !b.disabled) l.textContent = 'Оплатить ' + rub(checkoutSum().pay);
-    refreshBalanceOption();
   }
   async function applyPromo() {
     const inp = $('coPromoIn'); if (!inp) return;
@@ -6121,8 +6109,6 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       });
     });
     $('coPay').onclick = submitCheckout;
-    refreshBalanceOption();
-    loadBalance();
   }
 
   async function submitCheckout() {
@@ -6144,15 +6130,6 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     }
     if (/^[A-Za-z0-9_]{4,32}$/.test(telegram)) telegram = '@' + telegram;
 
-    if (checkoutPay === 'balance') {
-      const need = checkoutSum().pay;
-      if (myBalance === null) await loadBalance();
-      if (myBalance === null || myBalance < need) {
-        toast(myBalance === null ? 'Не удалось проверить баланс' : 'Недостаточно средств на балансе');
-        return;
-      }
-    }
-
     const btn = $('coPay');
     const label = btn.querySelector('span');
     btn.disabled = true;
@@ -6167,7 +6144,6 @@ const ordersBtn = document.getElementById('dofOpenOrders');
         telegram,
         city,
         comment: 'Оплата: ' + method.comment + (promoUsed ? ' | Промокод: ' + promoUsed.code : ''),
-        pay_method: checkoutPay,
         promo_code: promoUsed ? promoUsed.code : undefined,
         items: items.map(i => ({ id: String(i.id), qty: Number(i.qty), size: i.size || '' }))
       });
@@ -6182,10 +6158,6 @@ const ordersBtn = document.getElementById('dofOpenOrders');
         ).join('\n') +
         `\n\nИтого: ${rub(order.total)}`;
 
-      if (checkoutPay === 'balance') {
-        if (result.balance !== undefined) { myBalance = Math.max(0, Number(result.balance) || 0); renderBalance(); }
-        else loadBalance();
-      }
       cart = cart.filter(i => i.selected === false);
       checkoutPromo = null;
       persist();
@@ -6204,8 +6176,6 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     const view = $('checkoutView');
     const steps = checkoutPay === 'cash'
       ? ['Напишите менеджеру — кнопка ниже.', 'Договоритесь о месте и времени встречи в Луганске.', 'Оплатите заказ наличными при получении.']
-      : checkoutPay === 'balance'
-      ? ['Сумма уже списана с вашего баланса.', 'Напишите менеджеру — кнопка ниже, он подтвердит наличие.', 'Дождитесь доставки — статус виден в «Моих заказах».']
       : ['Напишите менеджеру — кнопка ниже.', 'Менеджер подтвердит наличие и пришлёт реквизиты карты.', 'Переведите сумму и отправьте чек в чат.'];
 
     view.innerHTML = `
@@ -6338,45 +6308,25 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     else if (e.target.closest('.dd-item')) dd.classList.remove('open');
   });
 
-  // профиль: баланс и страница пополнения
-  let topupSum = 0;
-  function renderTopup() {
-    topupSum = 0;
-    $('tuBal').textContent = rub(myBalance || 0);
-    $('tuCustom').value = '';
-    $('tuChips').querySelectorAll('.tu-chip').forEach(c => c.classList.remove('on'));
-    updateTopupBtn();
-    loadBalance().then(() => { $('tuBal').textContent = rub(myBalance || 0); });
-  }
-  function updateTopupBtn() {
-    const b = $('tuGo');
-    b.disabled = !(topupSum >= 100);
-    b.textContent = topupSum >= 100 ? 'Пополнить на ' + rub(topupSum) : 'Выберите сумму (от 100 ₽)';
-  }
-  (function balanceInit() {
-    $('balTopup').onclick = () => showPage('topup');
-    $('topupBack').onclick = () => showPage('profile');
-    $('tuChips').addEventListener('click', e => {
-      const c = e.target.closest('.tu-chip'); if (!c) return;
-      topupSum = Number(c.dataset.sum);
-      $('tuCustom').value = '';
-      $('tuChips').querySelectorAll('.tu-chip').forEach(x => x.classList.toggle('on', x === c));
-      updateTopupBtn();
-    });
-    $('tuCustom').addEventListener('input', e => {
-      topupSum = Math.floor(Number(e.target.value)) || 0;
-      $('tuChips').querySelectorAll('.tu-chip').forEach(x => x.classList.remove('on'));
-      updateTopupBtn();
-    });
-    $('tuGo').onclick = () => {
-      if (topupSum < 100) return;
-      const u = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
-      const who = u.username ? '@' + u.username : [u.first_name, u.last_name].filter(Boolean).join(' ');
-      const msg = 'Здравствуйте! Хочу пополнить баланс DOFAMIN на ' + rub(topupSum) + '.\n' +
-        'Telegram ID: ' + (u.id || 'не определён') + (who ? '\nИмя: ' + who : '');
+  // профиль: реферальный баланс
+  (function refInit() {
+    $('rfShare').onclick = () => {
+      const link = refLink();
+      if (!link) { toast('Реферальная ссылка пока не настроена'); return; }
+      openTg('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('Одежда в DOFAMIN — заходи по моей ссылке 🔥'));
+    };
+    $('rfCopy').onclick = async () => {
+      const link = refLink();
+      if (!link) { toast('Реферальная ссылка пока не настроена'); return; }
+      toast(await copyText(link) ? 'Ссылка скопирована' : 'Не удалось скопировать');
+    };
+    $('rfWithdraw').onclick = () => {
+      if (refState.balance < REF_MIN) return;
+      const u = tgUser();
+      const msg = 'Здравствуйте! Хочу вывести ' + rub(refState.balance) + ' с реферального баланса DOFAMIN.\nTelegram ID: ' + (u.id || '') + (u.username ? '\nUsername: @' + u.username : '');
       openTg('https://t.me/' + MANAGER_TELEGRAM + '?text=' + encodeURIComponent(msg));
     };
-    loadBalance();
+    loadRef();
   })();
 
   // профиль: счётчики
