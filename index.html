@@ -3911,7 +3911,9 @@ let refState = { balance: 0, invited: 0 };
 function tgUser() { return window.Telegram?.WebApp?.initDataUnsafe?.user || {}; }
 function refLink() {
   const id = tgUser().id;
-  if (!id || !REF_BOT || REF_BOT.indexOf('ВПИШИ') === 0) return '';
+  const say = m => { try { window.Telegram.WebApp.showAlert(m); } catch (e) { alert(m); } };
+  if (!id) { say('Нет Telegram ID. Откройте магазин внутри Telegram, через бота.'); return ''; }
+  if (!REF_BOT || REF_BOT.indexOf('ВПИШИ') === 0) { say('В коде не вписано имя бота (REF_BOT). Версия файла старая.'); return ''; }
   return 'https://t.me/' + REF_BOT + (REF_APP ? '/' + REF_APP : '') + '?startapp=ref_' + id;
 }
 function renderRef() {
