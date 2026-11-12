@@ -6752,5 +6752,90 @@ const ordersBtn = document.getElementById('dofOpenOrders');
   }
 })();
 </script>
+<script>
+/* DOFAMIN: вкладка «Рефералы» в админке. Вставить в index.html ПЕРЕД </body> */
+(function () {
+  'use strict';
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+
+  function ask(text, cb) {
+    try {
+      if (tg && tg.showConfirm) { tg.showConfirm(text, function (ok) { cb(!!ok); }); return; }
+    } catch (e) {}
+    cb(window.confirm(text));
+  }
+
+  /* ----- 1. Понятные названия и подсказка ----- */
+  var HINT =
+    '«Добавить» — прибавляет сумму к реферальному балансу человека. ' +
+    '«Забрать» — списывает сумму с его баланса (например, когда вы отправили ему деньги ' +
+    'или исправляете ошибку). Больше, чем есть на балансе, забрать нельзя.';
+
+  function fix() {
+    var credit = document.querySelector('#aTabRef [data-act="ref-credit"]');
+    if (credit && credit.textContent !== 'Добавить') credit.textContent = 'Добавить';
+
+    var pay = document.querySelector('#aTabRef [data-act="ref-pay"]');
+    if (pay && pay.textContent !== 'Забрать') pay.textContent = 'Забрать';
+
+    var user = document.getElementById('refUser');
+    if (user && user.placeholder.indexOf('Telegram ID') === 0 && user.placeholder.indexOf('выплачиваете') !== -1) {
+      user.placeholder = 'Telegram ID человека';
+    }
+
+    var amount = document.getElementById('refAmount');
+    if (amount && amount.placeholder !== 'Сумма, ₽') amount.placeholder = 'Сумма, ₽';
+
+    var hint = document.querySelector('#aTabRef .pm-form .small');
+    if (hint && hint.getAttribute('data-v') !== '8') {
+      hint.setAttribute('data-v', '8');
+      hint.textContent = HINT;
+    }
+
+    document.querySelectorAll('#aTabRef [data-act="ref-pick"]').forEach(function (b) {
+      if (b.textContent !== 'Выбрать') b.textContent = 'Выбрать';
+    });
+  }
+
+  var queued = false;
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; fix(); });
+  }
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  fix();
+
+  /* ----- 2. Подтверждение перед начислением и списанием ----- */
+  var bypass = false;
+
+  document.addEventListener('click', function (e) {
+    if (bypass || !e.target.closest) return;
+    var btn = e.target.closest('#aTabRef [data-act="ref-credit"], #aTabRef [data-act="ref-pay"]');
+    if (!btn) return;
+
+    var id = ((document.getElementById('refUser') || {}).value || '').trim();
+    var amount = ((document.getElementById('refAmount') || {}).value || '').trim();
+
+    // если поля пустые, пусть сработает штатная проверка с подсказкой
+    if (!id || !amount) return;
+
+    e.stopImmediatePropagation();
+    e.preventDefault();
+
+    var isCredit = btn.getAttribute('data-act') === 'ref-credit';
+    var text = (isCredit ? 'Добавить ' : 'Забрать ') + amount + ' ₽ ' +
+      (isCredit ? 'на баланс ' : 'с баланса ') + id + '?';
+
+    ask(text, function (ok) {
+      if (!ok) return;
+      bypass = true;
+      btn.click();
+      bypass = false;
+    });
+  }, true);
+})();
+</script>
 </body>
 </html>
