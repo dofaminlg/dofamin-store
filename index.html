@@ -6837,5 +6837,81 @@ const ordersBtn = document.getElementById('dofOpenOrders');
   }, true);
 })();
 </script>
+<style>
+/* DOFAMIN: кнопка «Оплатить» не прячется при вводе. Вставить в index.html ПЕРЕД </body> */
+body.kb-open .co-bar{
+  display:block !important;
+  padding-bottom:12px;
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var FIELDS = '.co-wrap input, .co-wrap textarea';
+
+  function isField(el) {
+    return el && el.matches && el.matches(FIELDS);
+  }
+
+  /* ----- кнопка оплаты держится прямо над клавиатурой ----- */
+  function placeBar() {
+    var bar = document.querySelector('.co-bar');
+    if (!bar) return;
+    var vv = window.visualViewport;
+    var offset = vv ? Math.max(0, window.innerHeight - vv.height - vv.offsetTop) : 0;
+    bar.style.bottom = offset + 'px';
+  }
+
+  /* ----- поле не прячется под кнопкой оплаты ----- */
+  function keepAboveBar(el) {
+    var vv = window.visualViewport;
+    var bar = document.querySelector('.co-bar');
+    var top = vv ? vv.offsetTop : 0;
+    var height = vv ? vv.height : window.innerHeight;
+    var barH = bar ? bar.offsetHeight : 0;
+    var limit = top + height - barH - 12;
+    var r = el.getBoundingClientRect();
+    if (r.bottom > limit) {
+      window.scrollBy({ top: r.bottom - limit, behavior: 'smooth' });
+    }
+  }
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', placeBar);
+    window.visualViewport.addEventListener('scroll', placeBar);
+  }
+
+  document.addEventListener('focusin', function (e) {
+    if (!isField(e.target)) return;
+    // подсказка на клавише ввода: «Готово» / «Далее»
+    e.target.setAttribute('enterkeyhint', e.target.id === 'coCity' ? 'done' : 'next');
+    placeBar();
+    setTimeout(placeBar, 250);
+    setTimeout(function () { keepAboveBar(e.target); }, 550);
+  });
+
+  document.addEventListener('focusout', function (e) {
+    if (!isField(e.target)) return;
+    setTimeout(placeBar, 300);
+  });
+
+  /* ----- Enter: следующее поле, а в последнем закрывает клавиатуру ----- */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || !isField(e.target)) return;
+    var order = ['coName', 'coTg', 'coCity'];
+    var i = order.indexOf(e.target.id);
+    if (i === -1) return;
+    e.preventDefault();
+    if (i < order.length - 1) {
+      var next = document.getElementById(order[i + 1]);
+      if (next) next.focus();
+    } else {
+      e.target.blur();
+    }
+  });
+})();
+</script>
 </body>
 </html>
