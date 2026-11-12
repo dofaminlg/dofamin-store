@@ -6498,5 +6498,138 @@ const ordersBtn = document.getElementById('dofOpenOrders');
   updateCount();renderCart();loadProducts();
 })();
 </script>
+<script>
+/* DOFAMIN PATCH v7. Вставить в index.html ПЕРЕД строкой </body> */
+(function () {
+  'use strict';
+
+  var BOT = 'DofaminLg_bot';
+  var MANAGER = 'DofaminMg';
+  var tg = window.Telegram && window.Telegram.WebApp;
+
+  function toast(m) {
+    var el = document.getElementById('toast');
+    if (!el) { alert(m); return; }
+    el.textContent = m;
+    el.style.display = 'block';
+    clearTimeout(window.__patchToast);
+    window.__patchToast = setTimeout(function () { el.style.display = 'none'; }, 3500);
+  }
+
+  /* ===== 1. Реферальная ссылка: «Копировать» и «Поделиться» ===== */
+
+  function refLink() {
+    var u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+    if (!u || !u.id) {
+      toast('[v7] Нет Telegram ID. Откройте магазин внутри Telegram через бота.');
+      return '';
+    }
+    return 'https://t.me/' + BOT + '?startapp=ref_' + u.id;
+  }
+
+  function copyText(text) {
+    return new Promise(function (resolve) {
+      function fallback() {
+        var a = document.createElement('textarea');
+        a.value = text;
+        a.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(a);
+        a.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        a.remove();
+        resolve(ok);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { resolve(true); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  }
+
+  var shareBtn = document.getElementById('rfShare');
+  var copyBtn = document.getElementById('rfCopy');
+
+  if (copyBtn) {
+    copyBtn.onclick = function () {
+      var link = refLink();
+      if (!link) return;
+      copyText(link).then(function (ok) {
+        toast(ok ? 'Ссылка скопирована' : 'Не удалось скопировать');
+      });
+    };
+  }
+
+  if (shareBtn) {
+    shareBtn.onclick = function () {
+      var link = refLink();
+      if (!link) return;
+      var url = 'https://t.me/share/url?url=' + encodeURIComponent(link) +
+        '&text=' + encodeURIComponent('Одежда в DOFAMIN — заходи по моей ссылке 🔥');
+      try {
+        if (tg && tg.openTelegramLink) { tg.openTelegramLink(url); return; }
+      } catch (e) {}
+      window.open(url, '_blank', 'noopener');
+    };
+  }
+
+  /* ===== 2. Статус «Отменен» ===== */
+
+  var style = document.createElement('style');
+  style.textContent = '.dof-status.s-cancel{background:#3a1717 !important;color:#ff8a8a !important}';
+  document.head.appendChild(style);
+
+  var CANCEL = 'Отменен';
+  var OLD_TEXT = 'Заказ отменён или оформлен возврат';
+  var NEW_TEXT = 'Отменён по ошибке? Напишите менеджеру @' + MANAGER;
+
+  function fix() {
+    // админка: добавляем «Отменен» в список статусов заказа
+    document.querySelectorAll('select[data-ostatus]').forEach(function (sel) {
+      var has = Array.prototype.some.call(sel.options, function (o) {
+        return o.value === CANCEL;
+      });
+      if (has) return;
+
+      var opt = document.createElement('option');
+      opt.value = CANCEL;
+      opt.textContent = CANCEL;
+      sel.appendChild(opt);
+
+      var card = sel.closest('.dof-order');
+      var badge = card && card.querySelector('.dof-status');
+      if (badge && badge.textContent.toLowerCase().indexOf('отмен') !== -1) {
+        sel.value = CANCEL;
+      }
+    });
+
+    // админка: красная плашка статуса
+    document.querySelectorAll('.dof-status').forEach(function (b) {
+      if (b.textContent.toLowerCase().indexOf('отмен') !== -1 && !b.classList.contains('s-cancel')) {
+        b.classList.remove('s-new');
+        b.classList.add('s-cancel');
+      }
+    });
+
+    // покупатель: текст под статусом в «Мои заказы»
+    document.querySelectorAll('#myOrdersList div, #purchaseHistoryList div').forEach(function (d) {
+      if (d.children.length === 0 && d.textContent.trim() === OLD_TEXT) {
+        d.textContent = NEW_TEXT;
+      }
+    });
+  }
+
+  var queued = false;
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; fix(); });
+  }
+
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  fix();
+})();
+</script>
 </body>
 </html>
