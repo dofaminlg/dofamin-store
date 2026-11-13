@@ -4542,7 +4542,19 @@ function dofKey(size,name){
   const c=dofColorOf(name);
   return c?((size||'')+DOF_SEP+c):(size||'');
 }
+function dofNeedColor(p){
+  const t=String((p&&p.description)||'');
+  let m=/\[\s*цвет[а-яё]*\s*(?::\s*([^\]]*))?\]/i.exec(t), raw='';
+  if(m) raw=m[1]||'';
+  else { m=/(^|[^а-яё])цвет(?:а|ов)?\s*:\s*([^\n\r.!?]+)/i.exec(t); if(m) raw=m[2]||''; }
+  return !!raw.trim() && !dofColorOf(p.name);
+}
+function dofAskColor(p){
+  toast('Выберите цвет на странице товара');
+  openProduct(String(p.id));
+}
 function addProductToCart(p, size = '') {
+  size = dofKey(size || '', p.name);
   const found = cart.find(i =>
     String(i.id) === String(p.id) &&
     String(i.size || '') === String(size || '')
@@ -4638,6 +4650,7 @@ root.querySelectorAll('[data-card-buy]').forEach(b => {
     const id = String(b.dataset.add);
     const p = products.find(x => String(x.id) === id);
     if (!p) return;
+    if (dofNeedColor(p)) { dofAskColor(p); return; }
 
     const sizes = Array.isArray(p.sizes) ? p.sizes : [];
     const picker = root.querySelector(`[data-size-picker="${id}"]`);
@@ -4702,6 +4715,7 @@ root.querySelectorAll('[data-size-confirm]').forEach(b => {
 
     const p = products.find(x => String(x.id) === id);
     if (!p) return;
+    if (dofNeedColor(p)) { dofAskColor(p); return; }
 
     addProductToCart(p, size);
 
