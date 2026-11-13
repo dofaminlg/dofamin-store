@@ -7642,21 +7642,40 @@ body.kb-open .co-paybtn-inline{display:flex}
 })();
 </script>
 <style id="dof-mini">
-/* DOFAMIN mini: серо-чёрный фон, размытие шапки/нижней панели, анимации нажатия */
-html body{background:radial-gradient(900px 500px at 50% -10%,#2b2b2f 0%,transparent 65%),linear-gradient(180deg,#1d1d20 0%,#101012 45%,#070708 100%) fixed!important}
-html body header{background:rgba(22,22,25,.52)!important;-webkit-backdrop-filter:blur(20px) saturate(150%)!important;backdrop-filter:blur(20px) saturate(150%)!important;border-bottom:1px solid rgba(255,255,255,.07)!important;transition:background .3s,box-shadow .3s,backdrop-filter .3s}
+/* DOFAMIN mini v2: серо-чёрный фон, размытие панелей, анимации нажатия + исправления багов */
+/* фон: один сплошной слой на весь экран (не повторяется на коротких страницах) */
+html{background:#08080a!important;min-height:100%}
+html body{background:none!important;min-height:100vh;min-height:100dvh}
+html body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 500px at 50% -8%,#2a2a2e 0%,transparent 65%),linear-gradient(180deg,#1b1b1e 0%,#0f0f11 50%,#08080a 100%);background-repeat:no-repeat;background-size:100% 100%}
+/* панели с размытием */
+html body header{background:rgba(22,22,25,.52)!important;-webkit-backdrop-filter:blur(20px) saturate(150%)!important;backdrop-filter:blur(20px) saturate(150%)!important;border-bottom:1px solid rgba(255,255,255,.07)!important;transition:background .3s,box-shadow .3s}
 html body.is-scrolled header{background:rgba(12,12,14,.68)!important;-webkit-backdrop-filter:blur(28px) saturate(170%)!important;backdrop-filter:blur(28px) saturate(170%)!important;box-shadow:0 10px 30px rgba(0,0,0,.45)}
 html body nav.bottomnav{background:rgba(22,22,25,.50)!important;-webkit-backdrop-filter:blur(24px) saturate(160%)!important;backdrop-filter:blur(24px) saturate(160%)!important;border:1px solid rgba(255,255,255,.10)!important;transition:background .3s,box-shadow .3s}
 html body.is-scrolled nav.bottomnav{background:rgba(12,12,14,.70)!important;-webkit-backdrop-filter:blur(32px) saturate(180%)!important;backdrop-filter:blur(32px) saturate(180%)!important}
-/* анимации нажатия */
-.btn,.iconbtn,.chip,.navbtn,.heart,.qty button,.product,.dof-sortchip,.dof-stat,.dof-profile-menu-item,.dof-oitem,.co-opt,.co-chip,.co-paybtn,.pp-add,.pp-fav,.pp-gocart,.premium-size,.rf-btn,.dof-back,.dof-tabs>button,.fav-clear{transition:transform .16s cubic-bezier(.3,.7,.4,1.4),box-shadow .2s,background-color .2s,filter .2s;-webkit-tap-highlight-color:transparent}
-.btn:active,.iconbtn:active,.chip:active,.dof-sortchip:active,.qty button:active,.co-paybtn:active,.pp-add:active,.pp-fav:active,.pp-gocart:active,.rf-btn:active,.dof-back:active,.dof-tabs>button:active,.fav-clear:active,.premium-size:active,.co-chip:active{transform:scale(.94)}
+/* анимации нажатия (карточки товаров и категории не трогаем — чтобы не ломать свайп и перерисовку) */
+.btn,.iconbtn,.navbtn,.heart,.qty button,.dof-stat,.dof-profile-menu-item,.dof-oitem,.co-opt,.co-paybtn,.pp-add,.pp-fav,.pp-gocart,.premium-size,.rf-btn,.dof-back{transition:transform .16s cubic-bezier(.3,.7,.4,1.4),box-shadow .2s,background-color .2s,filter .2s;-webkit-tap-highlight-color:transparent}
+.btn:active,.iconbtn:active,.qty button:active,.co-paybtn:active,.pp-add:active,.pp-fav:active,.pp-gocart:active,.rf-btn:active,.dof-back:active,.premium-size:active{transform:scale(.94)}
 .navbtn:active{transform:scale(.9)}
-.heart:active{transform:scale(1.22)}
-.product:active,.dof-stat:active,.dof-profile-menu-item:active,.dof-oitem:active,.co-opt:active{transform:scale(.975)}
+.heart:active{transform:scale(1.2)}
+.dof-stat:active,.dof-profile-menu-item:active,.dof-oitem:active,.co-opt:active{transform:scale(.975)}
 .dof-ripple{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.35);transform:scale(0);animation:dofRip .55s ease-out forwards}
 @keyframes dofRip{to{transform:scale(1);opacity:0}}
 @media(prefers-reduced-motion:reduce){.dof-ripple{display:none}}
+
+/* БАГ 1: свайп фото в карточках */
+.product:active{transform:none!important}
+.card-gallery,.card-gallery-track{touch-action:pan-x pan-y!important}
+.card-gallery-track{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+
+/* БАГ 3: кнопки категорий не сжимаются и не двоятся */
+.filters{flex-wrap:nowrap!important}
+.chip.cat{flex:0 0 auto!important;min-width:max-content;white-space:nowrap;transform:none!important;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s!important}
+.chip.cat .ci{flex:0 0 31px!important}
+.chip.cat:active{transform:none!important;filter:brightness(1.15)}
+
+/* БАГ 4: кнопка «Оплатить» всегда внизу экрана (над клавиатурой при вводе) */
+html body.kb-open .co-bar,html body .co-bar{display:block!important}
+html body .co-paybtn-inline{display:none!important}
 </style>
 <script>
 (function(){
@@ -7664,10 +7683,9 @@ html body.is-scrolled nav.bottomnav{background:rgba(12,12,14,.70)!important;-web
   function sc(){b.classList.toggle('is-scrolled',(window.scrollY||document.documentElement.scrollTop)>8)}
   window.addEventListener('scroll',sc,{passive:true});sc();
   document.addEventListener('pointerdown',function(e){
-    var el=e.target.closest&&e.target.closest('button.btn,button.chip,button.co-paybtn,button.pp-add,button.rf-btn,button.dof-sortchip,.dof-tabs>button');
+    var el=e.target.closest&&e.target.closest('button.btn,button.co-paybtn,button.pp-add,button.rf-btn');
     if(!el||el.disabled)return;
-    var cs=getComputedStyle(el);
-    if(cs.position==='static')el.style.position='relative';
+    if(getComputedStyle(el).position==='static')el.style.position='relative';
     el.style.overflow='hidden';
     var r=el.getBoundingClientRect(),d=Math.max(r.width,r.height)*2,s=document.createElement('span');
     s.className='dof-ripple';
