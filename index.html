@@ -7027,5 +7027,280 @@ body.kb-open .co-paybtn-inline{display:flex}
   });
 })();
 </script>
+<style>
+/* DOFAMIN: новая корзина. Вставить в index.html ПЕРЕД </body> */
+
+/* ----- заголовок ----- */
+#cartPage .sectionhead{margin:22px 0 14px}
+#cartPage .sectionhead h2{font-size:26px}
+#cartPage .sectionhead .count{
+  margin-left:auto;
+  padding:5px 11px;
+  border-radius:99px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:12px;
+  font-weight:700;
+  color:#d0d0d0;
+}
+#cartPage .cart-select-all-row{margin:0 2px 12px;font-size:14px;color:#cfcfcf}
+
+/* ----- карточка товара ----- */
+#cartPage .cartitem{
+  display:grid;
+  grid-template-columns:96px minmax(0,1fr);
+  gap:14px;
+  align-items:stretch;
+  padding:12px;
+  margin:0 0 12px;
+  border-radius:22px;
+  border:1px solid #262626;
+  background:linear-gradient(160deg,#151515,#0b0b0b);
+  box-shadow:0 10px 26px rgba(0,0,0,.35);
+  transition:opacity .2s ease;
+}
+#cartPage .cartitem.ci-off{opacity:.5}
+
+#cartPage .cartphoto{width:96px;min-height:0 !important}
+#cartPage .cartphoto>img,
+#cartPage .cartphoto>.cartthumb{
+  width:96px;
+  height:100% !important;
+  min-height:124px !important;
+  aspect-ratio:auto !important;
+  border-radius:16px !important;
+  object-fit:cover;
+}
+#cartPage .cart-select{top:6px;right:6px;width:26px;height:26px}
+#cartPage .cart-select.active::after{width:6px;height:10px;margin-top:-2px}
+
+#cartPage .cart-content{display:flex;flex-direction:column;gap:8px;min-width:0}
+#cartPage .cart-content .cartname{
+  font-size:15px;
+  font-weight:700;
+  line-height:1.25;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* размер и срок доставки */
+#cartPage .ci-chips{display:flex;flex-wrap:wrap;gap:6px}
+#cartPage .ci-chip{
+  font-size:11px;
+  font-weight:700;
+  padding:4px 9px;
+  border-radius:99px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  color:#d4d4d4;
+}
+
+/* цена и «Купить» */
+#cartPage .ci-price{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:auto;
+}
+#cartPage .ci-sum{display:flex;flex-direction:column;line-height:1.15}
+#cartPage .ci-sum .cart-line-total{
+  font-size:18px !important;
+  font-weight:900;
+  color:#fff !important;
+}
+#cartPage .ci-unit{font-size:11px;color:#8a8a8a;margin-top:2px}
+
+#cartPage .ci-price .cart-buy{
+  grid-column:auto;
+  width:auto;
+  min-height:34px;
+  padding:0 15px;
+  border:0;
+  border-radius:99px;
+  background:#fff;
+  color:#111;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:0;
+  box-shadow:none;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+
+/* счётчик и кнопки справа */
+#cartPage .ci-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#cartPage .cart-qty{
+  height:36px !important;
+  width:auto;
+  padding:3px !important;
+  gap:2px !important;
+  border-radius:99px !important;
+}
+#cartPage .cart-qty button{
+  width:30px !important;
+  height:30px !important;
+  border-radius:50% !important;
+  font-size:17px !important;
+}
+#cartPage .cart-qty span{min-width:24px !important;font-size:14px !important}
+
+#cartPage .cart-tools{display:flex;align-items:center;gap:8px}
+#cartPage .cart-tool{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:none;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+#cartPage .cart-tool svg{width:17px;height:17px}
+
+/* ----- итог ----- */
+#cartPage .totalbox{
+  margin-top:16px;
+  padding:18px;
+  border-radius:22px;
+  border:1px solid #262626;
+  background:linear-gradient(160deg,#151515,#0b0b0b);
+}
+#cartPage .totalrow{font-size:14px;color:#bdbdbd}
+#cartPage .totalrow.big{color:#fff;font-size:22px}
+#cartPage .totalbox .hint{font-size:12px;color:#7a7a7a;margin:12px 0 0}
+
+/* ----- пустая корзина ----- */
+#cartPage .empty{padding:44px 22px;border-radius:24px}
+#cartPage .empty .btn{margin-top:18px;min-height:46px;padding:0 22px;border-radius:14px}
+
+@media (max-width:360px){
+  #cartPage .cartitem{grid-template-columns:84px minmax(0,1fr);gap:10px;padding:10px}
+  #cartPage .cartphoto,
+  #cartPage .cartphoto>img,
+  #cartPage .cartphoto>.cartthumb{width:84px}
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var MARK = '9';
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text) n.textContent = text;
+    return n;
+  }
+
+  function plural(n) {
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return 'товар';
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'товара';
+    return 'товаров';
+  }
+
+  /* ----- перестраиваем карточку, не трогая кнопки и их обработчики ----- */
+  function upgrade(item) {
+    if (item.getAttribute('data-v') === MARK) return;
+
+    var photo = item.querySelector('.cartphoto');
+    var content = item.querySelector('.cart-content');
+    if (!photo || !content) return;
+
+    var name = content.querySelector('.cartname');
+    var total = content.querySelector('.cart-line-total');
+    var actions = content.querySelector('.cart-actions');
+    var tools = actions && actions.querySelector('.cart-tools');
+    var qty = actions && actions.querySelector('.cart-qty');
+    var buy = actions && actions.querySelector('.cart-buy');
+    if (!name || !total || !tools || !qty || !buy) return; // непонятная вёрстка: оставляем как есть
+
+    var size = '', delivery = '', unit = '';
+    Array.prototype.forEach.call(content.children, function (c) {
+      if (c === name || c === total || c === actions) return;
+      var t = (c.textContent || '').trim();
+      if (/^Размер/i.test(t)) size = t.replace(/^Размер:\s*/i, '');
+      else if (/^Доставка:/i.test(t)) delivery = t.replace(/^Доставка:\s*/i, '');
+      else if (/за шт/i.test(t)) unit = t;
+    });
+
+    var count = parseInt((qty.querySelector('span') || {}).textContent, 10) || 1;
+
+    var chips = el('div', 'ci-chips');
+    if (size) chips.appendChild(el('span', 'ci-chip', 'Размер ' + size));
+    if (delivery) chips.appendChild(el('span', 'ci-chip', 'Доставка ' + delivery));
+
+    var sum = el('div', 'ci-sum');
+    sum.appendChild(total);
+    if (unit && count > 1) sum.appendChild(el('span', 'ci-unit', unit));
+
+    var priceRow = el('div', 'ci-price');
+    priceRow.appendChild(sum);
+    priceRow.appendChild(buy);
+
+    var foot = el('div', 'ci-foot');
+    foot.appendChild(qty);
+    foot.appendChild(tools);
+
+    while (content.firstChild) content.removeChild(content.firstChild);
+    content.appendChild(name);
+    if (chips.children.length) content.appendChild(chips);
+    content.appendChild(priceRow);
+    content.appendChild(foot);
+
+    var sel = photo.querySelector('.cart-select');
+    item.classList.toggle('ci-off', !!sel && !sel.classList.contains('active'));
+    item.setAttribute('data-v', MARK);
+  }
+
+  /* ----- счётчик товаров в заголовке и кнопка в пустой корзине ----- */
+  function decorate() {
+    var items = document.querySelectorAll('#cartItems .cartitem');
+
+    var head = document.querySelector('#cartPage .sectionhead');
+    if (head) {
+      var c = head.querySelector('.count');
+      if (!c) { c = el('span', 'count'); head.appendChild(c); }
+      var text = items.length ? items.length + ' ' + plural(items.length) : '';
+      if (c.textContent !== text) c.textContent = text;
+      c.hidden = !items.length;
+    }
+
+    var empty = document.querySelector('#cartItems .empty');
+    if (empty && !empty.querySelector('.ci-to-catalog')) {
+      var b = el('button', 'btn primary ci-to-catalog', 'Перейти в каталог');
+      b.type = 'button';
+      b.addEventListener('click', function () {
+        var nav = document.querySelector('.navbtn[data-page="catalog"]');
+        if (nav) nav.click();
+      });
+      empty.appendChild(b);
+    }
+  }
+
+  function run() {
+    document.querySelectorAll('#cartItems .cartitem').forEach(upgrade);
+    decorate();
+  }
+
+  var queued = false;
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; run(); });
+  }
+
+  var page = document.getElementById('cartPage');
+  if (page) {
+    new MutationObserver(schedule).observe(page, { childList: true, subtree: true });
+  }
+  run();
+})();
+</script>
 </body>
 </html>
