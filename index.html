@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090909">
+  <link rel="preconnect" href="https://nigcbsunnavrlkwtktua.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <title>DOFAMIN — больше, чем просто одежда</title>
   <style>
     :root{--bg:#030303;--panel:#0a0a0a;--panel2:#111111;--text:#ffffff;--muted:#a6a6a6;--line:#202020;--orange:#ffffff;--radius:16px}
@@ -4377,6 +4379,10 @@ function renderPremiumCartLines() {
   wrap.classList.add('in-cart');
 
   container.innerHTML = `
+    <div class="pp-note">
+      <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+      <span>Товар в корзине: ${activeItem.qty} шт. · ${rub(activeItem.price * activeItem.qty)}</span>
+    </div>
     <div class="pp-incart-row">
       <div class="pp-stepper">
         <button type="button" id="ppMinus" aria-label="Уменьшить"><svg viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button>
@@ -4384,13 +4390,9 @@ function renderPremiumCartLines() {
         <button type="button" id="ppPlus" aria-label="Увеличить"><svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></button>
       </div>
       <button type="button" class="pp-gocart" id="ppGoCart">
-        Корзина
-        <svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 8h16l-1.5 12h-13L4 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        Открыть корзину
       </button>
-    </div>
-    <div class="pp-note">
-      <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-      В корзине: ${activeItem.qty} шт. · ${rub(activeItem.price * activeItem.qty)}
     </div>
   `;
 
@@ -5015,22 +5017,27 @@ async function loadProducts(){
     return;
   }
 
-  const {data,error}=await db
-    .from('products')
-    .select('*')
-    .eq('is_active',true)
-    .order('created_at',{ascending:false});
+  const catPromise=db.from('categories').select('id,name');
+  let data,error;
+  for(let attempt=0;attempt<3;attempt++){
+    ({data,error}=await db
+      .from('products')
+      .select('*')
+      .eq('is_active',true)
+      .order('created_at',{ascending:false}));
+    if(!error)break;
+    console.error('products attempt',attempt+1,error);
+    await new Promise(r=>setTimeout(r,1200*(attempt+1)));
+  }
 
   if(error){
     console.error(error);
-    $('productsGrid').innerHTML='<div class="empty"><strong>Не удалось загрузить товары</strong>Проверьте таблицу products и публичную RLS-политику SELECT для активных товаров в Supabase.</div>';
+    $('productsGrid').innerHTML='<div class="empty"><strong>Не удалось загрузить товары</strong>Проверьте таблицу products и публичную RLS-политику SELECT для активных товаров в Supabase.<br><small style="opacity:.7">Причина: '+safe(String((error&&(error.message||error.code))||'неизвестно'))+'</small></div>';
     $('productsGrid2').innerHTML=$('productsGrid').innerHTML;
     return;
   }
 
-  const {data:categories, error:categoriesError}=await db
-    .from('categories')
-    .select('id,name');
+  const {data:categories, error:categoriesError}=await catPromise;
 
   if(categoriesError){
     console.error('Ошибка загрузки категорий:',categoriesError);
@@ -7676,6 +7683,18 @@ html body.is-scrolled nav.bottomnav{background:rgba(12,12,14,.70)!important;-web
 /* БАГ 4: кнопка «Оплатить» всегда внизу экрана (над клавиатурой при вводе) */
 html body.kb-open .co-bar,html body .co-bar{display:block!important}
 html body .co-paybtn-inline{display:none!important}
+
+/* ЗАГРУЗКА: размытые подложки не тянут лишние картинки */
+.page:not(.active) .card-gallery-blur{background-image:none!important}
+.card-gallery-slide:not(:first-child) .card-gallery-blur{background-image:none!important}
+
+/* ТОВАР В КОРЗИНЕ: понятное состояние */
+html body .pp-note{display:flex!important;align-items:center;gap:9px;margin:0 0 10px!important;padding:11px 13px;border-radius:14px;background:rgba(52,210,123,.10)!important;border:1px solid rgba(52,210,123,.30);color:#6ff0a8!important;font-weight:750;font-size:14px}
+html body .pp-note svg{flex:0 0 18px;width:18px;height:18px;stroke:#6ff0a8!important;stroke-width:2.6}
+html body .pp-actions.in-cart .pp-gocart{background:linear-gradient(135deg,#3be083,#17a85a)!important;color:#04180d!important;font-size:14.5px;box-shadow:0 8px 24px rgba(52,210,123,.35)!important}
+html body .pp-actions.in-cart .pp-add{display:none!important}
+.pp-incart{animation:ppPop .35s cubic-bezier(.3,.7,.4,1.4)}
+@keyframes ppPop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
 </style>
 <script>
 (function(){
