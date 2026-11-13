@@ -1,34 +1,3 @@
-  var SEP = ' · ';
-  var ORIGINAL_FETCH = window.fetch;
-  window.fetch = function (url, opts) {
-    try {
-      if (opts && typeof opts.body === 'string' &&
-          String(url).indexOf('/functions/v1/dynamic-endpoint') !== -1) {
-        var body = JSON.parse(opts.body);
-        if (body && body.action === 'create' && Array.isArray(body.items)) {
-          var cart = [];
-          try { cart = JSON.parse(localStorage.getItem('dofamin_cart') || '[]') || []; } catch (e) {}
-          var parts = [];
-          body.items = body.items.map(function (it) {
-            var raw = String(it.size || '');
-            var k = raw.indexOf(SEP);
-            if (k === -1) return it;
-            var real = raw.slice(0, k), color = raw.slice(k + SEP.length);
-            var row = cart.filter(function (c) {
-              return String(c.id) === String(it.id) && String(c.size || '') === raw;
-            })[0];
-            parts.push((row ? row.name : 'Товар') + (real ? ' (' + real + ')' : '') + ': ' + color);
-            return Object.assign({}, it, { size: real });
-          });
-          var note = shorten(parts.join('; '), 250);
-          if (note) body.comment = (body.comment ? body.comment + ' | ' : '') + 'Цвет: ' + note;
-          opts = Object.assign({}, opts, { body: JSON.stringify(body) });
-        }
-      }
-    } catch (e) {}
-    return ORIGINAL_FETCH.call(this, url, opts);
-  };
-
 <!doctype html>
 <html lang="ru">
 <head>
@@ -7624,37 +7593,31 @@ body.kb-open .co-paybtn-inline{display:flex}
 
   /* ===== 3. Цвет уходит в заказ и в сообщение менеджеру ===== */
 
-  function buildNote(items) {
-    var map = read();
-    var cart = [];
-    try { cart = JSON.parse(localStorage.getItem('dofamin_cart') || '[]') || []; } catch (e) {}
-
-    var used = {};
-    var parts = [];
-    (items || []).forEach(function (it) {
-      var row = cart.filter(function (c) { return String(c.id) === String(it.id); })[0];
-      if (!row || used[row.name]) return;
-      var text = describe(map[row.name]);
-      if (!text) return;
-      used[row.name] = 1;
-      parts.push(row.name + ': ' + text);
-    });
-    return shorten(parts.join('; '), 250);
-  }
-
+  var SEP = ' · ';
   var ORIGINAL_FETCH = window.fetch;
   window.fetch = function (url, opts) {
     try {
       if (opts && typeof opts.body === 'string' &&
           String(url).indexOf('/functions/v1/dynamic-endpoint') !== -1) {
         var body = JSON.parse(opts.body);
-        if (body && body.action === 'create') {
-          var note = buildNote(body.items);
-          window.__dofColorNote = note;
-          if (note) {
-            body.comment = (body.comment ? body.comment + ' | ' : '') + 'Цвет: ' + note;
-            opts = Object.assign({}, opts, { body: JSON.stringify(body) });
-          }
+        if (body && body.action === 'create' && Array.isArray(body.items)) {
+          var cart = [];
+          try { cart = JSON.parse(localStorage.getItem('dofamin_cart') || '[]') || []; } catch (e) {}
+          var parts = [];
+          body.items = body.items.map(function (it) {
+            var raw = String(it.size || '');
+            var k = raw.indexOf(SEP);
+            if (k === -1) return it;
+            var real = raw.slice(0, k), color = raw.slice(k + SEP.length);
+            var row = cart.filter(function (c) {
+              return String(c.id) === String(it.id) && String(c.size || '') === raw;
+            })[0];
+            parts.push((row ? row.name : 'Товар') + (real ? ' (' + real + ')' : '') + ': ' + color);
+            return Object.assign({}, it, { size: real });
+          });
+          var note = shorten(parts.join('; '), 250);
+          if (note) body.comment = (body.comment ? body.comment + ' | ' : '') + 'Цвет: ' + note;
+          opts = Object.assign({}, opts, { body: JSON.stringify(body) });
         }
       }
     } catch (e) {}
