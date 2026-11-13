@@ -1,3 +1,34 @@
+  var SEP = ' · ';
+  var ORIGINAL_FETCH = window.fetch;
+  window.fetch = function (url, opts) {
+    try {
+      if (opts && typeof opts.body === 'string' &&
+          String(url).indexOf('/functions/v1/dynamic-endpoint') !== -1) {
+        var body = JSON.parse(opts.body);
+        if (body && body.action === 'create' && Array.isArray(body.items)) {
+          var cart = [];
+          try { cart = JSON.parse(localStorage.getItem('dofamin_cart') || '[]') || []; } catch (e) {}
+          var parts = [];
+          body.items = body.items.map(function (it) {
+            var raw = String(it.size || '');
+            var k = raw.indexOf(SEP);
+            if (k === -1) return it;
+            var real = raw.slice(0, k), color = raw.slice(k + SEP.length);
+            var row = cart.filter(function (c) {
+              return String(c.id) === String(it.id) && String(c.size || '') === raw;
+            })[0];
+            parts.push((row ? row.name : 'Товар') + (real ? ' (' + real + ')' : '') + ': ' + color);
+            return Object.assign({}, it, { size: real });
+          });
+          var note = shorten(parts.join('; '), 250);
+          if (note) body.comment = (body.comment ? body.comment + ' | ' : '') + 'Цвет: ' + note;
+          opts = Object.assign({}, opts, { body: JSON.stringify(body) });
+        }
+      }
+    } catch (e) {}
+    return ORIGINAL_FETCH.call(this, url, opts);
+  };
+
 <!doctype html>
 <html lang="ru">
 <head>
@@ -4331,9 +4362,10 @@ renderPremiumCartLines();
     return;
   }
 
+  const cartSize = dofKey(chosenSize, p.name);
   const found = cart.find(i =>
     String(i.id) === String(p.id) &&
-    String(i.size || '') === String(chosenSize)
+    String(i.size || '') === String(cartSize)
   );
 
   if (found) {
@@ -4344,7 +4376,7 @@ renderPremiumCartLines();
       name: p.name,
       price: Number(p.price) || 0,
       image_url: p.image_url || '',
-      size: chosenSize,
+      size: cartSize,
       qty: 1
     });
   }
@@ -4363,7 +4395,7 @@ function renderPremiumCartLines() {
 
   if (!container || !wrap) return;
 
-  const activeSize = selectedSize || '';
+  const activeSize = dofKey(selectedSize || '', p.name);
 
   const activeItem = cart.find(item =>
     String(item.id) === String(p.id) &&
@@ -4409,6 +4441,7 @@ function renderPremiumCartLines() {
   $('ppGoCart').onclick = () => showPage('cart');
 }
 renderPremiumCartLines();
+  window.__ppRender = renderPremiumCartLines;
   const backButton = $('productBack');
 
 if (backButton) {
@@ -4528,6 +4561,18 @@ const photo = `
     </div>
   </article>`;
   }
+const DOF_SEP=' · ';
+function dofColorOf(name){
+  try{
+    const c=(JSON.parse(localStorage.getItem('dofamin_colors')||'{}')||{})[name];
+    if(!c)return '';
+    return [c.choice,c.text?'«'+c.text+'»':''].filter(Boolean).join(' ');
+  }catch(e){return ''}
+}
+function dofKey(size,name){
+  const c=dofColorOf(name);
+  return c?((size||'')+DOF_SEP+c):(size||'');
+}
 function addProductToCart(p, size = '') {
   const found = cart.find(i =>
     String(i.id) === String(p.id) &&
@@ -7486,6 +7531,7 @@ body.kb-open .co-paybtn-inline{display:flex}
       if (!c.choice && !c.text) delete map[name]; else map[name] = c;
       write(map);
       sync();
+      try { if (window.__ppRender) window.__ppRender(); } catch (e) {}
     }
 
     if (chips) {
@@ -7537,6 +7583,7 @@ body.kb-open .co-paybtn-inline{display:flex}
   /* ===== 2. Цвет в корзине и на странице оплаты ===== */
 
   function addChips() {
+    return; /* цвет теперь часть позиции корзины и виден в строке размера */
     var map = read();
 
     // корзина (в новом дизайне карточек)
