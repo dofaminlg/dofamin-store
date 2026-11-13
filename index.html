@@ -7302,5 +7302,344 @@ body.kb-open .co-paybtn-inline{display:flex}
   run();
 })();
 </script>
+<style>
+/* DOFAMIN: выбор цвета. Вставить в index.html ПЕРЕД </body> */
+.clr-block{margin-top:18px}
+.clr-chips{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:10px}
+.clr-opt{
+  height:44px;
+  padding:0 16px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.05);
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+  transition:background .2s,color .2s,box-shadow .2s,transform .12s;
+}
+.clr-opt:active{transform:scale(.95)}
+.clr-opt.on{
+  background:#fff;
+  color:#111;
+  border-color:#fff;
+  box-shadow:0 0 16px rgba(255,255,255,.28);
+}
+.clr-hint{margin:0 0 8px}
+.clr-block.clr-need{
+  outline:1.5px solid #ff5a6e;
+  outline-offset:8px;
+  border-radius:14px;
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'dofamin_colors';
+  var MANAGER_LINK = 't.me/DofaminMg?text=';
+
+  /* В описании товара можно написать просто:  Цвета: Белый, Чёрный, Красный
+     (список заканчивается концом строки или точкой).
+     Также работает [Цвета: Белый, Чёрный] и [Цвет] (только поле для описания). */
+  var BRACKET = /\[\s*цвет[а-яё]*\s*(?::\s*([^\]]*))?\]/i;
+  var PLAIN = /(^|[^а-яё])цвет(?:а|ов)?\s*:\s*([^\n\r.!?]+)/i;
+
+  function findColors(text) {
+    var m = BRACKET.exec(text);
+    if (m) return { raw: m[1] || '' };
+    m = PLAIN.exec(text);
+    if (m) return { raw: m[2] };
+    return null;
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text) n.textContent = text;
+    return n;
+  }
+
+  function toast(m) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = m;
+    t.style.display = 'block';
+    clearTimeout(window.__clrToast);
+    window.__clrToast = setTimeout(function () { t.style.display = 'none'; }, 3000);
+  }
+
+  function read() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function write(map) {
+    try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) {}
+  }
+
+  // «Чёрный · «с белой подошвой»»
+  function describe(c) {
+    if (!c) return '';
+    var parts = [];
+    if (c.choice) parts.push(c.choice);
+    if (c.text) parts.push('«' + c.text + '»');
+    return parts.join(' · ');
+  }
+
+  function shorten(s, n) {
+    return s.length > n ? s.slice(0, n - 1) + '…' : s;
+  }
+
+  function cleanText(t) {
+    return t
+      .replace(/\[\s*цвет[а-яё]*\s*(?::\s*[^\]]*)?\]/gi, '')
+      .replace(/(^|[^а-яё])цвет(?:а|ов)?\s*:\s*[^\n\r.!?]+[.!?]?/gi, '$1')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  /* ===== 1. Блок «Цвет» на странице товара ===== */
+
+  function productBlock() {
+    var info = document.querySelector('#productDetails .premium-info');
+    if (!info) return;
+    var actions = info.querySelector('#ppActions');
+    var nameEl = info.querySelector('.premium-name');
+    if (!actions || !nameEl) return;
+
+    var name = nameEl.textContent.trim();
+    var existing = info.querySelector('.clr-block');
+    if (existing && existing.getAttribute('data-name') === name) return;
+    if (existing) existing.remove();
+
+    var descEl = document.querySelector('#productDetails .premium-description p');
+    var descText = descEl ? descEl.textContent : '';
+    var found = findColors(descText);
+    if (!found) return; // для этого товара выбор цвета не включён
+
+    var options = found.raw
+      .split(/\s*(?:,|;|\/|\sи\s)\s*/)
+      .map(function (s) { return s.trim(); })
+      .filter(function (s, i, a) { return s && a.indexOf(s) === i; })
+      .slice(0, 12)
+      .map(function (s) { return shorten(s, 24); });
+
+    // убираем служебную пометку из описания
+    if (descEl) {
+      descEl.textContent = cleanText(descText) || 'Подробности о товаре уточняйте у менеджера DOFAMIN.';
+    }
+
+    var block = el('div', 'clr-block');
+    block.setAttribute('data-name', name);
+    if (options.length) block.setAttribute('data-required', '1');
+
+    var head = el('div', 'pp-headrow');
+    head.appendChild(el('div', 'premium-heading', 'Цвет'));
+    var val = el('span', 'pp-sizeval');
+    head.appendChild(val);
+    block.appendChild(head);
+
+    var chips = null;
+    if (options.length) {
+      chips = el('div', 'clr-chips');
+      options.forEach(function (o) {
+        var b = el('button', 'clr-opt', o);
+        b.type = 'button';
+        b.setAttribute('data-v', o);
+        chips.appendChild(b);
+      });
+      block.appendChild(chips);
+    }
+
+    block.appendChild(el('div', 'small clr-hint',
+      options.length ? 'Выберите цвет или опишите его словами' : 'Опишите, какой цвет вам нужен'));
+
+    var input = el('input', 'field clr-text');
+    input.type = 'text';
+    input.maxLength = 60;
+    input.placeholder = options.length
+      ? 'Другой цвет или пожелание'
+      : 'Например: тёмно-синий с белой подошвой';
+    block.appendChild(input);
+
+    function sync() {
+      var c = read()[name] || {};
+      if (chips) {
+        Array.prototype.forEach.call(chips.children, function (b) {
+          b.classList.toggle('on', b.getAttribute('data-v') === c.choice);
+        });
+      }
+      val.textContent = c.choice || '';
+      if (c.choice || c.text) block.classList.remove('clr-need');
+    }
+
+    function save(patch) {
+      var map = read();
+      var c = Object.assign({}, map[name] || {}, patch);
+      if (!c.choice && !c.text) delete map[name]; else map[name] = c;
+      write(map);
+      sync();
+    }
+
+    if (chips) {
+      chips.addEventListener('click', function (e) {
+        var b = e.target.closest('.clr-opt');
+        if (!b) return;
+        var v = b.getAttribute('data-v');
+        var cur = (read()[name] || {}).choice;
+        save({ choice: cur === v ? '' : v });
+      });
+    }
+
+    input.addEventListener('input', function () {
+      save({ text: input.value.trim() });
+    });
+
+    input.value = (read()[name] || {}).text || '';
+    sync();
+
+    info.insertBefore(block, actions);
+  }
+
+  /* ----- если цвета заданы списком, без выбора в корзину не добавляем ----- */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('#ppAdd');
+    if (!btn) return;
+
+    var block = document.querySelector('#productDetails .clr-block[data-required="1"]');
+    if (!block) return;
+
+    var c = read()[block.getAttribute('data-name')] || {};
+    if (c.choice || c.text) return;
+
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    block.classList.add('clr-need');
+    block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toast('Сначала выберите цвет');
+  }, true);
+
+  /* ----- служебная пометка не показывается и в карточках каталога ----- */
+  function stripCards() {
+    document.querySelectorAll('.pdesc').forEach(function (d) {
+      var t = d.textContent;
+      if (findColors(t)) d.textContent = cleanText(t);
+    });
+  }
+
+  /* ===== 2. Цвет в корзине и на странице оплаты ===== */
+
+  function addChips() {
+    var map = read();
+
+    // корзина (в новом дизайне карточек)
+    document.querySelectorAll('#cartItems .cartitem[data-v]').forEach(function (item) {
+      var nameEl = item.querySelector('.cartname');
+      if (!nameEl) return;
+      var text = describe(map[nameEl.textContent.trim()]);
+      var tag = item.querySelector('.clr-chip');
+
+      if (!text) { if (tag) tag.remove(); return; }
+
+      var label = 'Цвет: ' + shorten(text, 30);
+      if (tag) { if (tag.textContent !== label) tag.textContent = label; return; }
+
+      var box = item.querySelector('.ci-chips');
+      if (!box) {
+        box = el('div', 'ci-chips');
+        nameEl.parentNode.insertBefore(box, nameEl.nextSibling);
+      }
+      box.appendChild(el('span', 'ci-chip clr-chip', label));
+    });
+
+    // оформление заказа
+    document.querySelectorAll('#checkoutView .co-item').forEach(function (item) {
+      var nameEl = item.querySelector('.co-name');
+      var box = item.querySelector('.co-chips');
+      if (!nameEl || !box) return;
+      var text = describe(map[nameEl.textContent.trim()]);
+      var tag = box.querySelector('.clr-chip');
+
+      if (!text) { if (tag) tag.remove(); return; }
+
+      var label = 'Цвет: ' + shorten(text, 30);
+      if (tag) { if (tag.textContent !== label) tag.textContent = label; return; }
+      box.appendChild(el('span', 'co-chip clr-chip', label));
+    });
+  }
+
+  /* ===== 3. Цвет уходит в заказ и в сообщение менеджеру ===== */
+
+  function buildNote(items) {
+    var map = read();
+    var cart = [];
+    try { cart = JSON.parse(localStorage.getItem('dofamin_cart') || '[]') || []; } catch (e) {}
+
+    var used = {};
+    var parts = [];
+    (items || []).forEach(function (it) {
+      var row = cart.filter(function (c) { return String(c.id) === String(it.id); })[0];
+      if (!row || used[row.name]) return;
+      var text = describe(map[row.name]);
+      if (!text) return;
+      used[row.name] = 1;
+      parts.push(row.name + ': ' + text);
+    });
+    return shorten(parts.join('; '), 250);
+  }
+
+  var ORIGINAL_FETCH = window.fetch;
+  window.fetch = function (url, opts) {
+    try {
+      if (opts && typeof opts.body === 'string' &&
+          String(url).indexOf('/functions/v1/dynamic-endpoint') !== -1) {
+        var body = JSON.parse(opts.body);
+        if (body && body.action === 'create') {
+          var note = buildNote(body.items);
+          window.__dofColorNote = note;
+          if (note) {
+            body.comment = (body.comment ? body.comment + ' | ' : '') + 'Цвет: ' + note;
+            opts = Object.assign({}, opts, { body: JSON.stringify(body) });
+          }
+        }
+      }
+    } catch (e) {}
+    return ORIGINAL_FETCH.call(this, url, opts);
+  };
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  if (tg && tg.openTelegramLink) {
+    var originalOpen = tg.openTelegramLink.bind(tg);
+    tg.openTelegramLink = function (url) {
+      try {
+        var note = window.__dofColorNote;
+        if (note && typeof url === 'string' && url.indexOf(MANAGER_LINK) !== -1 &&
+            decodeURIComponent(url).indexOf('Новый заказ') !== -1) {
+          url += encodeURIComponent('\n\nЦвет: ' + note);
+        }
+      } catch (e) {}
+      return originalOpen(url);
+    };
+  }
+
+  /* ===== запуск ===== */
+
+  function run() {
+    productBlock();
+    stripCards();
+    addChips();
+  }
+
+  var queued = false;
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; run(); });
+  }
+
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  run();
+})();
+</script>
 </body>
 </html>
