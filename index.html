@@ -7754,7 +7754,7 @@ html body .sortrow .fl-open{margin-right:auto}
 html body .sortrow .dd{margin-left:auto}
 
 /* Всплывающее сообщение: сверху, тёмное, само исчезает и не перекрывает кнопки */
-html body .toast{top:calc(env(safe-area-inset-top,0px) + 74px)!important;bottom:auto!important;background:rgba(24,24,27,.92)!important;color:#fff!important;border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 14px 36px rgba(0,0,0,.55);font-weight:700;font-size:14px;text-align:center;pointer-events:none;animation:dofToast 3s ease forwards}
+html body .toast{left:50%!important;right:auto!important;width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 74px)!important;bottom:auto!important;background:rgba(24,24,27,.92)!important;color:#fff!important;border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 14px 36px rgba(0,0,0,.55);font-weight:700;font-size:14px;text-align:center;pointer-events:none;animation:dofToast 3s ease forwards}
 @keyframes dofToast{0%{opacity:0;transform:translate(-50%,-10px)}8%{opacity:1;transform:translate(-50%,0)}85%{opacity:1}100%{opacity:0;transform:translate(-50%,-6px)}}
 </style>
 <script>
