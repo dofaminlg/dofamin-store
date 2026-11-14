@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#090909">
   <link rel="preconnect" href="https://nigcbsunnavrlkwtktua.supabase.co" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -3146,10 +3146,10 @@ body.gd-open nav.bottomnav{display:none!important}
 @media(min-width:560px){.req-btn{flex:none;padding:0 22px}}
 
 /* ===== v16: клавиатура на телефоне не перекрывает поля оформления ===== */
-body.kb-open .co-bar,body.kb-open nav.bottomnav{display:none!important}
-.co-wrap{padding-bottom:28px}
-body.kb-open .co-wrap{padding-bottom:45vh}
-.co-field .field{scroll-margin-top:90px;scroll-margin-bottom:260px}
+/* кнопка «Оплатить» — просто закреплена внизу экрана, никакого JS-позиционирования */
+.co-bar{position:fixed!important;left:0;right:0;bottom:0!important;top:auto!important;transform:none!important}
+.co-wrap{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+.co-field .field{scroll-margin-top:90px;scroll-margin-bottom:120px}
 
 /* ===== баннеры: компактнее, без стрелок ===== */
 .bn{margin:12px 0 10px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:#0b0b0b;box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.03) inset}
@@ -3204,7 +3204,6 @@ body.kb-open .co-wrap{padding-bottom:45vh}
     
     <div class="sectionhead"><h2>Каталог</h2><span class="count" id="homeCount"></span></div>
     <div class="searchrow"><input class="field" id="search" placeholder="Поиск товаров" aria-label="Поиск товаров"></div>
-    <div class="filters" id="categories"></div>
     <div class="sortrow">
   <select class="field sort-native" id="sort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select>
   <button type="button" class="fl-open" data-open-filter aria-haspopup="dialog"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8.5V19l-4 2v-7.5z"/></svg>Фильтр<span class="fl-count">0</span></button>
@@ -3224,7 +3223,6 @@ body.kb-open .co-wrap{padding-bottom:45vh}
   <section id="catalogPage" class="page">
     <div class="sectionhead"><h2>Каталог</h2><span class="count" id="catalogCount"></span></div>
     <div class="searchrow"><input class="field" id="search2" placeholder="Поиск товаров" aria-label="Поиск товаров"></div>
-<div class="filters" id="categories2"></div>
 <div class="sortrow">
   <select class="field sort-native" id="sort2" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select>
   <button type="button" class="fl-open" data-open-filter aria-haspopup="dialog"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8.5V19l-4 2v-7.5z"/></svg>Фильтр<span class="fl-count">0</span></button>
@@ -4381,6 +4379,7 @@ renderPremiumCartLines();
       price: Number(p.price) || 0,
       image_url: p.image_url || '',
       size: cartSize,
+      color: dofColorOf(p.name),
       qty: 1
     });
   }
@@ -4580,6 +4579,7 @@ function dofSanitizeCart(){
     if(!p||dofHasColors(p.name)) return;
     const sz=String(i.size||''), k=sz.indexOf(DOF_SEP);
     if(k>=0){ i.size=sz.slice(0,k); changed=true; }
+    if(i.color){ delete i.color; changed=true; }
   });
   if(changed){
     const merged=[];
@@ -4601,6 +4601,17 @@ function dofColorOf(name){
 function dofKey(size,name){
   const c=dofColorOf(name);
   return c?((size||'')+DOF_SEP+c):(size||'');
+}
+function dofSplit(i){
+  const raw=String((i&&i.size)||''), k=raw.indexOf(DOF_SEP);
+  const size=k>=0?raw.slice(0,k):raw;
+  const color=String((i&&i.color)||'').trim()||(k>=0?raw.slice(k+DOF_SEP.length):'');
+  return {size:size.trim(), color:String(color).trim()};
+}
+// «Цвет: Синий, Размер: 42» — части без значения не выводятся вообще
+function dofSpecLine(i){
+  const d=dofSplit(i);
+  return [d.color?'Цвет: '+d.color:'', d.size?'Размер: '+d.size:''].filter(Boolean).join(', ');
 }
 function dofNeedColor(p){
   const t=String((p&&p.description)||'');
@@ -4632,6 +4643,7 @@ function addProductToCart(p, size = '') {
       price: Number(p.price) || 0,
       image_url: p.image_url || '',
       size: size || '',
+      color: dofColorOf(p.name),
       qty: 1,
       selected: true
     });
@@ -4843,7 +4855,7 @@ root.querySelectorAll('[data-card-minus]').forEach(b => {
   function renderCategories(){
     const cats=['Все',...new Set(products.map(p=>p.category).filter(Boolean))];
     categories=cats;
-    ['categories','categories2'].forEach(id=>{$(id).innerHTML=cats.map(c=>`<button class="chip cat ${(filterCats.size?filterCats.has(c):activeCategory===c)?'active':''}" data-category="${safe(c)}"><span class="ci">${catIcon(c)}</span>${safe(c)}</button>`).join('');$(id).querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{activeCategory=b.dataset.category;filterCats.clear();renderCategories();renderProducts();syncFilterBadge();}));});
+    // кнопки категорий на страницах убраны — категории выбираются в панели «Фильтр»
   }
 
   // ===== ФИЛЬТР: панель снизу =====
@@ -5039,9 +5051,7 @@ function renderCart() {
             <div class="cart-content">
               <div class="cartname">${safe(i.name)}</div>
 
-              ${i.size
-                ? `<div class="small"><strong>Размер: ${safe(i.size)}</strong></div>`
-                : ''}
+              ${dofSpecLine(i) ? `<div class="small"><strong>${safe(dofSpecLine(i))}</strong></div>` : ''}
 
               <div class="small">${delivery}</div>
               <div class="small">${rub(i.price)} за шт.</div>
@@ -6266,7 +6276,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
           <div style="min-width:0">
             <div class="co-name">${safe(i.name)}</div>
             <div class="co-chips">
-              ${i.size ? `<span class="co-chip">Размер ${safe(i.size)}</span>` : ''}
+              ${dofSplit(i).color ? `<span class="co-chip">Цвет ${safe(dofSplit(i).color)}</span>` : ''}${dofSplit(i).size ? `<span class="co-chip">Размер ${safe(dofSplit(i).size)}</span>` : ''}
               ${delivery ? `<span class="co-chip">${safe(delivery)}</span>` : ''}
             </div>
             <div class="co-unit">${rub(i.price)} за шт.</div>
@@ -6391,7 +6401,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
         `Имя: ${name}\nTelegram: ${telegram}\nГород: ${city}\n` +
         `Оплата: ${method.comment}\n` + (promoUsed ? `Промокод: ${promoUsed.code} (−${promoUsed.percent}%)\n` : '') + `\nТовары:\n` +
         items.map(i =>
-          `${i.name}${i.size ? ' — Размер: ' + i.size : ''} × ${i.qty} — ${rub(i.price * i.qty)}`
+          `${i.name}${dofSpecLine(i) ? ' — ' + dofSpecLine(i) : ''} × ${i.qty} — ${rub(i.price * i.qty)}`
         ).join('\n') +
         `\n\nИтого: ${rub(order.total)}`;
 
@@ -6695,40 +6705,6 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     openTg('https://t.me/' + MANAGER_TELEGRAM + '?text=' + encodeURIComponent(text));
   });
 
-
-  // ===== v16: поля оформления не прячутся под клавиатурой =====
-  (function keyboardFix() {
-    let hideT = 0;
-    const isField = el => el && el.matches && el.matches('.co-wrap input, .co-wrap textarea');
-    const keepVisible = el => {
-      const vv = window.visualViewport;
-      const top = 80;
-      const bottomLimit = vv ? vv.height - 16 : window.innerHeight - 16;
-      const r = el.getBoundingClientRect();
-      if (r.bottom > bottomLimit || r.top < top) {
-        const delta = r.bottom - bottomLimit > 0 ? r.bottom - bottomLimit + 24 : r.top - top - 12;
-        window.scrollBy({ top: delta, behavior: 'smooth' });
-      }
-    };
-    document.addEventListener('focusin', e => {
-      if (!isField(e.target)) return;
-      clearTimeout(hideT);
-      document.body.classList.add('kb-open');
-      setTimeout(() => keepVisible(e.target), 320);
-    });
-    document.addEventListener('focusout', e => {
-      if (!isField(e.target)) return;
-      hideT = setTimeout(() => {
-        if (!isField(document.activeElement)) document.body.classList.remove('kb-open');
-      }, 250);
-    });
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', () => {
-        const a = document.activeElement;
-        if (isField(a)) keepVisible(a);
-      });
-    }
-  })();
 
   updateCount();renderCart();loadProducts();
 })();
@@ -7072,192 +7048,29 @@ const ordersBtn = document.getElementById('dofOpenOrders');
   }, true);
 })();
 </script>
-<style>
-/* DOFAMIN: кнопка «Оплатить» не прячется при вводе. Вставить в index.html ПЕРЕД </body> */
-body.kb-open .co-bar{
-  display:block !important;
-  padding-bottom:12px;
-}
-</style>
-
 <script>
+/* Оформление заказа: Enter переключает поля, в последнем закрывает клавиатуру.
+   Положением кнопки «Оплатить» управляет только CSS (position: fixed) — без JS. */
 (function () {
   'use strict';
-
   var FIELDS = '.co-wrap input, .co-wrap textarea';
-
-  function isField(el) {
-    return el && el.matches && el.matches(FIELDS);
-  }
-
-  /* ----- кнопка оплаты держится прямо над клавиатурой ----- */
-  function placeBar() {
-    var bar = document.querySelector('.co-bar');
-    if (!bar) return;
-    var vv = window.visualViewport;
-    var offset = vv ? Math.max(0, window.innerHeight - vv.height - vv.offsetTop) : 0;
-    bar.style.bottom = offset + 'px';
-  }
-
-  /* ----- поле не прячется под кнопкой оплаты ----- */
-  function keepAboveBar(el) {
-    var vv = window.visualViewport;
-    var bar = document.querySelector('.co-bar');
-    var top = vv ? vv.offsetTop : 0;
-    var height = vv ? vv.height : window.innerHeight;
-    var barH = bar ? bar.offsetHeight : 0;
-    var limit = top + height - barH - 12;
-    var r = el.getBoundingClientRect();
-    if (r.bottom > limit) {
-      window.scrollBy({ top: r.bottom - limit, behavior: 'smooth' });
-    }
-  }
-
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', placeBar);
-    window.visualViewport.addEventListener('scroll', placeBar);
-  }
-
+  var ORDER = ['coName', 'coTg', 'coCity'];
   document.addEventListener('focusin', function (e) {
-    if (!isField(e.target)) return;
-    // подсказка на клавише ввода: «Готово» / «Далее»
-    e.target.setAttribute('enterkeyhint', e.target.id === 'coCity' ? 'done' : 'next');
-    placeBar();
-    setTimeout(placeBar, 250);
-    setTimeout(function () { keepAboveBar(e.target); }, 550);
+    var t = e.target;
+    if (!t || !t.matches || !t.matches(FIELDS)) return;
+    t.setAttribute('enterkeyhint', t.id === 'coCity' ? 'done' : 'next');
   });
-
-  document.addEventListener('focusout', function (e) {
-    if (!isField(e.target)) return;
-    setTimeout(placeBar, 300);
-  });
-
-  /* ----- Enter: следующее поле, а в последнем закрывает клавиатуру ----- */
   document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter' || !isField(e.target)) return;
-    var order = ['coName', 'coTg', 'coCity'];
-    var i = order.indexOf(e.target.id);
+    var t = e.target;
+    if (e.key !== 'Enter' || !t || !t.matches || !t.matches(FIELDS)) return;
+    var i = ORDER.indexOf(t.id);
     if (i === -1) return;
     e.preventDefault();
-    if (i < order.length - 1) {
-      var next = document.getElementById(order[i + 1]);
+    if (i < ORDER.length - 1) {
+      var next = document.getElementById(ORDER[i + 1]);
       if (next) next.focus();
     } else {
-      e.target.blur();
-    }
-  });
-})();
-</script>
-<style>
-/* DOFAMIN: оплата при вводе. Вставить в index.html ПЕРЕД </body> */
-
-/* пока открыта клавиатура, закреплённая панель не мешает */
-body.kb-open .co-bar{display:none !important}
-
-/* кнопка прямо под полями: видна только при вводе */
-.co-paybtn-inline{display:none;margin-top:14px}
-body.kb-open .co-paybtn-inline{display:flex}
-</style>
-
-<script>
-(function () {
-  'use strict';
-
-  var FIELDS = '.co-wrap input, .co-wrap textarea';
-  var ICON =
-    '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/>' +
-    '<path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
-
-  function isField(el) {
-    return el && el.matches && el.matches(FIELDS);
-  }
-
-  /* ----- 1. Кнопка «Оплатить» под полями получателя ----- */
-  function fix() {
-    var city = document.getElementById('coCity');
-    var main = document.getElementById('coPay');
-    if (!city || !main) return;
-
-    var inline = document.getElementById('coPayInline');
-
-    if (!inline) {
-      var card = city.closest('.co-card');
-      if (!card) return;
-
-      inline = document.createElement('button');
-      inline.type = 'button';
-      inline.id = 'coPayInline';
-      inline.className = 'co-paybtn co-paybtn-inline';
-      inline.innerHTML = ICON + '<span></span>';
-
-      // клик передаём настоящей кнопке оплаты, чтобы сработали все проверки
-      inline.addEventListener('click', function () {
-        var real = document.getElementById('coPay');
-        if (real && !real.disabled) real.click();
-      });
-
-      card.appendChild(inline);
-    }
-
-    // текст и состояние всегда как у основной кнопки
-    var text = main.querySelector('span');
-    var mine = inline.querySelector('span');
-    if (text && mine && mine.textContent !== text.textContent) {
-      mine.textContent = text.textContent;
-    }
-    if (inline.disabled !== main.disabled) inline.disabled = main.disabled;
-    inline.classList.toggle('busy', main.classList.contains('busy'));
-  }
-
-  var queued = false;
-  function schedule() {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(function () { queued = false; fix(); });
-  }
-  new MutationObserver(schedule).observe(document.body, {
-    childList: true,
-    subtree: true,
-    characterData: true
-  });
-  fix();
-
-  /* ----- 2. Поле остаётся в фокусе, а кнопка видна над клавиатурой ----- */
-  function showButton() {
-    var target = document.getElementById('coPayInline') || document.activeElement;
-    if (!target || !target.getBoundingClientRect) return;
-
-    var vv = window.visualViewport;
-    var top = vv ? vv.offsetTop : 0;
-    var height = vv ? vv.height : window.innerHeight;
-    var limit = top + height - 12;
-
-    var r = target.getBoundingClientRect();
-    if (r.bottom > limit) {
-      window.scrollBy({ top: r.bottom - limit, behavior: 'smooth' });
-    }
-  }
-
-  document.addEventListener('focusin', function (e) {
-    if (!isField(e.target)) return;
-    // подпись на клавише ввода: «Далее» или «Готово»
-    e.target.setAttribute('enterkeyhint', e.target.id === 'coCity' ? 'done' : 'next');
-    setTimeout(showButton, 450);
-    setTimeout(showButton, 900);
-  });
-
-  /* ----- 3. Enter: следующее поле, в последнем закрывает клавиатуру ----- */
-  document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter' || !isField(e.target)) return;
-    var order = ['coName', 'coTg', 'coCity'];
-    var i = order.indexOf(e.target.id);
-    if (i === -1) return;
-    e.preventDefault();
-    if (i < order.length - 1) {
-      var next = document.getElementById(order[i + 1]);
-      if (next) next.focus();
-    } else {
-      e.target.blur();
+      t.blur();
     }
   });
 })();
@@ -7455,11 +7268,11 @@ body.kb-open .co-paybtn-inline{display:flex}
     var buy = actions && actions.querySelector('.cart-buy');
     if (!name || !total || !tools || !qty || !buy) return; // непонятная вёрстка: оставляем как есть
 
-    var size = '', delivery = '', unit = '';
+    var spec = '', delivery = '', unit = '';
     Array.prototype.forEach.call(content.children, function (c) {
       if (c === name || c === total || c === actions) return;
       var t = (c.textContent || '').trim();
-      if (/^Размер/i.test(t)) size = t.replace(/^Размер:\s*/i, '');
+      if (/^(Цвет|Размер):/i.test(t)) spec = t;
       else if (/^Доставка:/i.test(t)) delivery = t.replace(/^Доставка:\s*/i, '');
       else if (/за шт/i.test(t)) unit = t;
     });
@@ -7467,7 +7280,7 @@ body.kb-open .co-paybtn-inline{display:flex}
     var count = parseInt((qty.querySelector('span') || {}).textContent, 10) || 1;
 
     var chips = el('div', 'ci-chips');
-    if (size) chips.appendChild(el('span', 'ci-chip', 'Размер ' + size));
+    if (spec) chips.appendChild(el('span', 'ci-chip', spec));
     if (delivery) chips.appendChild(el('span', 'ci-chip', 'Доставка ' + delivery));
 
     var sum = el('div', 'ci-sum');
@@ -7905,8 +7718,7 @@ html body.is-scrolled nav.bottomnav{background:rgba(12,12,14,.70)!important;-web
 .chip.cat:active{transform:none!important;filter:brightness(1.15)}
 
 /* БАГ 4: кнопка «Оплатить» всегда внизу экрана (над клавиатурой при вводе) */
-html body.kb-open .co-bar,html body .co-bar{display:block!important}
-html body .co-paybtn-inline{display:none!important}
+html body .co-bar{display:block!important}
 
 /* ЗАГРУЗКА: размытые подложки не тянут лишние картинки */
 .page:not(.active) .card-gallery-blur{background-image:none!important}
