@@ -4364,7 +4364,7 @@ renderPremiumCartLines();
     return;
   }
 
-  const cartSize = dofKey(chosenSize, p.name);
+  const cartSize = dofKey(chosenSize, p.name, p);
   const found = cart.find(i =>
     String(i.id) === String(p.id) &&
     String(i.size || '') === String(cartSize)
@@ -4379,7 +4379,7 @@ renderPremiumCartLines();
       price: Number(p.price) || 0,
       image_url: p.image_url || '',
       size: cartSize,
-      color: dofColorOf(p.name),
+      color: dofColorOf(p.name, p),
       qty: 1
     });
   }
@@ -4398,7 +4398,7 @@ function renderPremiumCartLines() {
 
   if (!container || !wrap) return;
 
-  const activeSize = dofKey(selectedSize || '', p.name);
+  const activeSize = dofKey(selectedSize || '', p.name, p);
 
   const activeItem = cart.find(item =>
     String(item.id) === String(p.id) &&
@@ -4565,18 +4565,23 @@ const photo = `
   </article>`;
   }
 const DOF_SEP=' · ';
-function dofHasColors(name){
-  const p=products.find(x=>String(x.name)===String(name));
-  if(!p) return false;
-  const t=String(p.description||'');
+function dofColorsDefined(p){
+  const t=String((p&&p.description)||'');
   return /\[\s*цвет[а-яё]*\s*(?::\s*([^\]]*))?\]/i.test(t) ||
          /(^|[^а-яё])цвет(?:а|ов)?\s*:\s*([^\n\r.!?]+)/i.test(t);
+}
+function dofHasColors(name,p){
+  if(!p) p=products.find(x=>String(x.name)===String(name));
+  if(dofColorsDefined(p)) return true;
+  // на открытой странице товара есть блок выбора цвета
+  const blk=document.querySelector('#productDetails .clr-block[data-name]');
+  return !!blk && String(blk.getAttribute('data-name')).trim()===String(name||'').trim();
 }
 function dofSanitizeCart(){
   let changed=false;
   cart.forEach(i=>{
     const p=products.find(x=>String(x.id)===String(i.id));
-    if(!p||dofHasColors(p.name)) return;
+    if(!p||dofHasColors(p.name,p)) return;
     const sz=String(i.size||''), k=sz.indexOf(DOF_SEP);
     if(k>=0){ i.size=sz.slice(0,k); changed=true; }
     if(i.color){ delete i.color; changed=true; }
@@ -4590,16 +4595,19 @@ function dofSanitizeCart(){
     cart=merged; persist();
   }
 }
-function dofColorOf(name){
+function dofColorOf(name,p){
   try{
-    if(!dofHasColors(name)) return '';
-    const c=(JSON.parse(localStorage.getItem('dofamin_colors')||'{}')||{})[name];
+    if(!dofHasColors(name,p)) return '';
+    const map=JSON.parse(localStorage.getItem('dofamin_colors')||'{}')||{};
+    const want=String(name||'').trim().replace(/\s+/g,' ');
+    let c=map[name];
+    if(!c){ const k=Object.keys(map).find(x=>String(x).trim().replace(/\s+/g,' ')===want); if(k) c=map[k]; }
     if(!c)return '';
     return [c.choice,c.text?'«'+c.text+'»':''].filter(Boolean).join(' ');
   }catch(e){return ''}
 }
-function dofKey(size,name){
-  const c=dofColorOf(name);
+function dofKey(size,name,p){
+  const c=dofColorOf(name,p);
   return c?((size||'')+DOF_SEP+c):(size||'');
 }
 function dofSplit(i){
@@ -4618,14 +4626,14 @@ function dofNeedColor(p){
   let m=/\[\s*цвет[а-яё]*\s*(?::\s*([^\]]*))?\]/i.exec(t), raw='';
   if(m) raw=m[1]||'';
   else { m=/(^|[^а-яё])цвет(?:а|ов)?\s*:\s*([^\n\r.!?]+)/i.exec(t); if(m) raw=m[2]||''; }
-  return !!raw.trim() && !dofColorOf(p.name);
+  return !!raw.trim() && !dofColorOf(p.name,p);
 }
 function dofAskColor(p){
   toast('Выберите цвет на странице товара');
   openProduct(String(p.id));
 }
 function addProductToCart(p, size = '') {
-  size = dofKey(size || '', p.name);
+  size = dofKey(size || '', p.name, p);
   const found = cart.find(i =>
     String(i.id) === String(p.id) &&
     String(i.size || '') === String(size || '')
@@ -4643,7 +4651,7 @@ function addProductToCart(p, size = '') {
       price: Number(p.price) || 0,
       image_url: p.image_url || '',
       size: size || '',
-      color: dofColorOf(p.name),
+      color: dofColorOf(p.name, p),
       qty: 1,
       selected: true
     });
