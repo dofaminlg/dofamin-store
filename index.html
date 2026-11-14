@@ -7747,12 +7747,24 @@ html body .pp-incart-row{max-width:100%;min-width:0}
 html body .pp-gocart{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:14px!important;padding:0 8px!important}
 html body .pp-stepper button{width:42px}
 .field,input,textarea,select{font-size:16px}
+
+/* Фильтр слева, Каталог (сортировка) справа */
+html body .sortrow{display:flex!important;justify-content:space-between!important;align-items:center;gap:10px}
+html body .sortrow .fl-open{margin-right:auto}
+html body .sortrow .dd{margin-left:auto}
+
+/* Всплывающее сообщение: сверху, тёмное, само исчезает и не перекрывает кнопки */
+html body .toast{top:calc(env(safe-area-inset-top,0px) + 74px)!important;bottom:auto!important;background:rgba(24,24,27,.92)!important;color:#fff!important;border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 14px 36px rgba(0,0,0,.55);font-weight:700;font-size:14px;text-align:center;pointer-events:none;animation:dofToast 3s ease forwards}
+@keyframes dofToast{0%{opacity:0;transform:translate(-50%,-10px)}8%{opacity:1;transform:translate(-50%,0)}85%{opacity:1}100%{opacity:0;transform:translate(-50%,-6px)}}
 </style>
 <script>
 (function(){
   var b=document.body;
   function sc(){b.classList.toggle('is-scrolled',(window.scrollY||document.documentElement.scrollTop)>8)}
   window.addEventListener('scroll',sc,{passive:true});sc();
+  (function(){var t=document.getElementById('toast');if(!t||!window.MutationObserver)return;
+    new MutationObserver(function(){t.style.animation='none';void t.offsetWidth;t.style.animation='';}).observe(t,{childList:true,characterData:true,subtree:true});})();
+
   document.addEventListener('pointerdown',function(e){
     var el=e.target.closest&&e.target.closest('button.btn,button.co-paybtn,button.pp-add,button.rf-btn');
     if(!el||el.disabled)return;
