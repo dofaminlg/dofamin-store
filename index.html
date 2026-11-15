@@ -6563,8 +6563,11 @@ const ordersBtn = document.getElementById('dofOpenOrders');
   // ===== DOFAMIN v3: баннеры, меню «Каталог», статистика профиля =====
   const BANNERS = [
     { eyebrow: 'DOFAMIN', title: 'Брендовая одежда\nи обувь', sub: 'Лучшие бренды, быстрая доставка и удобная оплата.', tags: ['Новинки', 'Доставка', 'Выгодные цены'], mark: 'DOFAMIN', page: 'catalog' },
+    { eyebrow: 'БОНУСЫ', title: 'Приглашай друзей\nи получай рубли', sub: 'Рубли на счёт за первую покупку каждого друга.', cta: 'Узнать подробнее →', mark: '₽', page: 'profile', scrollTo: 'rfCard' },
     { eyebrow: 'ОТЗЫВЫ', title: 'Нам доверяют\nпокупатели', sub: 'Посмотри, что пишут о DOFAMIN.', stars: true, cta: 'Читать отзывы →', mark: '★★★★★', href: 'https://t.me/+47v_EHUngYI3YzJi' },
-    { eyebrow: 'БОНУСЫ', title: 'Приглашай друзей\nи получай рубли', sub: 'Рубли на счёт за первую покупку каждого друга.', cta: 'Узнать подробнее →', mark: '₽', page: 'profile', scrollTo: 'rfCard' }
+    { eyebrow: 'TELEGRAM', title: 'Наш канал\nDofamin', sub: 'Новинки, акции и новости магазина.', cta: 'Подписаться →', mark: 'TG', href: 'https://t.me/DofaminLg' },
+    { eyebrow: 'ПОДДЕРЖКА', title: 'Возник вопрос\nили проблема?', sub: 'Напиши менеджеру — поможем быстро.', cta: 'Написать менеджеру →', mark: '?', href: 'https://t.me/DofaminMg' },
+    { eyebrow: 'ИНФОРМАЦИЯ', title: 'Соглашение\nи FAQ', sub: 'Условия, доставка, оплата и ответы на частые вопросы.', cta: 'Читать →', mark: 'FAQ', href: 'https://teletype.in/@dofaminlg/DofaminInfo' }
     // Добавить баннер: { eyebrow, title (\n = перенос), sub, tags:[…], cta, mark, href | page } — или с картинкой: { img: 'url', alt: 'текст', href: '…' }
   ];
   (function initBanners() {
@@ -7818,8 +7821,8 @@ html body .toast{left:50%!important;right:auto!important;width:max-content;max-w
 /* ТЕКСТОВЫЕ БАННЕРЫ */
 html body .bn-slide.bn-text{aspect-ratio:auto!important;min-height:172px;display:flex!important;flex-direction:column;justify-content:center;align-items:flex-start;gap:7px;padding:22px 20px 38px;overflow:hidden;
   background:radial-gradient(120% 140% at 100% 0%,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 55%),linear-gradient(135deg,#26262a 0%,#141416 55%,#09090a 100%)!important;color:#fff}
-html body .bn-slide.bn-text:nth-child(3){background:radial-gradient(110% 130% at 50% 120%,rgba(255,255,255,.15) 0%,rgba(255,255,255,0) 58%),linear-gradient(160deg,#27272b 0%,#141416 55%,#09090a 100%)!important}
-html body .bn-slide.bn-text:nth-child(2){background:radial-gradient(120% 140% at 0% 100%,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 55%),linear-gradient(225deg,#2a2a2e 0%,#151517 55%,#09090a 100%)!important}
+html body .bn-slide.bn-text:nth-child(3),html body .bn-slide.bn-text:nth-child(6){background:radial-gradient(110% 130% at 50% 120%,rgba(255,255,255,.15) 0%,rgba(255,255,255,0) 58%),linear-gradient(160deg,#27272b 0%,#141416 55%,#09090a 100%)!important}
+html body .bn-slide.bn-text:nth-child(2),html body .bn-slide.bn-text:nth-child(5){background:radial-gradient(120% 140% at 0% 100%,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 55%),linear-gradient(225deg,#2a2a2e 0%,#151517 55%,#09090a 100%)!important}
 html body .bn-slide.bn-text::after{background:linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px) 0 0/22px 100%,linear-gradient(0deg,rgba(255,255,255,.05) 1px,transparent 1px) 0 0/100% 22px;-webkit-mask-image:linear-gradient(120deg,#000,transparent 70%);mask-image:linear-gradient(120deg,#000,transparent 70%);opacity:.55}
 html body .bn-slide.bn-text::before{content:attr(data-mark);position:absolute;right:-6px;bottom:-16px;font-size:76px;font-weight:900;letter-spacing:-.04em;line-height:1;color:rgba(255,255,255,.055);pointer-events:none;white-space:nowrap}
 .bn-text>*{position:relative;z-index:1}
