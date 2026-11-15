@@ -3799,7 +3799,7 @@ const renderOrderCards = list => list.map(order => {
         flex-wrap:wrap;
       ">
         <strong style="font-size:14px">
-          Заказ №${escapeHtml(order.id)}
+          Заказ №${shortOrderNo(order.id)}
         </strong>
 
         <span style="color:#888;font-size:12px">
@@ -4603,6 +4603,14 @@ const photo = `
     </div>
   </article>`;
   }
+/* короткий номер заказа: из длинного id получаем 6 цифр (одинаково у клиента, менеджера и в админке) */
+window.shortOrderNo=function(id){
+  const t=String(id==null?'':id).trim();
+  if(/^\d{1,7}$/.test(t)) return t;
+  let h=2166136261;
+  for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}
+  return String(100000+(h%900000));
+};
 const DOF_SEP=' · ';
 function dofColorsDefined(p){
   const t=String((p&&p.description)||'');
@@ -5886,7 +5894,7 @@ async function loadProducts(){
     let items = A.orders.filter(o =>
       A.ofilter === 'all' ? true : A.ofilter === 'done' ? isDone(o) : !isDone(o));
     if (q) {
-      items = items.filter(o => [o.id, o.customer_name, o.name, o.telegram, o.customer_telegram, o.city]
+      items = items.filter(o => [o.id, shortOrderNo(o.id), o.customer_name, o.name, o.telegram, o.customer_telegram, o.city]
         .some(v => String(v ?? '').toLowerCase().includes(q)));
     }
 
@@ -5910,7 +5918,7 @@ async function loadProducts(){
       return `
         <article class="dof-order">
           <div class="dof-order-head">
-            <div><strong>Заказ №${safe(order.id)}</strong><div class="date">${safe(date)}</div></div>
+            <div><strong>Заказ №${shortOrderNo(order.id)}</strong><div class="date">${safe(date)}</div></div>
             <span class="dof-status ${statusClass(status)}">${safe(status)}</span>
           </div>
           <div class="dof-cust">${cust}</div>
@@ -6444,7 +6452,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       const order = result.order;
 
       const message =
-        `Здравствуйте! Новый заказ DOFAMIN №${order.id}\n` +
+        `Здравствуйте! Новый заказ DOFAMIN №${shortOrderNo(order.id)}\n` +
         `Имя: ${name}\nTelegram: ${telegram}\nГород: ${city}\n` +
         `Оплата: ${method.comment}\n` + (promoUsed ? `Промокод: ${promoUsed.code} (−${promoUsed.percent}%)\n` : '') + `\nТовары:\n` +
         items.map(i =>
@@ -6475,7 +6483,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     view.innerHTML = `
       <div class="co-wrap co-done">
         <div class="co-ok"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
-        <h2>Заказ №${safe(order.id)} оформлен</h2>
+        <h2>Заказ №${shortOrderNo(order.id)} оформлен</h2>
         <p>${rub(order.total)} · ${safe(method.title)}. Осталось связаться с менеджером — так мы подтвердим наличие и оплату.</p>
         <section class="co-card co-next">
           <h3 class="co-title"><span>Что дальше</span></h3>
