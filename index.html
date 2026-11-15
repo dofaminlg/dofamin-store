@@ -3134,6 +3134,7 @@ body.gd-open nav.bottomnav{display:none!important}
 .ord-notify.st-paid{background:#e6c77a;color:#2a1f05;box-shadow:0 0 14px rgba(230,199,122,.45)}
 .ord-notify.st-late{background:#ffb45c;color:#2e1a05;box-shadow:0 0 14px rgba(255,180,92,.45)}
 .ord-notify.st-other{background:#fff;color:#111}
+.ord-notify.st-ready{background:#4fe8c4;color:#04201a;box-shadow:0 0 14px rgba(79,232,196,.5)}
 @keyframes ordPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @media(prefers-reduced-motion:reduce){.ord-notify{animation:none}}
 
@@ -3660,6 +3661,10 @@ const renderOrderCards = list => list.map(order => {
     statusColor = '#ffb45c';
     statusLabel = 'Задерживается';
     statusDescription = 'Доставка занимает больше времени';
+  } else if (normalized.includes('выдач')) {
+    statusColor = '#4fe8c4';
+    statusLabel = 'Готов к выдаче';
+    statusDescription = 'Заказ приехал! Заберите его, а если нужна помощь, напишите менеджеру';
   } else if (
     normalized.includes('доставлен') ||
     normalized.includes('получен') ||
@@ -5374,7 +5379,7 @@ async function loadProducts(){
     return result;
   }
   // ===== DOFAMIN ADMIN v2 — отдельная страница администратора =====
-  const ADMIN_STATUSES = ['Новый', 'Оплачен', 'В пути', 'Доставлен', 'Доставка задерживается'];
+  const ADMIN_STATUSES = ['Новый', 'Оплачен', 'В пути', 'Готов к выдаче', 'Доставлен', 'Доставка задерживается'];
   const A = {
     built: false, tab: 'products', products: [], categories: [], orders: [],
     ofilter: 'active', pq: '', oq: '', ed: null
@@ -6697,7 +6702,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       ['Заполните данные получателя', '<ul><li>Укажите <b>имя</b>, <b>Telegram</b> (например, @username) и <b>город</b>.</li><li>Выберите способ оплаты: <b>картой</b> (реквизиты пришлёт менеджер) или <b>наличными</b> при встрече в Луганске.</li></ul>'],
       ['Примените промокод', '<ul><li>Есть промокод? Введите его в блоке <b>«Промокод»</b> и нажмите <b>«Применить»</b>.</li><li>Скидка сразу появится в итоговой сумме. Убрать код можно кнопкой «Убрать».</li></ul>'],
       ['Нажмите «Оплатить»', '<ul><li>Заказ оформится, а на экране появится готовое сообщение для менеджера. Нажмите кнопку связи с менеджером и отправьте его.</li><li>Менеджер подтвердит наличие, объяснит оплату и доставку.</li></ul>'],
-      ['Следите за заказом', '<ul><li>Вкладка <b>«Заказы»</b> внизу: активные заказы и статус каждого — «Новый», «Оплачен», «В пути». Кнопка <b>«История покупок»</b> откроет доставленные заказы.</li><li>Если доставка задерживается, статус тоже покажет это.</li></ul>'],
+      ['Следите за заказом', '<ul><li>Вкладка <b>«Заказы»</b> внизу: активные заказы и статус каждого — «Новый», «Оплачен», «В пути», «Готов к выдаче» (заказ приехал, его можно забирать). Кнопка <b>«История покупок»</b> откроет доставленные заказы.</li><li>Если доставка задерживается, статус тоже покажет это.</li></ul>'],
       ['Остались вопросы?', '<ul><li>Нажмите кнопку <b>«Менеджер»</b> ниже — откроется личный чат, пишите в любое время.</li></ul>']
     ];
     const root = $('gd'), body = $('gdBody');
@@ -6727,7 +6732,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     const wr = m => { try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} };
     let last = [], changed = [];
     const cls = st => { st = String(st || '').toLowerCase();
-      return st.includes('доставлен') ? 'st-done' : st.includes('задерж') ? 'st-late' : st.includes('пути') ? 'st-way' : st.includes('оплач') ? 'st-paid' : 'st-other'; };
+      return st.includes('выдач') ? 'st-ready' : st.includes('доставлен') ? 'st-done' : st.includes('задерж') ? 'st-late' : st.includes('пути') ? 'st-way' : st.includes('оплач') ? 'st-paid' : 'st-other'; };
     const label = st => /задерж/i.test(st) ? 'Задерживается' : st;
     function render() {
       ordNotifyCount = changed.length;
@@ -6760,7 +6765,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
         wr(seen);
         if (changed.length > prev) {
           const o = changed[0], c = cls(o.status);
-          toast(c === 'st-done' ? 'Ваш заказ доставлен ✓' : 'Статус заказа обновлён: ' + label(String(o.status || '')));
+          toast(c === 'st-ready' ? 'Ваш заказ приехал — можно забирать 📍' : c === 'st-done' ? 'Ваш заказ доставлен ✓' : 'Статус заказа обновлён: ' + label(String(o.status || '')));
           try { window.Telegram.WebApp.HapticFeedback?.notificationOccurred('success'); } catch (e) {}
         }
         render();
