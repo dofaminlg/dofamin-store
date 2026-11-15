@@ -3636,10 +3636,7 @@ const histBtnCnt = $('ordHistCnt'); if (histBtnCnt) histBtnCnt.textContent = his
 const titleCnt = $('ordTitleCnt'); if (titleCnt) titleCnt.textContent = orders.length;
 
     if (!orders.length) {
-  container.innerHTML = `
-    <div class="dof-orders-empty">
-      <h3>Активных заказов пока нет</h3>
-    </div>`;
+  container.innerHTML = ordersEmptyHtml('active');
 }
 
     const escapeHtml = value => safe(String(value ?? ''));
@@ -3881,12 +3878,12 @@ const renderOrderCards = list => list.map(order => {
      
 container.innerHTML = orders.length
   ? renderOrderCards(orders)
-  : '<div class="dof-orders-empty"><h3>Активных заказов пока нет</h3></div>';
+  : ordersEmptyHtml('active');
 
 if (historyContainer) {
   historyContainer.innerHTML = historyOrders.length
     ? renderOrderCards(historyOrders)
-    : '<div class="dof-orders-empty">Здесь пока нет завершённых покупок.</div>';
+    : ordersEmptyHtml('history');
 }
   
 } catch (error) {
@@ -3989,6 +3986,16 @@ async function copyText(t) {
 let adminAllowed = false;
 const SUBPAGES = { product: 'home', catalog: 'home', admin: 'profile', checkout: 'cart' };
 let curPageName = 'home', productFrom = 'home';
+
+function ordersEmptyHtml(kind) {
+  if (kind === 'history') {
+    return '<div class="dof-orders-empty ord-empty"><div class="oe-ic"><svg viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.5v4h4M12 7.5V12l3 2"/></svg></div>' +
+      '<h3>Покупок пока нет</h3><p>Здесь появятся доставленные и отменённые заказы.</p></div>';
+  }
+  return '<div class="dof-orders-empty ord-empty"><div class="oe-ic"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 12H4z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></div>' +
+    '<h3>Активных заказов пока нет</h3><p>Выберите что-нибудь в каталоге — оформленные заказы появятся здесь.</p>' +
+    '<button type="button" class="oe-btn" data-go-shop>К покупкам</button></div>';
+}
 
 function setOrdersView(view) {
   const hist = view === 'history';
@@ -6522,6 +6529,11 @@ const ordersBtn = document.getElementById('dofOpenOrders');
     // страница «Мои заказы»
     $('ordersBack')?.addEventListener('click', () => setOrdersView('active'));
     $('ordersHistoryBtn')?.addEventListener('click', () => setOrdersView('history'));
+    $('myOrdersList')?.addEventListener('click', e => {
+      if (!e.target.closest('[data-go-shop]')) return;
+      showPage('home');
+      setTimeout(() => { const g = $('productsGrid'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+    });
     $('dofOpenAdmin')?.addEventListener('click', () => showPage('admin'));
     const otabs = $('ordersTabs');
     otabs?.addEventListener('click', e => {
@@ -7865,6 +7877,15 @@ body.fl-lock{overflow:hidden}
 .ord-history-btn span:nth-of-type(1){flex:1}
 .ord-history-btn .cnt{min-width:26px;height:26px;padding:0 8px;border-radius:13px;background:#242424;border:1px solid #333;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
 .ord-history-btn .chev{width:18px;height:18px;opacity:.6}
+.ord-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 22px 30px;border:1px dashed #2c2c2c;border-radius:22px;background:linear-gradient(160deg,#151515,#0b0b0b)}
+.ord-empty .oe-ic{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:#1a1a1a;border:1px solid #2e2e2e;margin-bottom:14px}
+.ord-empty .oe-ic svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ord-empty h3{margin:0 0 6px;font-size:19px}
+.ord-empty p{margin:0 0 18px;color:#9a9a9a;font-size:14px;line-height:1.45;max-width:280px}
+.ord-empty p:last-child{margin-bottom:0}
+.oe-btn{height:48px;padding:0 28px;border-radius:14px;border:0;background:#fff;color:#111;font-weight:800;font-size:15px;box-shadow:0 8px 22px rgba(255,255,255,.16);transition:transform .15s}
+.oe-btn:active{transform:scale(.97)}
+#productsGrid{scroll-margin-top:170px}
 </style>
 </body>
 </html>
