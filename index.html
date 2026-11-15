@@ -6469,6 +6469,8 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       checkoutPromo = null;
       persist();
       renderCheckoutDone(order, items, message, method);
+      // сразу открываем чат с менеджером: сообщение с заказом уже вписано, остаётся нажать «Отправить»
+      setTimeout(() => openTg(`https://t.me/${MANAGER_TELEGRAM}?text=${encodeURIComponent(message)}`), 700);
     } catch (error) {
       console.error(error);
       toast(error.message || 'Не удалось оформить заказ');
@@ -6489,7 +6491,7 @@ const ordersBtn = document.getElementById('dofOpenOrders');
       <div class="co-wrap co-done">
         <div class="co-ok"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
         <h2>Заказ №${shortOrderNo(order.id)} оформлен</h2>
-        <p>${rub(order.total)} · ${safe(method.title)}. Осталось связаться с менеджером — так мы подтвердим наличие и оплату.</p>
+        <p>${rub(order.total)} · ${safe(method.title)}. Сейчас откроется чат с менеджером с готовым сообщением, нажмите «Отправить». Если чат не открылся, нажмите кнопку ниже.</p>
         <section class="co-card co-next">
           <h3 class="co-title"><span>Что дальше</span></h3>
           <ol>${steps.map(s => `<li>${safe(s)}</li>`).join('')}</ol>
