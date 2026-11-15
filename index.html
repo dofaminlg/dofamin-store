@@ -3202,7 +3202,7 @@ body.gd-open nav.bottomnav{display:none!important}
   Перейти в каталог →
 </button>
     
-    <div class="sectionhead"><h2>Каталог</h2><span class="count" id="homeCount"></span></div>
+    <div class="sectionhead" id="homeCatalogHead"><h2>Каталог</h2><span class="count" id="homeCount"></span></div>
     <div class="searchrow"><input class="field" id="search" placeholder="Поиск товаров" aria-label="Поиск товаров"></div>
     <div class="sortrow">
   <select class="field sort-native" id="sort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="low">Сначала дешевле</option><option value="high">Сначала дороже</option><option value="name">По названию</option></select>
@@ -4010,6 +4010,14 @@ function setOrdersView(view) {
 }
 
 function showPage(name) {
+  if (name === 'catalog') {
+    showPage('home');
+    setTimeout(() => {
+      const h = $('homeCatalogHead');
+      if (h) h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+    return;
+  }
   if (name === 'admin' && !adminAllowed) name = 'profile';
   if (name === 'checkout' && !cart.some(i => i.selected !== false)) {
     toast('Выберите товары в корзине');
@@ -7797,6 +7805,7 @@ html body .pp-gocart{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;f
 html body .pp-stepper button{width:42px}
 .field,input,textarea,select{font-size:16px}
 
+#homeCatalogHead{scroll-margin-top:84px}
 /* Фильтр слева, Каталог (сортировка) справа */
 html body .sortrow{display:flex!important;justify-content:space-between!important;align-items:center;gap:10px}
 html body .sortrow .fl-open{margin-right:auto}
