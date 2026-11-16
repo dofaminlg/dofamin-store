@@ -5919,7 +5919,7 @@ async function loadProducts(){
     let items = A.orders.filter(o =>
       A.ofilter === 'all' ? true : A.ofilter === 'done' ? isDone(o) : !isDone(o));
     if (q) {
-      items = items.filter(o => [o.id, shortOrderNo(o.id), o.customer_name, o.name, o.telegram, o.customer_telegram, o.city]
+      items = items.filter(o => [o.id, shortOrderNo(o.id), o.customer_name, o.name, o.telegram_username, o.telegram, o.customer_telegram, o.delivery_address, o.city]
         .some(v => String(v ?? '').toLowerCase().includes(q)));
     }
 
@@ -5930,11 +5930,11 @@ async function loadProducts(){
 
     list.innerHTML = items.map(order => {
       const status = order.status || 'Новый';
-      const tgName = String(order.telegram || order.customer_telegram || '').trim();
+      const tgName = String(order.telegram_username || order.telegram || order.customer_telegram || '').trim();
       const tgLink = false && /^@?[A-Za-z0-9_]{4,32}$/.test(tgName)
         ? `<a href="https://t.me/${safe(tgName.replace('@', ''))}" target="_blank" rel="noopener">@${safe(tgName.replace('@', ''))}</a>`
         : safe(tgName);
-      const city = order.city || order.customer_city || '';
+      const city = order.delivery_address || order.city || order.customer_city || '';
       const cust = [safe(order.customer_name || order.name || 'Покупатель'), tgName ? tgLink : '', city ? safe(city) : '']
         .filter(Boolean).join(' · ');
       // ссылка на профиль покупателя: ТОЛЬКО по проверенному Telegram ID (его ставит сервер из initData).
