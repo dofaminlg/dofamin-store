@@ -2780,6 +2780,8 @@ img{max-width:100%}
 .dof-status.s-way{background:#17283a;color:#83baff}.dof-status.s-done{background:#1d2f1d;color:#8be28b}.dof-status.s-late{background:#3a2a17;color:#ffb45c}
 .dof-cust{font-size:13px;color:#cfcfcf;margin:8px 0;overflow-wrap:anywhere}
 .dof-cust a{color:#83baff;text-decoration:none}
+.dof-profile-link{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:8px 13px;border-radius:12px;background:rgba(131,186,255,.14);border:1px solid rgba(131,186,255,.45);color:#83baff!important;font-weight:700;font-size:13px;text-decoration:none}
+.dof-profile-link:active{transform:scale(.97)}
 .dof-oitem{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #1d1d1d}
 .dof-oitem .th{width:54px;height:64px;border-radius:9px;overflow:hidden;background:#1c1c1c;flex:none;display:grid;place-items:center;color:#555}
 .dof-oitem .th img{width:100%;height:100%;object-fit:cover}
@@ -5525,6 +5527,17 @@ async function loadProducts(){
   }
 
   function onAdminClick(e) {
+    const pl = e.target.closest && e.target.closest('a[data-tgprofile]');
+    if (pl) {
+      e.preventDefault();
+      const h = pl.getAttribute('href');
+      const w = window.Telegram && window.Telegram.WebApp;
+      try {
+        if (w && w.openTelegramLink && h.startsWith('https://t.me/')) w.openTelegramLink(h);
+        else window.location.href = h;
+      } catch (_) { window.open(h, '_blank'); }
+      return;
+    }
     const el = e.target.closest('[data-act]');
     if (!el) return;
     const act = el.dataset.act;
@@ -5911,12 +5924,28 @@ async function loadProducts(){
     list.innerHTML = items.map(order => {
       const status = order.status || 'Новый';
       const tgName = String(order.telegram || order.customer_telegram || '').trim();
-      const tgLink = /^@?[A-Za-z0-9_]{4,32}$/.test(tgName)
+      const tgLink = false && /^@?[A-Za-z0-9_]{4,32}$/.test(tgName)
         ? `<a href="https://t.me/${safe(tgName.replace('@', ''))}" target="_blank" rel="noopener">@${safe(tgName.replace('@', ''))}</a>`
         : safe(tgName);
       const city = order.city || order.customer_city || '';
       const cust = [safe(order.customer_name || order.name || 'Покупатель'), tgName ? tgLink : '', city ? safe(city) : '']
         .filter(Boolean).join(' · ');
+      // ссылка на профиль покупателя: ТОЛЬКО по проверенному Telegram ID (его ставит сервер из initData).
+      // @username из формы покупатель вводит сам и может вписать чужой, поэтому он не считается надёжным.
+      const buyerId = String(order.telegram_id || order.tg_id || order.user_id || order.customer_id || order.customer_telegram_id || '').trim();
+      const verifiedUser = String(order.tg_username || order.username || '').replace('@', '').trim().toLowerCase();
+      const typedUser = tgName.replace('@', '').trim().toLowerCase();
+      const hasId = /^\d{5,15}$/.test(buyerId);
+      const mismatch = hasId && verifiedUser && typedUser && verifiedUser !== typedUser;
+      const profileHref = hasId
+        ? `tg://user?id=${buyerId}`
+        : (/^[A-Za-z0-9_]{4,32}$/.test(typedUser) ? `https://t.me/${typedUser}` : '');
+      const profileBtn = profileHref
+        ? `<a class="dof-profile-link" href="${safe(profileHref)}" data-tgprofile="1">👤 ${hasId ? 'Профиль покупателя' : 'Профиль по указанному @ (не проверен)'}</a>`
+        : '';
+      const warn = mismatch
+        ? `<div class="small" style="color:#ffb86b;margin-top:6px">⚠️ Указан @${safe(typedUser)}, но заказ оформил @${safe(verifiedUser)}</div>`
+        : '';
       const comment = order.comment ? `<div class="small" style="margin-bottom:6px">${safe(order.comment)}</div>` : '';
       const date = order.created_at ? new Date(order.created_at).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
 
@@ -5926,7 +5955,7 @@ async function loadProducts(){
             <div><strong>Заказ №${shortOrderNo(order.id)}</strong><div class="date">${safe(date)}</div></div>
             <span class="dof-status ${statusClass(status)}">${safe(status)}</span>
           </div>
-          <div class="dof-cust">${cust}</div>
+          <div class="dof-cust">${cust}${warn}${profileBtn ? `<div>${profileBtn}</div>` : ''}</div>
           ${comment}
           ${(order.items || []).map(item => `
             <div class="dof-oitem">
