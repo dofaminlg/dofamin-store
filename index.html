@@ -5530,12 +5530,19 @@ async function loadProducts(){
     const pl = e.target.closest && e.target.closest('a[data-tgprofile]');
     if (pl) {
       e.preventDefault();
-      const h = pl.getAttribute('href');
       const w = window.Telegram && window.Telegram.WebApp;
-      try {
-        if (w && w.openTelegramLink && h.startsWith('https://t.me/')) w.openTelegramLink(h);
-        else window.location.href = h;
-      } catch (_) { window.open(h, '_blank'); }
+      const uname = pl.dataset.uname;
+      if (uname) {
+        const h = 'https://t.me/' + uname;
+        try {
+          if (w && w.openTelegramLink) w.openTelegramLink(h);
+          else window.open(h, '_blank');
+        } catch (_) { window.open(h, '_blank'); }
+      } else if (pl.dataset.uid) {
+        const id = pl.dataset.uid;
+        try { navigator.clipboard.writeText(id); } catch (_) {}
+        toast('ID скопирован: ' + id + '. Профиль откроется по ссылке в уведомлении бота');
+      }
       return;
     }
     const el = e.target.closest('[data-act]');
@@ -5937,12 +5944,11 @@ async function loadProducts(){
       const typedUser = tgName.replace('@', '').trim().toLowerCase();
       const hasId = /^\d{5,15}$/.test(buyerId);
       const mismatch = hasId && verifiedUser && typedUser && verifiedUser !== typedUser;
-      const profileHref = hasId
-        ? `tg://user?id=${buyerId}`
-        : (/^[A-Za-z0-9_]{4,32}$/.test(typedUser) ? `https://t.me/${typedUser}` : '');
-      const profileBtn = profileHref
-        ? `<a class="dof-profile-link" href="${safe(profileHref)}" data-tgprofile="1">👤 ${hasId ? 'Профиль покупателя' : 'Профиль по указанному @ (не проверен)'}</a>`
-        : '';
+      // tg://user?id= внутри мини-приложения блокируется (ERR_BLOCKED_BY_CSP), поэтому открываем только https://t.me/...
+      const openUser = verifiedUser || (/^[a-z0-9_]{4,32}$/.test(typedUser) ? typedUser : '');
+      const profileBtn = openUser
+        ? `<a class="dof-profile-link" href="https://t.me/${safe(openUser)}" data-tgprofile="1" data-uname="${safe(openUser)}">👤 ${verifiedUser ? 'Профиль покупателя' : 'Профиль по указанному @ (не проверен)'}</a>`
+        : (hasId ? `<a class="dof-profile-link" href="#" data-tgprofile="1" data-uid="${safe(buyerId)}">👤 Скопировать ID покупателя</a>` : '');
       const warn = mismatch
         ? `<div class="small" style="color:#ffb86b;margin-top:6px">⚠️ Указан @${safe(typedUser)}, но заказ оформил @${safe(verifiedUser)}</div>`
         : '';
